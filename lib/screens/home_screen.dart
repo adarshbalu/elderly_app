@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:elderly_app/others/constants.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,65 +14,60 @@ class _HomeScreenState extends State<HomeScreen> {
     MediaQueryData deviceInfo = MediaQuery.of(context);
     double screenWidth = deviceInfo.size.width;
     double screenHeight = deviceInfo.size.height;
-
+    dimensions(screenHeight, screenWidth);
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Elderly Care'),
+        centerTitle: true,
+        elevation: 0,
+        actions: <Widget>[
+          CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.white,
+            child: Icon(
+              Icons.perm_identity,
+              size: 30,
+              color: Colors.black,
+            ),
+          )
+        ],
+      ),
       body: ListView(
         children: <Widget>[
           Column(
             children: <Widget>[
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Expanded(
-                    child: CardButton(
-                      icon: Icons.assignment,
-                      size: (screenWidth / 3),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xfffcf5ee),
                     ),
+                    margin: EdgeInsets.only(bottom: 5),
+                    child: Text(
+                      'Sample Text for Application',
+                      style: GoogleFonts.roboto(),
+                    ),
+                    height: screenHeight / 9.5,
                   ),
-                  Expanded(
-                    child: CardButton(
-                      icon: Icons.favorite,
-                      size: (screenWidth / 3),
-                    ),
-                  )
                 ],
               ),
               Row(
                 children: <Widget>[
-                  Container(
-                    child: Column(
-                      children: <Widget>[
-                        CircleAvatar(
-                          child: Icon(
-                            Icons.person,
-                            size: 40.0,
-                          ),
-                          radius: 35.0,
-                        ),
-                        Text(
-                          'Name',
-                          style: kProfileTextStyle,
-                        ),
-                        Text(
-                          'Age',
-                          style: kProfileTextStyle,
-                        ),
-                        Text(
-                          'Gender',
-                          style: kProfileTextStyle,
-                        ),
-                        Text(
-                          'Blood Group',
-                          style: kProfileTextStyle,
-                        ),
-                      ],
-                    ),
-                    width: screenWidth,
-                    height: 200.0,
-                    decoration: BoxDecoration(
-                      color: Color(0xff9765F4),
-                      borderRadius: BorderRadius.circular(5.0),
+                  Expanded(
+                    child: CardButton(
+                      icon: FontAwesomeIcons.heartbeat,
+                      size: (screenWidth / 3),
+                      color: Color(0xffD83B36),
                     ),
                   ),
+                  Expanded(
+                    child: CardButton(
+                      icon: FontAwesomeIcons.capsules,
+                      size: (screenWidth / 3),
+                      color: Color(0xffE3952D),
+                    ),
+                  )
                 ],
               ),
             ],
@@ -89,15 +86,17 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class CardButton extends StatelessWidget {
-  var icon, size;
-  CardButton({this.icon, this.size});
+  var icon, size, color;
+  CardButton({this.icon, this.size, this.color});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 133,
+      width: 151,
       decoration: BoxDecoration(
-        color: Color(0xff6002EE),
-        borderRadius: BorderRadius.circular(5),
+        color: color,
+        borderRadius: BorderRadius.circular(20),
       ),
       margin: EdgeInsets.all(10.0),
       child: Icon(
@@ -107,4 +106,9 @@ class CardButton extends StatelessWidget {
       ),
     );
   }
+}
+
+void dimensions(double a, double b) {
+  print(a);
+  print(b);
 }

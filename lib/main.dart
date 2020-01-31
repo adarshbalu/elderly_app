@@ -12,6 +12,16 @@ class ElderlyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Elderly Care',
       home: HomeScreen(),
+      theme: ThemeData(
+        fontFamily: 'OpenSans',
+        scaffoldBackgroundColor: Colors.white,
+        primaryColor: Colors.white,
+        textTheme: TextTheme(
+            display1: TextStyle(
+          color: Colors.black,
+          fontSize: 20.0,
+        )),
+      ),
     );
   }
 }

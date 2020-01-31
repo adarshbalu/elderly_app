@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   google_fonts: ^0.3.2
   flutter_spinkit: ^4.1.1
+  font_awesome_flutter: ^8.5.0
 
 
 dev_dependencies:
@@ -59,10 +60,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: 'OpenSans'
+      fonts:
+        - asset: others/OpenSans-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
