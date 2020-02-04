@@ -26,6 +26,7 @@ dependencies:
   google_fonts: ^0.3.2
   flutter_spinkit: ^4.1.1
   font_awesome_flutter: ^8.5.0
+  connectivity: ^0.4.6+2
 
 
 dev_dependencies:

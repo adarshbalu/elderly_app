@@ -1,4 +1,5 @@
 import 'package:elderly_app/screens/profile_screen.dart';
+import 'package:elderly_app/screens/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:elderly_app/widgets/home_screen_widgets.dart';
@@ -15,10 +16,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     MediaQueryData deviceInfo = MediaQuery.of(context);
+    double factor = 0;
     double screenWidth = deviceInfo.size.width;
     double screenHeight = deviceInfo.size.height;
     dimensions(screenHeight, screenWidth);
-
+    if (screenHeight > 640) {
+      factor = screenHeight * (10 / 100);
+    }
     return Scaffold(
       drawer: AppDrawer(),
       appBar: AppBar(
@@ -46,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: <Widget>[
           SizedBox(
-            height: screenHeight * (9 / 100),
+            height: screenHeight * (9 / 100) - factor,
           ),
           Row(
             children: <Widget>[
@@ -55,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     GestureDetector(
                       child: CardButton(
-                        height: screenHeight * (20 / 100),
+                        height: screenHeight * (20 / 100) - factor,
                         width: screenWidth * (35 / 100),
                         icon: FontAwesomeIcons.heartbeat,
                         size: screenWidth * (25 / 100),
@@ -78,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     GestureDetector(
                       child: CardButton(
-                        height: screenHeight * (20 / 100),
+                        height: screenHeight * (20 / 100) - factor,
                         width: screenWidth * (35 / 100),
                         icon: FontAwesomeIcons.capsules,
                         size: screenWidth * (25 / 100),
@@ -108,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     GestureDetector(
                       child: CardButton(
-                        height: screenHeight * (20 / 100),
+                        height: screenHeight * (20 / 100) - factor,
                         width: screenWidth * (35 / 100),
                         icon: FontAwesomeIcons.hospital,
                         size: screenWidth * (25 / 100),
@@ -131,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     GestureDetector(
                       child: CardButton(
-                        height: screenHeight * (20 / 100),
+                        height: screenHeight * (20 / 100) - factor,
                         width: screenWidth * (35 / 100),
                         icon: FontAwesomeIcons.child,
                         size: screenWidth * (25 / 100),
@@ -155,9 +159,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: GestureDetector(
               onTap: () {
                 print('Urgent Tapped');
+                Navigator.pushNamed(context, LoadingScreen.id);
               },
               child: Container(
-                height: screenHeight * (10 / 100),
+                height: screenHeight * (10 / 100) - factor,
                 decoration: BoxDecoration(
                   color: Colors.redAccent,
                   borderRadius: BorderRadius.circular(30),
@@ -187,6 +192,6 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 void dimensions(double a, double b) {
-  print(a);
-  print(b);
+  print('Height : $a');
+  print('Width : $b');
 }

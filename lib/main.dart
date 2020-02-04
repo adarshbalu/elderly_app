@@ -11,7 +11,7 @@ class ElderlyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Elderly Care',
-      initialRoute: HomeScreen.id,
+      initialRoute: LoadingScreen.id,
       routes: {
         HomeScreen.id: (context) => HomeScreen(),
         ProfileScreen.id: (context) => ProfileScreen(),
