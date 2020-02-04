@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:elderly_app/others/constants.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:elderly_app/widgets/home_screen_widgets.dart';
+import 'package:elderly_app/widgets/app_default.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -15,94 +17,243 @@ class _HomeScreenState extends State<HomeScreen> {
     double screenWidth = deviceInfo.size.width;
     double screenHeight = deviceInfo.size.height;
     dimensions(screenHeight, screenWidth);
+
     return Scaffold(
+      drawer: Drawer(
+        elevation: 4,
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              flex: 6,
+              child: ListView(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.all(20.0),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                            child:
+                                Image.asset('lib/resources/images/logo.png')),
+                        SizedBox(
+                          width: 20.0,
+                        ),
+                        Text(
+                          'Elderly ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w100,
+                            fontSize: 32.0,
+                          ),
+                        ),
+                        Text(
+                          'Care',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w100,
+                            fontSize: 32.0,
+                            color: Colors.green,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10.0,
+                        )
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  ListButtons(
+                    icon: Icons.assignment,
+                    text: 'Item 1',
+                  ),
+                  ListButtons(
+                    icon: Icons.alarm,
+                    text: 'Item 2',
+                  ),
+                  ListButtons(
+                    icon: Icons.assessment,
+                    text: 'Item 3',
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  child: Text('Application in Development'),
+                  margin: EdgeInsets.all(20),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: Text('Elderly Care'),
         centerTitle: true,
-        elevation: 0,
+        elevation: 1,
         actions: <Widget>[
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.white,
-            child: Icon(
-              Icons.perm_identity,
-              size: 30,
-              color: Colors.black,
+          GestureDetector(
+            onTap: () {
+              print('Profile Button Tapped');
+            },
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.perm_identity,
+                size: 30,
+                color: Color(0xff5e444d),
+              ),
             ),
-          )
+          ),
         ],
       ),
       body: ListView(
         children: <Widget>[
-          Column(
+          SizedBox(
+            height: 50.0,
+          ),
+          Row(
             children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xfffcf5ee),
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: CardButton(
+                        icon: FontAwesomeIcons.heartbeat,
+                        size: (screenWidth / 4),
+                        color: Color(0xffD83B36),
+                        borderColor: Color(0xffd93b36),
+                      ),
+                      onTap: () {
+                        print('Heartbeat Tapped');
+                      },
                     ),
-                    margin: EdgeInsets.only(bottom: 5),
-                    child: Text(
-                      'Sample Text for Application',
-                      style: GoogleFonts.roboto(),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text('Check your Heartbeat'),
                     ),
-                    height: screenHeight / 9.5,
-                  ),
-                ],
+                  ],
+                ),
               ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: CardButton(
-                      icon: FontAwesomeIcons.heartbeat,
-                      size: (screenWidth / 3),
-                      color: Color(0xffD83B36),
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: CardButton(
+                        icon: FontAwesomeIcons.capsules,
+                        size: (screenWidth / 4),
+                        color: Color(0xffE3952D),
+                        borderColor: Color(0xffe2932c),
+                      ),
+                      onTap: () {
+                        print('Medicine Tapped');
+                      },
                     ),
-                  ),
-                  Expanded(
-                    child: CardButton(
-                      icon: FontAwesomeIcons.capsules,
-                      size: (screenWidth / 3),
-                      color: Color(0xffE3952D),
-                    ),
-                  )
-                ],
-              ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text('Add Medicine Reminder'),
+                    )
+                  ],
+                ),
+              )
             ],
           ),
-          Column(),
-          Column(
+          SizedBox(
+            height: 30.0,
+          ),
+          Row(
             children: <Widget>[
-              Row(),
-              Row(),
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: CardButton(
+                        icon: FontAwesomeIcons.hospital,
+                        size: (screenWidth / 4),
+                        color: Color(0xff3c513d),
+                        borderColor: Color(0xff3c513d),
+                      ),
+                      onTap: () {
+                        print('Hospital Tapped');
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text('Locate Nearby Hospital'),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: CardButton(
+                        icon: FontAwesomeIcons.child,
+                        size: (screenWidth / 4),
+                        color: Color(0xffaf5676),
+                        borderColor: Color(0xffaf5676),
+                      ),
+                      onTap: () {
+                        print('Relatives Tapped');
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text('Contact Relatives'),
+                    )
+                  ],
+                ),
+              )
             ],
-          )
+          ),
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                print('Urgent Tapped');
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.red[200],
+                      blurRadius: 10.0,
+                      offset: Offset(0, 8.0),
+                    ),
+                  ],
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20),
+                margin: EdgeInsets.only(top: 30.0, bottom: 20.0),
+                child: Text(
+                  'Urgent',
+                  style: TextStyle(
+                    color: Colors.white, //837666
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class CardButton extends StatelessWidget {
-  var icon, size, color;
-  CardButton({this.icon, this.size, this.color});
-
+class ListButtons extends StatelessWidget {
+  String text;
+  var icon;
+  ListButtons({this.text, this.icon});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 133,
-      width: 151,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(20),
+    return ListTile(
+      title: Text(
+        text,
+        style: kDrawerListStyle,
       ),
-      margin: EdgeInsets.all(10.0),
-      child: Icon(
+      leading: Icon(
         icon,
-        size: size,
-        color: Colors.white,
+        size: 37.0,
       ),
     );
   }
