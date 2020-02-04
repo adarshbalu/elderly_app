@@ -1,7 +1,5 @@
 import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:elderly_app/others/constants.dart';
-import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:elderly_app/widgets/home_screen_widgets.dart';
 import 'package:elderly_app/widgets/app_default.dart';
