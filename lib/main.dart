@@ -1,7 +1,7 @@
 import 'package:elderly_app/screens/home_screen.dart';
 import 'package:elderly_app/screens/loading_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:elderly_app/screens/profile_screen.dart';
 
 void main() => runApp(ElderlyApp());
 
@@ -11,7 +11,12 @@ class ElderlyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Elderly Care',
-      home: HomeScreen(),
+      initialRoute: HomeScreen.id,
+      routes: {
+        HomeScreen.id: (context) => HomeScreen(),
+        ProfileScreen.id: (context) => ProfileScreen(),
+        LoadingScreen.id: (context) => LoadingScreen(),
+      },
       theme: ThemeData(
         fontFamily: 'OpenSans',
         scaffoldBackgroundColor: Colors.white,

@@ -1,3 +1,4 @@
+import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/others/constants.dart';
 import 'package:flutter/rendering.dart';
@@ -6,6 +7,8 @@ import 'package:elderly_app/widgets/home_screen_widgets.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const String id = 'Home_Screen';
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -28,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
           GestureDetector(
             onTap: () {
               print('Profile Button Tapped');
+              Navigator.pushNamed(context, ProfileScreen.id);
             },
             child: CircleAvatar(
               radius: 20,

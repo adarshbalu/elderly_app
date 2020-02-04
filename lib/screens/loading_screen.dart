@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingScreen extends StatefulWidget {
+  static const String id = 'Loading_Screen';
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
 }
