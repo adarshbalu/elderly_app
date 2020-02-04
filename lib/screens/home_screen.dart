@@ -19,72 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
     dimensions(screenHeight, screenWidth);
 
     return Scaffold(
-      drawer: Drawer(
-        elevation: 4,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 6,
-              child: ListView(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.all(20.0),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            child:
-                                Image.asset('lib/resources/images/logo.png')),
-                        SizedBox(
-                          width: 20.0,
-                        ),
-                        Text(
-                          'Elderly ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w100,
-                            fontSize: 32.0,
-                          ),
-                        ),
-                        Text(
-                          'Care',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w100,
-                            fontSize: 32.0,
-                            color: Colors.green,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        )
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                  ListButtons(
-                    icon: Icons.assignment,
-                    text: 'Item 1',
-                  ),
-                  ListButtons(
-                    icon: Icons.alarm,
-                    text: 'Item 2',
-                  ),
-                  ListButtons(
-                    icon: Icons.assessment,
-                    text: 'Item 3',
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                Container(
-                  child: Text('Application in Development'),
-                  margin: EdgeInsets.all(20),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+      drawer: AppDrawer(),
       appBar: AppBar(
         title: Text('Elderly Care'),
         centerTitle: true,
@@ -106,10 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: ListView(
+      body: Column(
         children: <Widget>[
           SizedBox(
-            height: 50.0,
+            height: screenHeight * (9 / 100),
           ),
           Row(
             children: <Widget>[
@@ -118,8 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     GestureDetector(
                       child: CardButton(
+                        height: screenHeight * (20 / 100),
+                        width: screenWidth * (35 / 100),
                         icon: FontAwesomeIcons.heartbeat,
-                        size: (screenWidth / 4),
+                        size: screenWidth * (25 / 100),
                         color: Color(0xffD83B36),
                         borderColor: Color(0xffd93b36),
                       ),
@@ -139,8 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     GestureDetector(
                       child: CardButton(
+                        height: screenHeight * (20 / 100),
+                        width: screenWidth * (35 / 100),
                         icon: FontAwesomeIcons.capsules,
-                        size: (screenWidth / 4),
+                        size: screenWidth * (25 / 100),
                         color: Color(0xffE3952D),
                         borderColor: Color(0xffe2932c),
                       ),
@@ -167,8 +106,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     GestureDetector(
                       child: CardButton(
+                        height: screenHeight * (20 / 100),
+                        width: screenWidth * (35 / 100),
                         icon: FontAwesomeIcons.hospital,
-                        size: (screenWidth / 4),
+                        size: screenWidth * (25 / 100),
                         color: Color(0xff3c513d),
                         borderColor: Color(0xff3c513d),
                       ),
@@ -188,8 +129,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     GestureDetector(
                       child: CardButton(
+                        height: screenHeight * (20 / 100),
+                        width: screenWidth * (35 / 100),
                         icon: FontAwesomeIcons.child,
-                        size: (screenWidth / 4),
+                        size: screenWidth * (25 / 100),
                         color: Color(0xffaf5676),
                         borderColor: Color(0xffaf5676),
                       ),
@@ -212,6 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 print('Urgent Tapped');
               },
               child: Container(
+                height: screenHeight * (10 / 100),
                 decoration: BoxDecoration(
                   color: Colors.redAccent,
                   borderRadius: BorderRadius.circular(30),
@@ -235,25 +179,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class ListButtons extends StatelessWidget {
-  String text;
-  var icon;
-  ListButtons({this.text, this.icon});
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        text,
-        style: kDrawerListStyle,
-      ),
-      leading: Icon(
-        icon,
-        size: 37.0,
       ),
     );
   }

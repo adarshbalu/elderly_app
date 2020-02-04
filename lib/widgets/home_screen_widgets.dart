@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 
 class CardButton extends StatelessWidget {
-  var icon, size, color, borderColor;
-  CardButton({this.icon, this.size, this.color, this.borderColor});
+  var icon, size, color, borderColor, height, width;
+  CardButton(
+      {this.icon,
+      this.size,
+      this.color,
+      this.borderColor,
+      this.height,
+      this.width});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 113,
-      width: 131,
+      height: height,
+      width: width,
       decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(20),
