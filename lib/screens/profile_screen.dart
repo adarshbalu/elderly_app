@@ -12,6 +12,14 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    MediaQueryData deviceInfo = MediaQuery.of(context);
+    double screenWidth = deviceInfo.size.width;
+    double screenHeight = deviceInfo.size.height;
+
+    double kTextSize = 19.0;
+    if (screenHeight > 641) {
+      kTextSize = 25.0;
+    }
     return Scaffold(
       drawer: AppDrawer(),
       floatingActionButton: FloatingActionButton(
@@ -24,7 +32,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Color(0xff3c513d),
       ),
       appBar: AppBar(
-        title: Text('Elderly Care'),
+        title: Row(
+          children: <Widget>[
+            Text('Elderly '),
+            Text(
+              'Care',
+              style: TextStyle(color: Colors.green),
+            ),
+          ],
+        ),
         centerTitle: true,
         elevation: 1,
         actions: <Widget>[
@@ -88,23 +104,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ProfileDetails(
             detailName: 'AGE',
             detailValue: '67',
+            textSize: kTextSize,
           ),
           ProfileDetails(
             detailName: 'HEIGHT',
             detailValue: '200',
+            textSize: kTextSize,
           ),
           ProfileDetails(
             detailName: 'WEIGHT',
+            textSize: kTextSize,
             detailValue: '50',
           ),
           ProfileDetails(
+            textSize: kTextSize,
             detailName: 'BLOOD GROUP',
             detailValue: 'O+ve',
           ),
           ProfileDetails(
+            textSize: kTextSize,
             detailName: 'BLOOD PRESSURE',
             detailValue: 'Normal',
           ),
+          SizedBox(
+            height: 25.0,
+          )
         ],
       ),
     );
@@ -113,8 +137,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 class ProfileDetails extends StatelessWidget {
   String detailName, detailValue;
-
-  ProfileDetails({this.detailName, this.detailValue});
+  double textSize;
+  ProfileDetails({this.detailName, this.detailValue, this.textSize});
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +153,7 @@ class ProfileDetails extends StatelessWidget {
         children: <Widget>[
           Text(
             '$detailName : ',
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: textSize, fontWeight: FontWeight.w500),
           ),
           Text(
             '$detailValue',

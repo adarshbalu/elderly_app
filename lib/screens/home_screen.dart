@@ -16,17 +16,23 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     MediaQueryData deviceInfo = MediaQuery.of(context);
-    double factor = 0;
     double screenWidth = deviceInfo.size.width;
     double screenHeight = deviceInfo.size.height;
+
     dimensions(screenHeight, screenWidth);
-    if (screenHeight > 640) {
-      factor = screenHeight * (5 / 100);
-    }
+
     return Scaffold(
       drawer: AppDrawer(),
       appBar: AppBar(
-        title: Text('Elderly Care'),
+        title: Row(
+          children: <Widget>[
+            Text('Elderly '),
+            Text(
+              'Care',
+              style: TextStyle(color: Colors.green),
+            ),
+          ],
+        ),
         centerTitle: true,
         elevation: 1,
         actions: <Widget>[
@@ -48,127 +54,132 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            height: screenHeight * (9 / 100),
+            height: screenHeight * 0.1,
           ),
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      GestureDetector(
-                        child: CardButton(
-                          height: screenHeight * (20 / 100) - factor,
-                          width: screenWidth * (35 / 100),
-                          icon: FontAwesomeIcons.heartbeat,
-                          size: screenWidth * (25 / 100),
-                          color: Color(0xffD83B36),
-                          borderColor: Color(0xffd93b36),
-                        ),
-                        onTap: () {
-                          print('Heartbeat Tapped');
-                        },
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: CardButton(
+                        height: screenHeight * 0.2,
+                        width: screenWidth * (35 / 100),
+                        icon: FontAwesomeIcons.heartbeat,
+                        size: screenWidth * (25 / 100),
+                        color: Color(0xffD83B36),
+                        borderColor: Color(0xffd93b36),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: Text('Check your Heartbeat'),
-                      ),
-                    ],
-                  ),
+                      onTap: () {
+                        print('Heartbeat Tapped');
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text('Check your Heartbeat'),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      GestureDetector(
-                        child: CardButton(
-                          height: screenHeight * (20 / 100) - factor,
-                          width: screenWidth * (35 / 100),
-                          icon: FontAwesomeIcons.capsules,
-                          size: screenWidth * (25 / 100),
-                          color: Color(0xffE3952D),
-                          borderColor: Color(0xffe2932c),
-                        ),
-                        onTap: () {
-                          print('Medicine Tapped');
-                        },
+              ),
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: CardButton(
+                        height: screenHeight * (20 / 100),
+                        width: screenWidth * (35 / 100),
+                        icon: FontAwesomeIcons.capsules,
+                        size: screenWidth * 0.2,
+                        color: Color(0xffE3952D),
+                        borderColor: Color(0xffe2932c),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: Text('Add Medicine Reminder'),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
+                      onTap: () {
+                        print('Medicine Tapped');
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text('Add Medicine Reminder'),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
           SizedBox(
-            height: screenHeight * (7.5 / 100) - factor,
+            height: screenHeight * 0.06,
           ),
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      GestureDetector(
-                        child: CardButton(
-                          height: screenHeight * (20 / 100) - factor,
-                          width: screenWidth * (35 / 100),
-                          icon: FontAwesomeIcons.hospital,
-                          size: screenWidth * (25 / 100),
-                          color: Color(0xff3c513d),
-                          borderColor: Color(0xff3c513d),
-                        ),
-                        onTap: () {
-                          print('Hospital Tapped');
-                        },
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: CardButton(
+                        height: screenHeight * (20 / 100),
+                        width: screenWidth * (35 / 100),
+                        icon: FontAwesomeIcons.hospital,
+                        size: screenWidth * (25 / 100),
+                        color: Color(0xff3c513d),
+                        borderColor: Color(0xff3c513d),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: Text('Locate Nearby Hospital'),
-                      ),
-                    ],
-                  ),
+                      onTap: () {
+                        print('Hospital Tapped');
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text('Locate Nearby Hospital'),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      GestureDetector(
-                        child: CardButton(
-                          height: screenHeight * (20 / 100) - factor,
-                          width: screenWidth * (35 / 100),
-                          icon: FontAwesomeIcons.child,
-                          size: screenWidth * (25 / 100),
-                          color: Color(0xffaf5676),
-                          borderColor: Color(0xffaf5676),
-                        ),
-                        onTap: () {
-                          print('Relatives Tapped');
-                        },
+              ),
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: CardButton(
+                        height: screenHeight * (20 / 100),
+                        width: screenWidth * (35 / 100),
+                        icon: FontAwesomeIcons.child,
+                        size: screenWidth * (25 / 100),
+                        color: Color(0xffaf5676),
+                        borderColor: Color(0xffaf5676),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: Text('Contact Relatives'),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
+                      onTap: () {
+                        print('Relatives Tapped');
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text('Contact Relatives'),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
           SizedBox(
-            height: screenHeight * (5 / 100) - factor,
+            height: screenHeight * (5 / 100),
           ),
-          Expanded(
-            child: RaisedButton(
-              child: Text('Button'),
-              onPressed: () {
-                Navigator.pushNamed(context, ProfileScreen.id);
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                print('Button urgent');
               },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 55.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.redAccent,
+                ),
+                child: Text(
+                  'Urgent',
+                  style: TextStyle(color: Colors.white, fontSize: 20.0),
+                ),
+              ),
             ),
           )
         ],

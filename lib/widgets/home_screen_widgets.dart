@@ -17,7 +17,7 @@ class CardButton extends StatelessWidget {
       width: width,
       decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
               color: borderColor,
@@ -25,7 +25,7 @@ class CardButton extends StatelessWidget {
               offset: Offset(0, 8.0),
             ),
           ]),
-      margin: EdgeInsets.all(10.0),
+      margin: EdgeInsets.all(5.0),
       child: Icon(
         icon,
         size: size,
