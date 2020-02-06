@@ -2,6 +2,7 @@ import 'package:elderly_app/others/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/app_default.dart';
+import 'package:elderly_app/others/functions.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'Profile_Screen';
@@ -12,13 +13,13 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    MediaQueryData deviceInfo = MediaQuery.of(context);
-    double screenWidth = deviceInfo.size.width;
-    double screenHeight = deviceInfo.size.height;
+    double screenWidth = getDeviceWidth(context);
+    double screenHeight = getDeviceHeight(context);
 
-    double kTextSize = 19.0;
+    double kTextSize = 19.0, kValueSize = 18.0;
     if (screenHeight > 641) {
       kTextSize = 25.0;
+      kValueSize = 22.0;
     }
     return Scaffold(
       drawer: AppDrawer(),
@@ -105,25 +106,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
             detailName: 'AGE',
             detailValue: '67',
             textSize: kTextSize,
+            valueSize: kValueSize,
+          ),
+          ProfileDetails(
+            textSize: kTextSize,
+            valueSize: kValueSize,
+            detailName: 'Gender',
+            detailValue: 'Male',
           ),
           ProfileDetails(
             detailName: 'HEIGHT',
             detailValue: '200',
             textSize: kTextSize,
+            valueSize: kValueSize,
           ),
           ProfileDetails(
             detailName: 'WEIGHT',
+            valueSize: kValueSize,
             textSize: kTextSize,
             detailValue: '50',
           ),
           ProfileDetails(
+            valueSize: kValueSize,
             textSize: kTextSize,
             detailName: 'BLOOD GROUP',
             detailValue: 'O+ve',
           ),
           ProfileDetails(
             textSize: kTextSize,
+            valueSize: kValueSize,
             detailName: 'BLOOD PRESSURE',
+            detailValue: 'Normal',
+          ),
+          ProfileDetails(
+            textSize: kTextSize,
+            valueSize: kValueSize,
+            detailName: 'BLOOD Sugar',
             detailValue: 'Normal',
           ),
           SizedBox(
@@ -137,8 +155,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 class ProfileDetails extends StatelessWidget {
   String detailName, detailValue;
-  double textSize;
-  ProfileDetails({this.detailName, this.detailValue, this.textSize});
+  double textSize, valueSize;
+  ProfileDetails(
+      {this.detailName, this.detailValue, this.textSize, this.valueSize});
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +177,7 @@ class ProfileDetails extends StatelessWidget {
           Text(
             '$detailValue',
             style: TextStyle(
-                fontSize: 18.0,
+                fontSize: valueSize,
                 fontWeight: FontWeight.w500,
                 fontStyle: FontStyle.italic),
           )

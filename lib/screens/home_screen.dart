@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:elderly_app/widgets/home_screen_widgets.dart';
 import 'package:elderly_app/widgets/app_default.dart';
+import 'package:elderly_app/screens/contact_relatives_screen.dart';
+import 'package:elderly_app/others/functions.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'Home_Screen';
@@ -15,11 +17,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    MediaQueryData deviceInfo = MediaQuery.of(context);
-    double screenWidth = deviceInfo.size.width;
-    double screenHeight = deviceInfo.size.height;
-
-    dimensions(screenHeight, screenWidth);
+    double screenWidth = getDeviceWidth(context);
+    double screenHeight = getDeviceHeight(context);
 
     return Scaffold(
       drawer: AppDrawer(),
@@ -150,6 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onTap: () {
                         print('Relatives Tapped');
+                        Navigator.pushNamed(context, ContactScreen.id);
                       },
                     ),
                     Padding(
