@@ -6,6 +6,7 @@ import 'package:elderly_app/widgets/home_screen_widgets.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:elderly_app/screens/contact_relatives_screen.dart';
 import 'package:elderly_app/others/functions.dart';
+import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'Home_Screen';
@@ -74,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onTap: () {
                         print('Heartbeat Tapped');
+                        Navigator.pushNamed(context, LoginScreen.id);
                       },
                     ),
                     Padding(
@@ -176,6 +178,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   color: Colors.redAccent,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.red,
+                      blurRadius: 3.0,
+                      offset: Offset(0, 4.0),
+                    ),
+                  ],
                 ),
                 child: Text(
                   'Urgent',

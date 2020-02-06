@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:elderly_app/screens/contact_relatives_screen.dart';
 import 'package:elderly_app/screens/medicine_reminder.dart';
+import 'package:elderly_app/screens/login_screen.dart';
 
 void main() => runApp(ElderlyApp());
 
@@ -20,6 +21,7 @@ class ElderlyApp extends StatelessWidget {
         MedicineReminder.id: (context) => MedicineReminder(),
         LoadingScreen.id: (context) => LoadingScreen(),
         ContactScreen.id: (context) => ContactScreen(),
+        LoginScreen.id: (context) => LoginScreen(),
       },
       theme: ThemeData(
         fontFamily: 'OpenSans',
