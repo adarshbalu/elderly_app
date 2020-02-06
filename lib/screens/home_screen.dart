@@ -1,5 +1,5 @@
+import 'package:elderly_app/screens/medicine_reminder.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
-import 'package:elderly_app/screens/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:elderly_app/widgets/home_screen_widgets.dart';
@@ -24,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: AppDrawer(),
       appBar: AppBar(
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Elderly '),
             Text(
@@ -96,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onTap: () {
                         print('Medicine Tapped');
+                        Navigator.pushNamed(context, MedicineReminder.id);
                       },
                     ),
                     Padding(

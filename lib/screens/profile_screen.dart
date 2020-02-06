@@ -34,6 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       appBar: AppBar(
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Elderly '),
             Text(
