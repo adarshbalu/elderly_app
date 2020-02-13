@@ -28,8 +28,8 @@ dependencies:
   font_awesome_flutter: ^8.5.0
   connectivity: ^0.4.6+2
   flutter_signin_button: ^1.0.0
-  firebase_core: ^0.4.3+3
-  firebase_auth: ^0.15.4
+  #firebase_core: ^0.4.3+3
+  #firebase_auth: ^0.15.4
 
 
 dev_dependencies:

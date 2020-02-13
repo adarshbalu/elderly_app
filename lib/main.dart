@@ -5,6 +5,7 @@ import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:elderly_app/screens/contact_relatives_screen.dart';
 import 'package:elderly_app/screens/medicine_reminder.dart';
 import 'package:elderly_app/screens/login_screen.dart';
+import 'package:elderly_app/screens/profile_edit_screen.dart';
 
 void main() => runApp(ElderlyApp());
 
@@ -22,6 +23,7 @@ class ElderlyApp extends StatelessWidget {
         LoadingScreen.id: (context) => LoadingScreen(),
         ContactScreen.id: (context) => ContactScreen(),
         LoginScreen.id: (context) => LoginScreen(),
+        ProfileEdit.id: (context) => ProfileEdit(),
       },
       theme: ThemeData(
         fontFamily: 'OpenSans',

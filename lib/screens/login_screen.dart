@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'home_screen.dart';
+import 'package:connectivity/connectivity.dart';
+
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,6 +13,18 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+//  @override
+//  initState() async {
+//    super.initState();
+//
+//    var connectivityResult = await (Connectivity().checkConnectivity());
+//    if (connectivityResult == ConnectivityResult.mobile) {
+//      // I am connected to a mobile network.
+//    } else if (connectivityResult == ConnectivityResult.wifi) {
+//      // I am connected to a wifi network.
+//    }
+//  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

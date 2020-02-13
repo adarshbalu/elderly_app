@@ -3,7 +3,7 @@ import 'profile_screen.dart';
 import 'package:elderly_app/others/functions.dart';
 
 class MedicineReminder extends StatefulWidget {
-  static const String id = 'Medicine_Screen';
+  static const String id = 'Medicine_home_screen';
   @override
   _MedicineReminderState createState() => _MedicineReminderState();
 }

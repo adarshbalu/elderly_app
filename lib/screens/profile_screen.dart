@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:elderly_app/others/functions.dart';
+import 'profile_edit_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'Profile_Screen';
@@ -11,6 +12,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String username = 'NameofUser';
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = getDeviceWidth(context);
@@ -21,6 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       kTextSize = 25.0;
       kValueSize = 22.0;
     }
+
     return Scaffold(
       drawer: AppDrawer(),
       floatingActionButton: FloatingActionButton(
@@ -29,6 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         onPressed: () {
           print('Edit Button');
+          Navigator.pushNamed(context, ProfileEdit.id);
         },
         backgroundColor: Color(0xff3c513d),
       ),
@@ -66,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: <Widget>[
           Center(
             child: Padding(
-              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+              padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
               child: CircleAvatar(
                 radius: 50.0,
                 backgroundColor: Color(0xff3c513d),
@@ -80,9 +85,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           Center(
             child: Text(
-              'NameOfUser',
+              username,
               style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w100),
             ),
+          ),
+          SizedBox(
+            height: 10,
           ),
           Center(
             child: Container(
