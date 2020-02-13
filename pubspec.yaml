@@ -33,6 +33,7 @@ dependencies:
   shared_preferences: ^0.5.6+1
   path_provider: ^1.6.0
   sqflite: ^1.2.0
+  intl: ^0.16.1
 
 
 dev_dependencies:
