@@ -30,6 +30,9 @@ dependencies:
   flutter_signin_button: ^1.0.0
   #firebase_core: ^0.4.3+3
   #firebase_auth: ^0.15.4
+  shared_preferences: ^0.5.6+1
+  path_provider: ^1.6.0
+  sqflite: ^1.2.0
 
 
 dev_dependencies:

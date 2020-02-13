@@ -44,18 +44,86 @@ class AppDrawer extends StatelessWidget {
                     ),
                   ),
                   Divider(),
-                  ListButtons(
-                    icon: Icons.assignment,
-                    text: 'Item 1',
+                  InkWell(
+                    onTap: () {
+                      print('Drawer item Tapped');
+                    },
+                    splashColor: Color(0xff3c513d),
+                    child: ListButtons(
+                      icon: Icons.attach_file,
+                      text: 'Add Documents',
+                    ),
                   ),
-                  ListButtons(
-                    icon: Icons.alarm,
-                    text: 'Item 2',
+                  InkWell(
+                    splashColor: Color(0xff3c513d),
+                    onTap: () {
+                      print('Drawer item Tapped');
+                    },
+                    child: ListButtons(
+                      icon: Icons.description,
+                      text: 'View Documents',
+                    ),
                   ),
-                  ListButtons(
-                    icon: Icons.assessment,
-                    text: 'Item 3',
+                  InkWell(
+                    splashColor: Color(0xff3c513d),
+                    onTap: () {
+                      print('Drawer item Tapped');
+                    },
+                    child: ListButtons(
+                      icon: Icons.person_add,
+                      text: 'Add Relatives',
+                    ),
                   ),
+                  InkWell(
+                    splashColor: Color(0xff3c513d),
+                    onTap: () {
+                      print('Drawer item Tapped');
+                    },
+                    child: ListButtons(
+                      icon: Icons.supervisor_account,
+                      text: 'View Relatives',
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      print('Drawer item Tapped');
+                    },
+                    splashColor: Color(0xff3c513d),
+                    child: ListButtons(
+                      icon: Icons.create,
+                      text: 'Add Notes',
+                    ),
+                  ),
+                  InkWell(
+                    splashColor: Color(0xff3c513d),
+                    onTap: () {
+                      print('Drawer item Tapped');
+                    },
+                    child: ListButtons(
+                      icon: Icons.list,
+                      text: 'View Notes',
+                    ),
+                  ),
+                  InkWell(
+                    splashColor: Color(0xff3c513d),
+                    onTap: () {
+                      print('Drawer item Tapped');
+                    },
+                    child: ListButtons(
+                      icon: Icons.local_hospital,
+                      text: 'Appoinment Reminder',
+                    ),
+                  ),
+                  InkWell(
+                    splashColor: Color(0xff3c513d),
+                    onTap: () {
+                      print('Drawer item Tapped');
+                    },
+                    child: ListButtons(
+                      icon: Icons.cancel,
+                      text: 'Close App',
+                    ),
+                  )
                 ],
               ),
             ),
@@ -63,7 +131,7 @@ class AppDrawer extends StatelessWidget {
               children: <Widget>[
                 Container(
                   child: Text('Application in Development'),
-                  margin: EdgeInsets.all(20),
+                  margin: EdgeInsets.only(bottom: 5, left: 20, right: 20),
                 ),
               ],
             ),
@@ -87,6 +155,7 @@ class ListButtons extends StatelessWidget {
       ),
       leading: Icon(
         icon,
+        color: Color(0xff3c513d),
         size: 37.0,
       ),
     );

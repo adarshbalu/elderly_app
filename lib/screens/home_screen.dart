@@ -64,7 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: Column(
                   children: <Widget>[
-                    GestureDetector(
+                    InkWell(
+                      splashColor: Colors.redAccent,
                       child: CardButton(
                         height: screenHeight * 0.2,
                         width: screenWidth * (35 / 100),
@@ -88,7 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: Column(
                   children: <Widget>[
-                    GestureDetector(
+                    InkWell(
+                      splashColor: Colors.yellowAccent,
                       child: CardButton(
                         height: screenHeight * (20 / 100),
                         width: screenWidth * (35 / 100),
@@ -119,7 +121,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: Column(
                   children: <Widget>[
-                    GestureDetector(
+                    InkWell(
+                      splashColor: Colors.green,
                       child: CardButton(
                         height: screenHeight * (20 / 100),
                         width: screenWidth * (35 / 100),
@@ -144,7 +147,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: Column(
                   children: <Widget>[
-                    GestureDetector(
+                    InkWell(
+                      splashColor: Colors.indigo[300],
                       child: CardButton(
                         height: screenHeight * (20 / 100),
                         width: screenWidth * (35 / 100),
