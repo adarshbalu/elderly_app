@@ -9,6 +9,7 @@ import 'package:elderly_app/screens/profile_edit_screen.dart';
 import 'package:elderly_app/screens/note_edit_screen.dart';
 import 'package:elderly_app/screens/note_home_screen.dart';
 import 'screens/reminder_detail.dart';
+import 'screens/nearby_hospital_screen.dart';
 
 void main() => runApp(ElderlyApp());
 
@@ -29,6 +30,7 @@ class ElderlyApp extends StatelessWidget {
         ProfileEdit.id: (context) => ProfileEdit(),
         NoteList.id: (context) => NoteList(),
         ReminderDetail.id: (context) => ReminderDetail(),
+        NearbyHospital.id: (context) => NearbyHospital(),
       },
       theme: ThemeData(
         fontFamily: 'OpenSans',

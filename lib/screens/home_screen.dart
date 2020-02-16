@@ -1,4 +1,5 @@
 import 'package:elderly_app/screens/medicine_reminder.dart';
+import 'package:elderly_app/screens/nearby_hospital_screen.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,6 +8,8 @@ import 'package:elderly_app/widgets/app_default.dart';
 import 'package:elderly_app/screens/contact_relatives_screen.dart';
 import 'package:elderly_app/others/functions.dart';
 import 'login_screen.dart';
+import 'nearby_hospital_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'Home_Screen';
@@ -16,6 +19,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final _auth = FirebaseAuth.instance;
+  FirebaseUser loggedInUser;
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = getDeviceWidth(context);
@@ -54,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: ListView(
         children: <Widget>[
           SizedBox(
             height: screenHeight * 0.1,
@@ -133,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onTap: () {
                         print('Hospital Tapped');
+                        Navigator.pushNamed(context, NearbyHospital.id);
                       },
                     ),
                     Padding(
@@ -202,6 +215,18 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  void getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser();
+      if (user != null) {
+        loggedInUser = user;
+        print(loggedInUser.email);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }
 

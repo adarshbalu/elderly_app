@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "733391842518",
+    "firebase_url": "https://digital-hall-267416.firebaseio.com",
+    "project_id": "digital-hall-267416",
+    "storage_bucket": "digital-hall-267416.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733391842518:android:a733bd98b23dcc602b6d77",
+        "android_client_info": {
+          "package_name": "app.csminiproject.elderly_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733391842518-il83g0kjo44ls2hebm3gajcsc6reh1ep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcii32v6rBVRpt0VehwKN6vrMUCoxJ72A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733391842518-il83g0kjo44ls2hebm3gajcsc6reh1ep.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

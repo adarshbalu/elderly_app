@@ -1,6 +1,8 @@
 import 'package:elderly_app/screens/note_home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/others/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:elderly_app/screens/note_edit_screen.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -119,9 +121,7 @@ class AppDrawer extends StatelessWidget {
                   ),
                   InkWell(
                     splashColor: Color(0xff3c513d),
-                    onTap: () {
-                      print('Drawer item Tapped');
-                    },
+                    onTap: () {},
                     child: ListButtons(
                       icon: Icons.cancel,
                       text: 'Close App',
