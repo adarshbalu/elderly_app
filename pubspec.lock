@@ -490,6 +490,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  sweet_alert_dialogs:
+    dependency: "direct main"
+    description:
+      name: sweet_alert_dialogs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   synchronized:
     dependency: transitive
     description:

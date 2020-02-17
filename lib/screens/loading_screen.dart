@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoadingScreen extends StatefulWidget {
   static const String id = 'Loading_Screen';
@@ -17,11 +18,23 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(duration, () {
-      Navigator.pushNamed(context, LoginScreen.id);
+    getUser().then((user) {
+      if (user != null) {
+        Navigator.pushNamed(context, HomeScreen.id);
+      } else {
+        Future.delayed(duration, () {
+          Navigator.pushNamed(context, LoginScreen.id);
+        });
+      }
     });
   }
 
+  final _auth = FirebaseAuth.instance;
+  Future<FirebaseUser> getUser() async {
+    return await _auth.currentUser();
+  }
+
+  bool showSpinner = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

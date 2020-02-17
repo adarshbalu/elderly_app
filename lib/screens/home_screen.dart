@@ -2,6 +2,7 @@ import 'package:elderly_app/screens/medicine_reminder.dart';
 import 'package:elderly_app/screens/nearby_hospital_screen.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:elderly_app/widgets/home_screen_widgets.dart';
 import 'package:elderly_app/widgets/app_default.dart';
@@ -10,6 +11,8 @@ import 'package:elderly_app/others/functions.dart';
 import 'login_screen.dart';
 import 'nearby_hospital_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
+import 'dart:io';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'Home_Screen';
@@ -66,153 +69,181 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: screenHeight * 0.1,
-          ),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  children: <Widget>[
-                    InkWell(
-                      splashColor: Colors.redAccent,
-                      child: CardButton(
-                        height: screenHeight * 0.2,
-                        width: screenWidth * (35 / 100),
-                        icon: FontAwesomeIcons.heartbeat,
-                        size: screenWidth * (25 / 100),
-                        color: Color(0xffD83B36),
-                        borderColor: Color(0xffd93b36),
-                      ),
-                      onTap: () {
-                        print('Heartbeat Tapped');
-                        Navigator.pushNamed(context, LoginScreen.id);
+      body: WillPopScope(
+        onWillPop: () async {
+          return showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return RichAlertDialog(
+                  alertTitle: richTitle("Exit the App"),
+                  alertSubtitle: richSubtitle('Are you Sure '),
+                  alertType: RichAlertType.WARNING,
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text("Yes"),
+                      onPressed: () {
+                        SystemNavigator.pop();
                       },
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Text('Check your Heartbeat'),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  children: <Widget>[
-                    InkWell(
-                      splashColor: Colors.yellowAccent,
-                      child: CardButton(
-                        height: screenHeight * (20 / 100),
-                        width: screenWidth * (35 / 100),
-                        icon: FontAwesomeIcons.capsules,
-                        size: screenWidth * 0.2,
-                        color: Color(0xffE3952D),
-                        borderColor: Color(0xffe2932c),
-                      ),
-                      onTap: () {
-                        print('Medicine Tapped');
-                        Navigator.pushNamed(context, MedicineReminder.id);
+                    FlatButton(
+                      child: Text("No"),
+                      onPressed: () {
+                        Navigator.pop(context);
                       },
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Text('Add Medicine Reminder'),
-                    )
                   ],
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: screenHeight * 0.06,
-          ),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  children: <Widget>[
-                    InkWell(
-                      splashColor: Colors.green,
-                      child: CardButton(
-                        height: screenHeight * (20 / 100),
-                        width: screenWidth * (35 / 100),
-                        icon: FontAwesomeIcons.hospital,
-                        size: screenWidth * (25 / 100),
-                        color: Color(0xff3c513d),
-                        borderColor: Color(0xff3c513d),
-                      ),
-                      onTap: () {
-                        print('Hospital Tapped');
-                        Navigator.pushNamed(context, NearbyHospital.id);
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        'Locate Nearby Hospital',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  children: <Widget>[
-                    InkWell(
-                      splashColor: Colors.indigo[300],
-                      child: CardButton(
-                        height: screenHeight * (20 / 100),
-                        width: screenWidth * (35 / 100),
-                        icon: FontAwesomeIcons.child,
-                        size: screenWidth * (25 / 100),
-                        color: Color(0xffaf5676),
-                        borderColor: Color(0xffaf5676),
-                      ),
-                      onTap: () {
-                        print('Relatives Tapped');
-                        Navigator.pushNamed(context, ContactScreen.id);
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Text('Contact Relatives'),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: screenHeight * (5 / 100),
-          ),
-          Center(
-            child: GestureDetector(
-              onTap: () {
-                print('Button urgent');
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 55.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Colors.redAccent,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.red,
-                      blurRadius: 3.0,
-                      offset: Offset(0, 4.0),
-                    ),
-                  ],
-                ),
-                child: Text(
-                  'Urgent',
-                  style: TextStyle(color: Colors.white, fontSize: 20.0),
-                ),
-              ),
+                );
+              });
+        },
+        child: ListView(
+          children: <Widget>[
+            SizedBox(
+              height: screenHeight * 0.1,
             ),
-          )
-        ],
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      InkWell(
+                        splashColor: Colors.redAccent,
+                        child: CardButton(
+                          height: screenHeight * 0.2,
+                          width: screenWidth * (35 / 100),
+                          icon: FontAwesomeIcons.heartbeat,
+                          size: screenWidth * (25 / 100),
+                          color: Color(0xffD83B36),
+                          borderColor: Color(0xffd93b36),
+                        ),
+                        onTap: () {
+                          print('Heartbeat Tapped');
+                          Navigator.pushNamed(context, LoginScreen.id);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text('Check your Heartbeat'),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      InkWell(
+                        splashColor: Colors.yellowAccent,
+                        child: CardButton(
+                          height: screenHeight * (20 / 100),
+                          width: screenWidth * (35 / 100),
+                          icon: FontAwesomeIcons.capsules,
+                          size: screenWidth * 0.2,
+                          color: Color(0xffE3952D),
+                          borderColor: Color(0xffe2932c),
+                        ),
+                        onTap: () {
+                          print('Medicine Tapped');
+                          Navigator.pushNamed(context, MedicineReminder.id);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text('Add Medicine Reminder'),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: screenHeight * 0.06,
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      InkWell(
+                        splashColor: Colors.green,
+                        child: CardButton(
+                          height: screenHeight * (20 / 100),
+                          width: screenWidth * (35 / 100),
+                          icon: FontAwesomeIcons.hospital,
+                          size: screenWidth * (25 / 100),
+                          color: Color(0xff3c513d),
+                          borderColor: Color(0xff3c513d),
+                        ),
+                        onTap: () {
+                          print('Hospital Tapped');
+                          Navigator.pushNamed(context, NearbyHospital.id);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          'Locate Nearby Hospital',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      InkWell(
+                        splashColor: Colors.indigo[300],
+                        child: CardButton(
+                          height: screenHeight * (20 / 100),
+                          width: screenWidth * (35 / 100),
+                          icon: FontAwesomeIcons.child,
+                          size: screenWidth * (25 / 100),
+                          color: Color(0xffaf5676),
+                          borderColor: Color(0xffaf5676),
+                        ),
+                        onTap: () {
+                          print('Relatives Tapped');
+                          Navigator.pushNamed(context, ContactScreen.id);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text('Contact Relatives'),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: screenHeight * (5 / 100),
+            ),
+            Center(
+              child: GestureDetector(
+                onTap: () {
+                  print('Button urgent');
+                },
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 15.0, horizontal: 55.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.redAccent,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.red,
+                        blurRadius: 3.0,
+                        offset: Offset(0, 4.0),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    'Urgent',
+                    style: TextStyle(color: Colors.white, fontSize: 20.0),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

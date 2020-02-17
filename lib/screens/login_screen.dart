@@ -5,6 +5,7 @@ import 'package:flutter_signin_button/button_builder.dart';
 import 'home_screen.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'Login_Screen';
@@ -73,6 +74,23 @@ class _LoginScreenState extends State<LoginScreen> {
 //  }
 //
 //  bool tap = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getUser().then((user) {
+      if (user != null) {
+        setState(() {
+          showSpinner = !showSpinner;
+        });
+        Navigator.pushNamed(context, HomeScreen.id);
+      }
+    });
+  }
+
+  Future<FirebaseUser> getUser() async {
+    return await _lauth.currentUser();
+  }
 
   bool login = true;
   final emailController = new TextEditingController();
@@ -160,10 +178,41 @@ class _LoginScreenState extends State<LoginScreen> {
                                       await _lauth.signInWithEmailAndPassword(
                                           email: email, password: password);
                                   if (newUser != null) {
+                                    setState(() {
+                                      showSpinner = !showSpinner;
+                                    });
                                     Navigator.pushNamed(context, HomeScreen.id);
+                                  } else {
+                                    setState(() {
+                                      showSpinner = !showSpinner;
+                                    });
                                   }
                                 } catch (e) {
+                                  setState(() {
+                                    showSpinner = !showSpinner;
+                                  });
+
                                   print(e);
+
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return RichAlertDialog(
+                                          alertTitle:
+                                              richTitle("Some Error Occured"),
+                                          alertSubtitle:
+                                              richSubtitle('Please try again'),
+                                          alertType: RichAlertType.ERROR,
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text("OK"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      });
                                 }
                               }),
                         ],
@@ -204,10 +253,41 @@ class _LoginScreenState extends State<LoginScreen> {
                                       .createUserWithEmailAndPassword(
                                           email: email, password: password);
                                   if (user != null) {
+                                    setState(() {
+                                      showSpinner = !showSpinner;
+                                    });
                                     Navigator.pushNamed(context, HomeScreen.id);
+                                  } else {
+                                    setState(() {
+                                      showSpinner = !showSpinner;
+                                    });
                                   }
                                 } catch (e) {
+                                  setState(() {
+                                    showSpinner = !showSpinner;
+                                  });
+
                                   print(e);
+
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return RichAlertDialog(
+                                          alertTitle:
+                                              richTitle("Some Error Occured"),
+                                          alertSubtitle:
+                                              richSubtitle('Please try again'),
+                                          alertType: RichAlertType.ERROR,
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text("OK"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      });
                                 }
                               }),
                         ],
@@ -338,28 +418,3 @@ class EmailTextField extends StatelessWidget {
     );
   }
 }
-
-//Column(
-//children: <Widget>[
-//EmailTextField(
-//editingController: loginController,
-//helperText: 'Enter Valid E-mail Address',
-//hintText: 'Enter E-mail ',
-//),
-//PasswordTextField(
-//editingController: loginController,
-//helperText: 'Enter Minimum 6 Characters',
-//hintText: 'Enter Password',
-//),
-//FlatButton(
-//padding: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
-//color: Colors.grey.shade200,
-//splashColor: Colors.white,
-//child: Text(
-//'Login',
-//style: TextStyle(fontSize: 20),
-//),
-//onPressed: () {},
-//),
-//],
-//),

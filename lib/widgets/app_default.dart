@@ -2,8 +2,13 @@ import 'package:elderly_app/screens/note_home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/others/constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:elderly_app/screens/note_edit_screen.dart';
+import 'package:elderly_app/screens/loading_screen.dart';
+
+final auth = FirebaseAuth.instance;
+final user = FirebaseUser;
+Future<FirebaseUser> getUser() async {
+  return await auth.currentUser();
+}
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -121,10 +126,13 @@ class AppDrawer extends StatelessWidget {
                   ),
                   InkWell(
                     splashColor: Color(0xff3c513d),
-                    onTap: () {},
+                    onTap: () async {
+                      await auth.signOut();
+                      Navigator.pushNamed(context, LoadingScreen.id);
+                    },
                     child: ListButtons(
                       icon: Icons.cancel,
-                      text: 'Close App',
+                      text: 'Log Out',
                     ),
                   )
                 ],

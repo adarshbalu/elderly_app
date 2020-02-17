@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:elderly_app/others/functions.dart';
 import 'profile_edit_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'Profile_Screen';
@@ -13,6 +14,25 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String username = 'NameofUser';
+
+  final _auth = FirebaseAuth.instance;
+
+  FirebaseUser loggedInUser;
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser();
+      loggedInUser = user;
+      username = loggedInUser.displayName;
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
