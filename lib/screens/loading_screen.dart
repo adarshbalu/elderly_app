@@ -13,20 +13,21 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  Duration duration = Duration(seconds: 5);
+  Duration duration = Duration(seconds: 3);
 
   @override
   void initState() {
-    super.initState();
     getUser().then((user) {
       if (user != null) {
-        Navigator.pushNamed(context, HomeScreen.id);
-      } else {
-        Future.delayed(duration, () {
-          Navigator.pushNamed(context, LoginScreen.id);
-        });
+        Navigator.pushReplacementNamed(context, HomeScreen.id);
       }
     });
+
+    Future.delayed(duration, () {
+      Navigator.pushReplacementNamed(context, LoginScreen.id);
+    });
+
+    super.initState();
   }
 
   final _auth = FirebaseAuth.instance;
@@ -39,57 +40,62 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 4,
-            child: Hero(
-              child: Image.asset('lib/resources/images/loadingimage.jpg'),
-              tag: 'logo',
+      body: WillPopScope(
+        onWillPop: () async {
+          return await Future.value(false);
+        },
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              flex: 4,
+              child: Hero(
+                child: Image.asset('lib/resources/images/loadingimage.jpg'),
+                tag: 'logo',
+              ),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Elderly ',
-                  style: TextStyle(
-                    fontSize: 30.0,
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Elderly ',
+                    style: TextStyle(
+                      fontSize: 30.0,
+                    ),
                   ),
-                ),
-                Text(
-                  'Care',
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontSize: 30.0,
+                  Text(
+                    'Care',
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 30.0,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.only(left: 20, right: 20),
-              child: Text(
-                'Some Catchy Slogan for the app',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w100,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(left: 20, right: 20),
+                child: Text(
+                  'Some Catchy Slogan for the app',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w100,
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: SpinKitFadingCube(
-              color: Colors.greenAccent,
-              size: 50.0,
-            ),
-          )
-        ],
+            Expanded(
+              flex: 1,
+              child: SpinKitFadingCube(
+                color: Colors.greenAccent,
+                size: 50.0,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -28,7 +28,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final user = await _auth.currentUser();
       loggedInUser = user;
-      username = loggedInUser.displayName;
+//      if (loggedInUser.displayName != null) {
+//        username = loggedInUser.displayName.toString();
+//      }
     } catch (e) {
       print(e);
     }
@@ -105,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           Center(
             child: Text(
-              username,
+              'user',
               style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w100),
             ),
           ),

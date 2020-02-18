@@ -1,3 +1,4 @@
+import 'package:elderly_app/screens/initial_setup_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -105,6 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: SizedBox(),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -120,212 +122,221 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         elevation: 1,
       ),
-      body: ModalProgressHUD(
-        inAsyncCall: showSpinner,
-        child: Container(
-          child: Center(
-            child: ListView(
-              children: <Widget>[
-                Container(
-                  height: 190,
-                  padding: EdgeInsets.all(10),
-                  child: Hero(
-                      tag: 'logo',
-                      child:
-                          Image.asset('lib/resources/images/loadingimage.jpg')),
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
-                  child: Text(
-                    'To Continue Please Sign in to the app.',
-                    textAlign: TextAlign.center,
+      body: WillPopScope(
+        onWillPop: () async {
+          return await Future.value(false);
+        },
+        child: ModalProgressHUD(
+          inAsyncCall: showSpinner,
+          child: Container(
+            child: Center(
+              child: ListView(
+                children: <Widget>[
+                  Container(
+                    height: 190,
+                    padding: EdgeInsets.all(10),
+                    child: Hero(
+                        tag: 'logo',
+                        child: Image.asset(
+                            'lib/resources/images/loadingimage.jpg')),
                   ),
-                ),
-                login
-                    ? Column(
-                        children: <Widget>[
-                          EmailTextField(
-                            editingController: emailController,
-                            helperText: 'Enter Valid E-mail Address',
-                            hintText: 'Enter E-mail ',
-                            emailGetter: (value) {
-                              email = value;
-                            },
-                          ),
-                          PasswordTextField(
-                            editingController: passwordController,
-                            helperText: 'Enter Minimum 6 Characters',
-                            hintText: 'Enter Password',
-                            passwordGetter: (value) {
-                              password = value;
-                            },
-                          ),
-                          FlatButton(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 50),
-                              color: Colors.grey.shade200,
-                              splashColor: Colors.white,
-                              child: Text(
-                                'Login',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              onPressed: () async {
-                                setState(() {
-                                  showSpinner = !showSpinner;
-                                });
-                                try {
-                                  final newUser =
-                                      await _lauth.signInWithEmailAndPassword(
-                                          email: email, password: password);
-                                  if (newUser != null) {
-                                    setState(() {
-                                      showSpinner = !showSpinner;
-                                    });
-                                    Navigator.pushNamed(context, HomeScreen.id);
-                                  } else {
-                                    setState(() {
-                                      showSpinner = !showSpinner;
-                                    });
-                                  }
-                                } catch (e) {
+                  Container(
+                    margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                    child: Text(
+                      'To Continue Please Sign in to the app.',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  login
+                      ? Column(
+                          children: <Widget>[
+                            EmailTextField(
+                              editingController: emailController,
+                              helperText: 'Enter Valid E-mail Address',
+                              hintText: 'Enter E-mail ',
+                              emailGetter: (value) {
+                                email = value;
+                              },
+                            ),
+                            PasswordTextField(
+                              editingController: passwordController,
+                              helperText: 'Enter Minimum 6 Characters',
+                              hintText: 'Enter Password',
+                              passwordGetter: (value) {
+                                password = value;
+                              },
+                            ),
+                            FlatButton(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 50),
+                                color: Colors.grey.shade200,
+                                splashColor: Colors.white,
+                                child: Text(
+                                  'Login',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                onPressed: () async {
                                   setState(() {
                                     showSpinner = !showSpinner;
                                   });
-
-                                  print(e);
-
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return RichAlertDialog(
-                                          alertTitle:
-                                              richTitle("Some Error Occured"),
-                                          alertSubtitle:
-                                              richSubtitle('Please try again'),
-                                          alertType: RichAlertType.ERROR,
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              child: Text("OK"),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          ],
-                                        );
+                                  try {
+                                    final newUser =
+                                        await _lauth.signInWithEmailAndPassword(
+                                            email: email, password: password);
+                                    if (newUser != null) {
+                                      setState(() {
+                                        showSpinner = !showSpinner;
                                       });
-                                }
-                              }),
-                        ],
-                      )
-                    : Column(
-                        children: <Widget>[
-                          EmailTextField(
-                            editingController: emailController,
-                            helperText: 'Enter Valid E-mail Address',
-                            hintText: 'Enter E-mail ',
-                            emailGetter: (value) {
-                              email = value;
-                            },
-                          ),
-                          PasswordTextField(
-                            editingController: passwordController,
-                            helperText: 'Enter Minimum 6 Characters',
-                            hintText: 'Enter Password',
-                            passwordGetter: (value) {
-                              password = value;
-                            },
-                          ),
-                          FlatButton(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 50),
-                              color: Colors.grey.shade200,
-                              splashColor: Colors.white,
-                              child: Text(
-                                'Register',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              onPressed: () async {
-                                setState(() {
-                                  showSpinner = !showSpinner;
-                                });
-                                try {
-                                  final user = await _rauth
-                                      .createUserWithEmailAndPassword(
-                                          email: email, password: password);
-                                  if (user != null) {
+                                      Navigator.pushNamed(
+                                          context, HomeScreen.id);
+                                    } else {
+                                      setState(() {
+                                        showSpinner = !showSpinner;
+                                      });
+                                    }
+                                  } catch (e) {
                                     setState(() {
                                       showSpinner = !showSpinner;
                                     });
-                                    Navigator.pushNamed(context, HomeScreen.id);
-                                  } else {
-                                    setState(() {
-                                      showSpinner = !showSpinner;
-                                    });
+
+                                    print(e);
+
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return RichAlertDialog(
+                                            alertTitle:
+                                                richTitle("Some Error Occured"),
+                                            alertSubtitle: richSubtitle(
+                                                'Please try again'),
+                                            alertType: RichAlertType.ERROR,
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                child: Text("OK"),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        });
                                   }
-                                } catch (e) {
+                                }),
+                          ],
+                        )
+                      : Column(
+                          children: <Widget>[
+                            EmailTextField(
+                              editingController: emailController,
+                              helperText: 'Enter Valid E-mail Address',
+                              hintText: 'Enter E-mail ',
+                              emailGetter: (value) {
+                                email = value;
+                              },
+                            ),
+                            PasswordTextField(
+                              editingController: passwordController,
+                              helperText: 'Enter Minimum 6 Characters',
+                              hintText: 'Enter Password',
+                              passwordGetter: (value) {
+                                password = value;
+                              },
+                            ),
+                            FlatButton(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 50),
+                                color: Colors.grey.shade200,
+                                splashColor: Colors.white,
+                                child: Text(
+                                  'Register',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                onPressed: () async {
                                   setState(() {
                                     showSpinner = !showSpinner;
                                   });
-
-                                  print(e);
-
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return RichAlertDialog(
-                                          alertTitle:
-                                              richTitle("Some Error Occured"),
-                                          alertSubtitle:
-                                              richSubtitle('Please try again'),
-                                          alertType: RichAlertType.ERROR,
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              child: Text("OK"),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          ],
-                                        );
+                                  try {
+                                    final user = await _rauth
+                                        .createUserWithEmailAndPassword(
+                                            email: email, password: password);
+                                    if (user != null) {
+                                      setState(() {
+                                        showSpinner = !showSpinner;
                                       });
-                                }
-                              }),
-                        ],
-                      ),
-                SizedBox(
-                  height: 10,
-                ),
-                login
-                    ? Padding(
-                        padding: const EdgeInsets.only(left: 30.0, right: 30.0),
-                        child: SignInButtonBuilder(
-                          text: 'Register to ElderlyCare',
-                          icon: Icons.person_add,
-                          onPressed: () {
-                            setState(() {
-                              login = !login;
-                            });
-                          },
-                          backgroundColor: Colors.blueGrey[700],
+                                      Navigator.pushReplacementNamed(
+                                          context, InitialSetupScreen.id);
+                                    } else {
+                                      setState(() {
+                                        showSpinner = !showSpinner;
+                                      });
+                                    }
+                                  } catch (e) {
+                                    setState(() {
+                                      showSpinner = !showSpinner;
+                                    });
+
+                                    print(e);
+
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return RichAlertDialog(
+                                            alertTitle:
+                                                richTitle("Some Error Occured"),
+                                            alertSubtitle: richSubtitle(
+                                                'Please try again'),
+                                            alertType: RichAlertType.ERROR,
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                child: Text("OK"),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }
+                                }),
+                          ],
                         ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(left: 30.0, right: 30.0),
-                        child: SignInButtonBuilder(
-                          text: 'Login to ElderlyCare',
-                          icon: Icons.person,
-                          onPressed: () {
-                            setState(() {
-                              login = !login;
-                            });
-                          },
-                          backgroundColor: Colors.blueGrey[700],
+                  SizedBox(
+                    height: 10,
+                  ),
+                  login
+                      ? Padding(
+                          padding:
+                              const EdgeInsets.only(left: 30.0, right: 30.0),
+                          child: SignInButtonBuilder(
+                            text: 'Register to ElderlyCare',
+                            icon: Icons.person_add,
+                            onPressed: () {
+                              setState(() {
+                                login = !login;
+                              });
+                            },
+                            backgroundColor: Colors.blueGrey[700],
+                          ),
+                        )
+                      : Padding(
+                          padding:
+                              const EdgeInsets.only(left: 30.0, right: 30.0),
+                          child: SignInButtonBuilder(
+                            text: 'Login to ElderlyCare',
+                            icon: Icons.person,
+                            onPressed: () {
+                              setState(() {
+                                login = !login;
+                              });
+                            },
+                            backgroundColor: Colors.blueGrey[700],
+                          ),
                         ),
-                      ),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                )
-              ],
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                  )
+                ],
+              ),
             ),
           ),
         ),

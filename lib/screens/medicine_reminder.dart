@@ -11,6 +11,7 @@ class MedicineReminder extends StatefulWidget {
 
 class _MedicineReminderState extends State<MedicineReminder> {
   int rem_count = 0;
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = getDeviceWidth(context);
