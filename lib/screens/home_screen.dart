@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 8.0),
-                        child: Text('Check your Heartbeat'),
+                        child: Text('Check your Heartrate'),
                       ),
                     ],
                   ),
