@@ -10,7 +10,7 @@ class MedicineReminder extends StatefulWidget {
 }
 
 class _MedicineReminderState extends State<MedicineReminder> {
-  int rem_count = 0;
+  int rem_count = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
                   child: Container(
                     margin: EdgeInsets.all(20),
                     child: Text(
-                      'Medicine Reminder',
+                      'Medicine Reminders',
                       style: TextStyle(
                           fontSize: 32,
                           color: Color(0xffE3952D),
