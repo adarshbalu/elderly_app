@@ -15,67 +15,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-//  @override
-//  initState() async {
-//    super.initState();
-//
-//    var connectivityResult = await (Connectivity().checkConnectivity());
-//    if (connectivityResult == ConnectivityResult.mobile) {
-//      // I am connected to a mobile network.
-//    } else if (connectivityResult == ConnectivityResult.wifi) {
-//      // I am connected to a wifi network.
-//    }
-//  }
-//  final phoneNumController = TextEditingController();
-//  String _smsVerificationCode;
-//
-//  _verifyPhoneNumber(BuildContext context) async {
-//    print('Caleed');
-//    String phoneNumber = "+1" + phoneNumController.text.toString();
-//    final FirebaseAuth _auth = FirebaseAuth.instance;
-//    await _auth.verifyPhoneNumber(
-//        phoneNumber: phoneNumber,
-//        timeout: Duration(seconds: 5),
-//        verificationCompleted: (authCredential) =>
-//            _verificationComplete(authCredential, context),
-//        verificationFailed: (authException) =>
-//            _verificationFailed(authException, context),
-//        codeAutoRetrievalTimeout: (verificationId) =>
-//            _codeAutoRetrievalTimeout(verificationId),
-//        // called when the SMS code is sent
-//        codeSent: (verificationId, [code]) =>
-//            _smsCodeSent(verificationId, [code]));
-//  }
-//
-//  _verificationComplete(AuthCredential authCredential, BuildContext context) {
-//    FirebaseAuth.instance
-//        .signInWithCredential(authCredential)
-//        .then((authResult) {
-//      final snackBar =
-//          SnackBar(content: Text("Success!!! UUID is: " + authResult.user.uid));
-//      Scaffold.of(context).showSnackBar(snackBar);
-//    });
-//  }
-//
-//  _smsCodeSent(String verificationId, List<int> code) {
-//    // set the verification code so that we can use it to log the user in
-//    _smsVerificationCode = verificationId;
-//  }
-//
-//  _verificationFailed(AuthException authException, BuildContext context) {
-//    final snackBar = SnackBar(
-//        content:
-//            Text("Exception!! message:" + authException.message.toString()));
-//    Scaffold.of(context).showSnackBar(snackBar);
-//  }
-//
-//  _codeAutoRetrievalTimeout(String verificationId) {
-////    // set the verification code so that we can use it to log the user in
-//    _smsVerificationCode = verificationId;
-//  }
-//
-//  bool tap = false;
-
   @override
   void initState() {
     super.initState();
@@ -133,8 +72,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: ListView(
                 children: <Widget>[
                   Container(
-                    height: 190,
-                    padding: EdgeInsets.all(10),
+                    height: 170,
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                     child: Hero(
                         tag: 'logo',
                         child: Image.asset(
@@ -147,6 +86,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       textAlign: TextAlign.center,
                     ),
                   ),
+                  Center(
+                      child: login
+                          ? Container(
+                              child: Text(
+                                'Login',
+                                style: TextStyle(
+                                    fontSize: 30, color: Colors.green),
+                              ),
+                            )
+                          : Container(
+                              child: Text(
+                                'Register',
+                                style: TextStyle(
+                                    fontSize: 30, color: Colors.greenAccent),
+                              ),
+                            )),
                   login
                       ? Column(
                           children: <Widget>[

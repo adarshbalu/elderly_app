@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'profile_screen.dart';
+import 'home_screen.dart';
 
 class InitialSetupScreen extends StatefulWidget {
   static const String id = 'Initial_Screen';
@@ -89,6 +90,11 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
             TextInputField(),
             TextInputField(),
             TextInputField(),
+            FlatButton(
+              onPressed: () {
+                Navigator.pushNamed(context, HomeScreen.id);
+              },
+            )
           ],
         ),
       ),
