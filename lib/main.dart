@@ -11,6 +11,7 @@ import 'package:elderly_app/screens/note_home_screen.dart';
 import 'screens/reminder_detail.dart';
 import 'screens/nearby_hospital_screen.dart';
 import 'screens/initial_setup_screen.dart';
+import 'screens/edit_relatives.dart';
 
 void main() => runApp(ElderlyApp());
 
@@ -33,6 +34,7 @@ class ElderlyApp extends StatelessWidget {
         ReminderDetail.id: (context) => ReminderDetail(),
         NearbyHospital.id: (context) => NearbyHospital(),
         InitialSetupScreen.id: (context) => InitialSetupScreen(),
+        EditRelativesScreen.id: (context) => EditRelativesScreen()
       },
       theme: ThemeData(
         fontFamily: 'OpenSans',

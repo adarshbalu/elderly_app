@@ -1,7 +1,9 @@
+import 'package:elderly_app/others/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/home_screen_widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 import 'package:place_picker/place_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -32,11 +34,14 @@ class _ContactScreenState extends State<ContactScreen> {
 
   void showPlacePicker(BuildContext context) async {
     LatLng customLocation;
+    Location location = Location();
+    await location.getLocation();
 
+//customLocation=LatLng();
     LocationResult result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => PlacePicker(
-          "AIzaSyBRSjFpkj9vWq4ETzy-mG5fCmhleGPdmnY",
+          kApi,
           displayLocation: customLocation,
         ),
       ),

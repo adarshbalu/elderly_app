@@ -9,3 +9,5 @@ final kDrawerListStyle = TextStyle(
   fontSize: 20.0,
   fontWeight: FontWeight.w500,
 );
+
+final String kApi = 'AIzaSyBRSjFpkj9vWq4ETzy-mG5fCmhleGPdmnY';

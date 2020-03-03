@@ -13,6 +13,7 @@ import 'nearby_hospital_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'dart:io';
+import 'edit_relatives.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'Home_Screen';
