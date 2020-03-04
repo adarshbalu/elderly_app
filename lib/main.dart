@@ -12,8 +12,12 @@ import 'screens/reminder_detail.dart';
 import 'screens/nearby_hospital_screen.dart';
 import 'screens/initial_setup_screen.dart';
 import 'screens/edit_relatives.dart';
+import 'resources/service_locator.dart';
 
-void main() => runApp(ElderlyApp());
+void main() {
+  setupLocator();
+  runApp(ElderlyApp());
+}
 
 class ElderlyApp extends StatelessWidget {
   @override

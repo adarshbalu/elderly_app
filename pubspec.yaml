@@ -47,6 +47,8 @@ dependencies:
   flutter_material_pickers: ^1.2.0
   image_picker: ^0.6.3+4
   permission_handler: ^4.3.0
+  url_launcher: ^5.4.2
+  get_it:
 
 
 

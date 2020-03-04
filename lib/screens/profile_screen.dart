@@ -198,7 +198,7 @@ class ProfileDetails extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       padding: EdgeInsets.all(21.0),
-      margin: EdgeInsets.only(right: 15, left: 15, top: 18),
+      margin: EdgeInsets.only(right: 1, left: 10, top: 18),
       child: Row(
         children: <Widget>[
           Text(
