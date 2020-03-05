@@ -218,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       setState(() {
                                         showSpinner = !showSpinner;
                                       });
-                                      Navigator.pushReplacementNamed(
+                                      Navigator.pushNamed(
                                           context, InitialSetupScreen.id);
                                     } else {
                                       setState(() {

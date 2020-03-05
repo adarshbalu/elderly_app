@@ -1,12 +1,14 @@
-import 'package:elderly_app/others/constants.dart';
+import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
-import 'package:elderly_app/widgets/home_screen_widgets.dart';
+import 'package:flutter_sms/flutter_sms.dart' as sms;
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 import 'profile_screen.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:get_it/get_it.dart';
 import '../resources/call_and_messages.dart';
-import '../resources/service_locator.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'dart:convert';
+import 'package:sms/contact.dart';
+import 'package:flutter_beautiful_popup/main.dart';
 
 class ContactScreen extends StatefulWidget {
   static const String id = 'Contact_Screen';
@@ -16,24 +18,77 @@ class ContactScreen extends StatefulWidget {
 
 class _ContactScreenState extends State<ContactScreen> {
   GetIt locator = GetIt.instance;
+  double latitude, longitude;
+  String messageText = '';
+  String username = 'user';
+  void getLatLong() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    latitude = position.latitude;
+    longitude = position.longitude;
+  }
+
+  void getContactDetails() async {
+    UserProfile profile = await provider.getUserProfile();
+    username = profile.fullName;
+  }
+
+  void getLocationDetails() async {
+    http.Response response = await http.get(
+        'https://api.opencagedata.com/geocode/v1/json?q=$latitude+$longitude&key=f29cf18b10224e27b8931981380b747a');
+    String data = response.body;
+    var status = response.statusCode;
+    String locationUrl =
+        jsonDecode(data)['results'][0]['annotations']['OSM']['url'];
+
+    String formattedAddress = jsonDecode(data)['results'][0]['formatted'];
+
+    print(locationUrl);
+
+    print(formattedAddress);
+    getContactDetails();
+    messageText =
+        'Hey , This is $username find me at $formattedAddress .\n Link to my location : $locationUrl';
+  }
 
   void setupLocator() {
     locator.registerSingleton(CallsAndMessagesService());
   }
 
+  void _sendSMS(String message, List<String> recipents) async {
+    String _result = await sms
+        .sendSMS(message: message, recipients: recipents)
+        .catchError((onError) {
+      print(onError);
+    });
+
+    print(_result);
+  }
+
+  List<String> recipents = ["8078214942"];
+  UserProfileProvider provider = new UserProfileProvider();
+
+  void showWarning() async {}
+  //_sendSMS(messageText, recipents);
   @override
   void initState() {
     super.initState();
+    getLatLong();
   }
 
   @override
   Widget build(BuildContext context) {
+    final popup = BeautifulPopup(
+      context: context,
+      template: TemplateNotification,
+    );
+
     MediaQueryData deviceInfo = MediaQuery.of(context);
     double screenWidth = deviceInfo.size.width;
     double screenHeight = deviceInfo.size.height;
-    final String number = '8078214942';
     final CallsAndMessagesService _service = locator<CallsAndMessagesService>();
     return Scaffold(
+      drawer: AppDrawer(),
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -69,22 +124,42 @@ class _ContactScreenState extends State<ContactScreen> {
         children: <Widget>[
           Text('Contacting Relatives '),
           RaisedButton(
+              child: Text(
+                "call number",
+              ),
+              onPressed: () async {
+                // _service.sendSms(number);
+
+                _sendSMS(messageText, recipents);
+              }),
+          RaisedButton(
             child: Text(
-              "call $number",
+              "send",
             ),
             onPressed: () async {
-              Map<PermissionGroup, PermissionStatus> permissions =
-                  await PermissionHandler()
-                      .requestPermissions([PermissionGroup.contacts]);
-              PermissionStatus permission = await PermissionHandler()
-                  .checkPermissionStatus(PermissionGroup.location);
-
-              bool isShown = await PermissionHandler()
-                  .shouldShowRequestPermissionRationale(
-                      PermissionGroup.location);
-              _service.sendSms(number);
+              getLatLong();
+              print(latitude);
+              print(longitude);
+              getLocationDetails();
             },
           ),
+          RaisedButton(
+            child: Text('popup'),
+            onPressed: () {
+              popup.show(
+                title: 'String or Widget',
+                content: 'String or Widget',
+                actions: [
+                  popup.button(
+                    label: 'Close',
+                    onPressed: Navigator.of(context).pop,
+                  ),
+                ],
+                // bool barrierDismissible = false,
+                // Widget close,
+              );
+            },
+          )
         ],
       ),
     );

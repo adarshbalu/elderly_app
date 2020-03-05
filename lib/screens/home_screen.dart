@@ -143,6 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onTap: () {
                           print('Medicine Tapped');
+
                           Navigator.pushNamed(context, MedicineReminder.id);
                         },
                       ),

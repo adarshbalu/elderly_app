@@ -19,12 +19,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     getUser().then((user) {
       if (user != null) {
-        Navigator.pushReplacementNamed(context, HomeScreen.id);
+        Navigator.pushNamed(context, HomeScreen.id);
       }
     });
 
     Future.delayed(duration, () {
-      Navigator.pushReplacementNamed(context, LoginScreen.id);
+      Navigator.pushNamed(context, LoginScreen.id);
     });
 
     super.initState();
