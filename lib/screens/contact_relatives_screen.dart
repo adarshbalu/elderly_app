@@ -8,7 +8,7 @@ import 'package:get_it/get_it.dart';
 import '../resources/call_and_messages.dart';
 import 'dart:convert';
 import 'package:sms/contact.dart';
-import 'package:flutter_beautiful_popup/main.dart';
+import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
 class ContactScreen extends StatefulWidget {
   static const String id = 'Contact_Screen';
@@ -68,21 +68,18 @@ class _ContactScreenState extends State<ContactScreen> {
   List<String> recipents = ["8078214942"];
   UserProfileProvider provider = new UserProfileProvider();
 
-  void showWarning() async {}
   //_sendSMS(messageText, recipents);
   @override
   void initState() {
     super.initState();
     getLatLong();
+    getLocationDetails();
   }
 
   @override
   Widget build(BuildContext context) {
-    final popup = BeautifulPopup(
-      context: context,
-      template: TemplateNotification,
-    );
-
+    getLatLong();
+    getLocationDetails();
     MediaQueryData deviceInfo = MediaQuery.of(context);
     double screenWidth = deviceInfo.size.width;
     double screenHeight = deviceInfo.size.height;
@@ -122,46 +119,113 @@ class _ContactScreenState extends State<ContactScreen> {
       ),
       body: ListView(
         children: <Widget>[
-          Text('Contacting Relatives '),
-          RaisedButton(
+          Center(
+            child: Container(
+              margin: EdgeInsets.all(20),
               child: Text(
-                "call number",
+                'Relatives Details',
+                style: TextStyle(
+                  fontSize: 32,
+                  color: Color(0xffE3952D),
+                ),
               ),
-              onPressed: () async {
-                // _service.sendSms(number);
-
-                _sendSMS(messageText, recipents);
-              }),
-          RaisedButton(
-            child: Text(
-              "send",
             ),
-            onPressed: () async {
-              getLatLong();
-              print(latitude);
-              print(longitude);
-              getLocationDetails();
-            },
           ),
-          RaisedButton(
-            child: Text('popup'),
-            onPressed: () {
-              popup.show(
-                title: 'String or Widget',
-                content: 'String or Widget',
-                actions: [
-                  popup.button(
-                    label: 'Close',
-                    onPressed: Navigator.of(context).pop,
-                  ),
-                ],
-                // bool barrierDismissible = false,
-                // Widget close,
-              );
-            },
+          Container(
+              margin: EdgeInsets.all(10),
+              child: RelativeDetail(name: 'Relative 1', number: '99012932')),
+          Container(
+              margin: EdgeInsets.all(10),
+              child: RelativeDetail(name: 'Relative 2', number: '340129355')),
+          Container(
+              margin: EdgeInsets.all(10),
+              child: RelativeDetail(name: 'Relative 3', number: '2230156945')),
+          Container(
+              margin: EdgeInsets.all(10),
+              child: RelativeDetail(name: 'Relative 4', number: '1901293234')),
+          SizedBox(
+            height: 40,
+          ),
+          Center(
+            child: GestureDetector(
+              onTap: () async {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return RichAlertDialog(
+                        alertTitle: richTitle("Alert Relatives"),
+                        alertSubtitle: richSubtitle('Are you Sure '),
+                        alertType: RichAlertType.INFO,
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("Yes"),
+                            onPressed: () async {
+                              getLatLong();
+                              getLocationDetails();
+                              Navigator.pop(context);
+                              _sendSMS(messageText, recipents);
+                            },
+                          ),
+                          FlatButton(
+                            child: Text("No"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 55.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.redAccent,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.red,
+                      blurRadius: 3.0,
+                      offset: Offset(0, 4.0),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  'Contact Relatives',
+                  style: TextStyle(color: Colors.white, fontSize: 20.0),
+                ),
+              ),
+            ),
           )
         ],
       ),
+    );
+  }
+}
+
+class RelativeDetail extends StatelessWidget {
+  String name;
+  String number;
+
+  RelativeDetail({this.name, this.number});
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Icon(Icons.person_pin_circle),
+        Text(
+          name,
+          style: TextStyle(fontSize: 22, color: Colors.black),
+        ),
+        SizedBox(
+          width: 50,
+        ),
+        Icon(Icons.phone),
+        Text(
+          number,
+          style: TextStyle(fontSize: 21, color: Colors.blueGrey),
+        )
+      ],
     );
   }
 }
