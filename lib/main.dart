@@ -1,3 +1,4 @@
+import 'package:elderly_app/screens/heart_rate_screen.dart';
 import 'package:elderly_app/screens/home_screen.dart';
 import 'package:elderly_app/screens/loading_screen.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class ElderlyApp extends StatelessWidget {
       initialRoute: LoadingScreen.id,
       routes: {
         HomeScreen.id: (context) => HomeScreen(),
+        HeartRateScreen.id: (context) => HeartRateScreen(),
         ProfileScreen.id: (context) => ProfileScreen(),
         MedicineReminder.id: (context) => MedicineReminder(),
         LoadingScreen.id: (context) => LoadingScreen(),

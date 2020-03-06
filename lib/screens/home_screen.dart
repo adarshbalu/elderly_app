@@ -1,3 +1,4 @@
+import 'package:elderly_app/screens/heart_rate_screen.dart';
 import 'package:elderly_app/screens/medicine_reminder.dart';
 import 'package:elderly_app/screens/nearby_hospital_screen.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
@@ -114,11 +115,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: FontAwesomeIcons.heartbeat,
                           size: screenWidth * (25 / 100),
                           color: Color(0xffD83B36),
-                          borderColor: Color(0xffd93b36),
+                          borderColor: Color(0xffD83B36).withOpacity(0.75),
                         ),
                         onTap: () {
                           print('Heartbeat Tapped');
-                          Navigator.pushNamed(context, LoginScreen.id);
+                          Navigator.pushNamed(context, HeartRateScreen.id);
                         },
                       ),
                       Padding(
@@ -139,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: FontAwesomeIcons.capsules,
                           size: screenWidth * 0.2,
                           color: Color(0xffE3952D),
-                          borderColor: Color(0xffe2932c),
+                          borderColor: Color(0xffE3952D).withOpacity(0.75),
                         ),
                         onTap: () {
                           print('Medicine Tapped');
@@ -172,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: FontAwesomeIcons.hospital,
                           size: screenWidth * (25 / 100),
                           color: Color(0xff3c513d),
-                          borderColor: Color(0xff3c513d),
+                          borderColor: Color(0xff3c513d).withOpacity(0.75),
                         ),
                         onTap: () {
                           print('Hospital Tapped');
@@ -199,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: FontAwesomeIcons.child,
                           size: screenWidth * (25 / 100),
                           color: Color(0xffaf5676),
-                          borderColor: Color(0xffaf5676),
+                          borderColor: Color(0xffaf5676).withOpacity(0.75),
                         ),
                         onTap: () {
                           print('Relatives Tapped');
@@ -209,6 +210,122 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: EdgeInsets.only(top: 8.0),
                         child: Text('Contact Relatives'),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: screenHeight * 0.06,
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      InkWell(
+                        splashColor: Colors.purple,
+                        child: CardButton(
+                          height: screenHeight * 0.2,
+                          width: screenWidth * (35 / 100),
+                          icon: FontAwesomeIcons.userMd,
+                          size: screenWidth * (25 / 100),
+                          color: Color(0xff7b1fa2),
+                          borderColor: Color(0xff7b1fa2).withOpacity(0.75),
+                        ),
+                        onTap: () {
+                          print('Appoinment Tapped');
+                          Navigator.pushNamed(context, HeartRateScreen.id);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text('Appoinment Reminder'),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      InkWell(
+                        splashColor: Colors.brown,
+                        child: CardButton(
+                          height: screenHeight * (20 / 100),
+                          width: screenWidth * (35 / 100),
+                          icon: FontAwesomeIcons.fileAlt,
+                          size: screenWidth * 0.2,
+                          color: Color(0xff5d4037),
+                          borderColor: Color(0xff5d4037).withOpacity(0.75),
+                        ),
+                        onTap: () {
+                          print('Documents Tapped');
+
+                          Navigator.pushNamed(context, MedicineReminder.id);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text('Save Documents'),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: screenHeight * 0.06,
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      InkWell(
+                        splashColor: Colors.teal,
+                        child: CardButton(
+                          height: screenHeight * 0.2,
+                          width: screenWidth * (35 / 100),
+                          icon: FontAwesomeIcons.stickyNote,
+                          size: screenWidth * (25 / 100),
+                          color: Color(0xff00796b),
+                          borderColor: Color(0xff00796b).withOpacity(0.75),
+                        ),
+                        onTap: () {
+                          print('Notes Tapped');
+                          Navigator.pushNamed(context, HeartRateScreen.id);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text('Take a Note'),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      InkWell(
+                        splashColor: Colors.blue,
+                        child: CardButton(
+                          height: screenHeight * (20 / 100),
+                          width: screenWidth * (35 / 100),
+                          icon: FontAwesomeIcons.walking,
+                          size: screenWidth * 0.2,
+                          color: Color(0xff3d5afe),
+                          borderColor: Color(0xff3d5afe).withOpacity(0.75),
+                        ),
+                        onTap: () {
+                          print('Fit Tapped');
+
+                          Navigator.pushNamed(context, MedicineReminder.id);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text('Fitness Track'),
                       )
                     ],
                   ),
@@ -243,6 +360,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+            ),
+            SizedBox(
+              height: 30,
             )
           ],
         ),
