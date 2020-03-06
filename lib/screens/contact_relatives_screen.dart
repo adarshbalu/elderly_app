@@ -38,17 +38,21 @@ class _ContactScreenState extends State<ContactScreen> {
         'https://api.opencagedata.com/geocode/v1/json?q=$latitude+$longitude&key=f29cf18b10224e27b8931981380b747a');
     String data = response.body;
     var status = response.statusCode;
-    String locationUrl =
-        jsonDecode(data)['results'][0]['annotations']['OSM']['url'];
+    if (status == 200) {
+      String locationUrl =
+          jsonDecode(data)['results'][0]['annotations']['OSM']['url'];
 
-    String formattedAddress = jsonDecode(data)['results'][0]['formatted'];
+      String formattedAddress = jsonDecode(data)['results'][0]['formatted'];
 
-    print(locationUrl);
+      print(locationUrl);
 
-    print(formattedAddress);
-    getContactDetails();
-    messageText =
-        'Hey , This is $username find me at $formattedAddress .\n Link to my location : $locationUrl';
+      print(formattedAddress);
+      getContactDetails();
+      messageText =
+          'Hey , This is $username find me at $formattedAddress .\n Link to my location : $locationUrl';
+    } else {
+      messageText = 'Some error ocurred';
+    }
   }
 
   void setupLocator() {
@@ -68,7 +72,6 @@ class _ContactScreenState extends State<ContactScreen> {
   List<String> recipents = ["8078214942"];
   UserProfileProvider provider = new UserProfileProvider();
 
-  //_sendSMS(messageText, recipents);
   @override
   void initState() {
     super.initState();
@@ -160,8 +163,10 @@ class _ContactScreenState extends State<ContactScreen> {
                           FlatButton(
                             child: Text("Yes"),
                             onPressed: () async {
-                              getLatLong();
-                              getLocationDetails();
+                              setState(() {
+                                getLatLong();
+                                getLocationDetails();
+                              });
                               Navigator.pop(context);
                               _sendSMS(messageText, recipents);
                             },

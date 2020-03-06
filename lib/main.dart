@@ -36,7 +36,7 @@ class ElderlyApp extends StatelessWidget {
         ProfileEdit.id: (context) => ProfileEdit(),
         NoteList.id: (context) => NoteList(),
         ReminderDetail.id: (context) => ReminderDetail(),
-        NearbyHospital.id: (context) => NearbyHospital(),
+        NearbyHospitalScreen.id: (context) => NearbyHospitalScreen(),
         InitialSetupScreen.id: (context) => InitialSetupScreen(),
         EditRelativesScreen.id: (context) => EditRelativesScreen()
       },

@@ -176,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onTap: () {
                           print('Hospital Tapped');
-                          Navigator.pushNamed(context, NearbyHospital.id);
+                          Navigator.pushNamed(context, NearbyHospitalScreen.id);
                         },
                       ),
                       Padding(

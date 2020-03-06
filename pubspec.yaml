@@ -52,6 +52,8 @@ dependencies:
   flutter_sms: ^2.0.0+2
   sms: ^0.2.4
   flutter_beautiful_popup: ^1.5.0
+  google_maps_webservice: ^0.0.16
+  flutter_map: ^0.8.2
 
 
 
