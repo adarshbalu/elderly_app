@@ -18,6 +18,7 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
     super.initState();
   }
 
+  bool heartRateSensor = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,12 +27,21 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
         child: FlatButton(
           child: Text('Press'),
           onPressed: () async {
-            sensor = await SensorManager.getDefaultSensor(
-                Sensor.TYPE_STATIONARY_DETECT);
-            var events = await sensor.subscribe();
-            events.listen((SensorEvent event) {
-              print(event.values[0]);
-            });
+            try {
+              sensor =
+                  await SensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+              var events = await sensor.subscribe();
+              events.listen((SensorEvent event) {
+                print(event.values[0]);
+                setState(() {
+                  heartRateSensor = true;
+                });
+              });
+            } catch (e) {
+              if (e == NoSuchMethodError) {
+                heartRateSensor = false;
+              }
+            }
           },
         ),
       ),

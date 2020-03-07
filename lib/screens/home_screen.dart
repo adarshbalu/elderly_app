@@ -15,6 +15,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'dart:io';
 import 'edit_relatives.dart';
+import 'package:flutter_android/android_hardware.dart'
+    show Sensor, SensorEvent, SensorManager;
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'Home_Screen';
@@ -24,6 +26,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var sensor;
+  bool heartRateSensor = false;
+  checkSensor() async {
+    try {
+      sensor = await SensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+      var events = await sensor.subscribe();
+      events.listen((SensorEvent event) {
+        print(event.values[0]);
+        setState(() {
+          heartRateSensor = true;
+        });
+      });
+    } catch (e) {
+      if (e == NoSuchMethodError) {
+        heartRateSensor = false;
+      }
+    }
+  }
+
   final _auth = FirebaseAuth.instance;
   FirebaseUser loggedInUser;
 
@@ -119,7 +140,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onTap: () {
                           print('Heartbeat Tapped');
-                          Navigator.pushNamed(context, HeartRateScreen.id);
+                          if (heartRateSensor) {
+                            Navigator.pushNamed(context, HeartRateScreen.id);
+                          } else {
+                            print('Heart Rate Sensor not available');
+                          }
                         },
                       ),
                       Padding(
