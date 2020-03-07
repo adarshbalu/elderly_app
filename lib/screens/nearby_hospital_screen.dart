@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'profile_screen.dart';
 import 'package:location/location.dart' as LocationManager;
@@ -8,6 +11,15 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 const kTomsApiKey = 'vA9uQILIGUAG86z9xCTSkETjqg7ZCiGa';
+double latitude, longitude;
+getLocation() async {
+  LocationManager.Location location = LocationManager.Location();
+  var pos = await location.getLocation();
+  latitude = pos.latitude;
+  longitude = pos.longitude;
+  print(longitude);
+  print(latitude);
+}
 
 class NearbyHospitalScreen extends StatefulWidget {
   static const String id = 'Nearby_Hospital_screen';
@@ -18,21 +30,11 @@ class NearbyHospitalScreen extends StatefulWidget {
 }
 
 class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
-  double latitude, longitude;
   bool showSpinner = true;
-  getLocation() async {
-    LocationManager.Location location = LocationManager.Location();
-    var pos = await location.getLocation();
-    latitude = pos.latitude;
-    longitude = pos.longitude;
-    print(longitude);
-    print(latitude);
-  }
 
   initState() {
     super.initState();
     getLocation();
-    getNearbyHospitals();
   }
 
   _launchURL(String url) async {
@@ -43,164 +45,186 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
     }
   }
 
-  changeScreen() async {
-    Future.delayed(Duration(seconds: 10));
-    setState(() {
-      showSpinner = false;
-    });
-  }
-
-  //https://api.tomtom.com/search/2/nearbySearch/.JSON?key=vA9uQILIGUAG86z9xCTSkETjqg7ZCiGa&lat=11.5924988&lon=75.5976548&radius=1000&categorySet=7321
-  List<String> hospitalName = [''];
-
-  List<double> hospitalLat = [];
-  List<double> hospitalLongitude = [];
   double lat, tempLon;
   String locationUrl;
-  void getNearbyHospitals() async {
-    http.Response response = await http.get(
-        'https://api.tomtom.com/search/2/nearbySearch/.JSON?key=$kTomsApiKey&lat=$latitude&lon=$longitude&radius=5000&limit=10&categorySet=7321');
-    String data = response.body;
-    var status = response.statusCode;
-    if (status == 200) {
-      for (int i = 0; i < 10; i++) {
-        hospitalName.insert(
-            i, jsonDecode(data)['results'][i]['poi']['name'].toString());
-      }
-      for (int i = 0; i < 10; i++) {
-        tempLon = jsonDecode(data)['results'][i]['position']['lon'];
-
-        hospitalLongitude.insert(i, tempLon);
-
-        hospitalLat.insert(
-            i, jsonDecode(data)['results'][i]['position']['lat']);
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    getLocation();
-    getNearbyHospitals();
-    changeScreen();
-
     return Scaffold(
-        drawer: AppDrawer(),
-        appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('Elderly '),
-              Text(
-                'Care',
-                style: TextStyle(color: Colors.green),
-              ),
-            ],
-          ),
-          centerTitle: true,
-          elevation: 1,
-          actions: <Widget>[
-            GestureDetector(
-              onTap: () {
-                print('Profile Button Tapped');
-                Navigator.pushNamed(context, ProfileScreen.id);
-              },
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.perm_identity,
-                  size: 30,
-                  color: Color(0xff5e444d),
-                ),
-              ),
+      drawer: AppDrawer(),
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Elderly '),
+            Text(
+              'Care',
+              style: TextStyle(color: Colors.green),
             ),
           ],
         ),
-        body: ModalProgressHUD(
-          inAsyncCall: showSpinner,
-          child: ListView(
-            children: <Widget>[
-              ListCard(
-                getUrl: getUrl(0),
-                position: 0,
-                hospitalName: hospitalName,
+        centerTitle: true,
+        elevation: 1,
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () {
+              print('Profile Button Tapped');
+              Navigator.pushNamed(context, ProfileScreen.id);
+            },
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.perm_identity,
+                size: 30,
+                color: Color(0xff5e444d),
               ),
-            ],
-          ),
-        ));
-  }
-
-  getUrl(int position) async {
-    double locationLat = hospitalLat[position];
-    double locationLon = hospitalLongitude[position];
-    http.Response response = await http.get(
-        'https://api.opencagedata.com/geocode/v1/json?q=$locationLat+$locationLon&key=f29cf18b10224e27b8931981380b747a');
-    String data = response.body;
-    var status = response.statusCode;
-    if (status == 200) {
-      locationUrl = jsonDecode(data)['results'][0]['annotations']['OSM']['url'];
-      print(locationUrl);
-    }
-  }
-
-  Widget getListView() {
-    return FutureBuilder(builder: (context, projectSnap) {
-      if (projectSnap.connectionState == ConnectionState.none &&
-          projectSnap.hasData == null) {
-        //print('project snapshot data is: ${projectSnap.data}');
-        return Container();
-      }
-      return ListView.builder(
-        itemCount: 10,
-        itemBuilder: (BuildContext context, int position) {
-          return Card(
-            margin: EdgeInsets.all(15),
-            color: Colors.white,
-            elevation: 2.5,
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.blue,
-                child: Icon(Icons.place, color: Colors.red),
-              ),
-              title: Text(
-                this.hospitalName[position],
-                //style: titleStyle,
-              ),
-              onTap: () async {
-                await getUrl(position);
-                await _launchURL(locationUrl);
-              },
             ),
-          );
-        },
-      );
-    });
-  }
-}
-
-class ListCard extends StatelessWidget {
-  var position, hospitalName, getUrl;
-  ListCard({this.position, this.hospitalName, this.getUrl});
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(15),
-      color: Colors.white,
-      elevation: 2.5,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Colors.blue,
-          child: Icon(Icons.place, color: Colors.red),
-        ),
-        title: Text(
-          this.hospitalName[position],
-          //style: titleStyle,
-        ),
-        onTap: () {
-          getUrl(position);
+          ),
+        ],
+      ),
+      body: FutureBuilder(
+        future: getNearbyHospitals(),
+        builder: (context, snapshot) {
+          print(snapshot.data);
+          if (!snapshot.hasData) {
+            return Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SpinKitRotatingCircle(
+                    color: Colors.blue,
+                    size: 100.0,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Please wait Fetching data.'),
+                  ),
+                  Text(' It may take a few moments.'),
+                ],
+              ),
+            );
+          } else {
+            return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: EdgeInsets.all(15),
+                    color: Colors.white,
+                    elevation: 2.5,
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        child: Icon(Icons.place, color: Colors.blue),
+                      ),
+                      trailing: Icon(
+                        Icons.pin_drop,
+                        color: Colors.red,
+                      ),
+                      title: Text(
+                        snapshot.data[index].hospitalName,
+                      ),
+                      subtitle: Text(snapshot.data[index].hospitalPlace),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) => MyWebView(
+                                  title: snapshot.data[index].hospitalName,
+                                  selectedUrl:
+                                      snapshot.data[index].hospitalLocationUrl,
+                                )));
+                      },
+                    ),
+                  );
+                });
+          }
         },
       ),
     );
+  }
+
+  Future<List<Hospital>> getNearbyHospitals() async {
+    List<Hospital> hospitalList = [];
+    await getLocation();
+    print(latitude);
+    print(longitude);
+    http.Response response = await http.get(
+        'https://api.tomtom.com/search/2/nearbySearch/.JSON?key=$kTomsApiKey&lat=$latitude&lon=$longitude&radius=5000&limit=10&categorySet=7321');
+    var data = response.body;
+    var status = response.statusCode;
+    print(status);
+    if (status == 200) {
+      var jsonData = jsonDecode(data)['results'];
+
+      for (var h in jsonData) {
+        String locationUrl, placeName;
+        double locationLat = h['position']['lat'];
+        print(locationLat);
+        double locationLon = h['position']['lon'];
+        print(locationLon);
+        http.Response urlResponse = await http.get(
+            'https://api.opencagedata.com/geocode/v1/json?q=$locationLat+$locationLon&key=f29cf18b10224e27b8931981380b747a');
+        String urlData = urlResponse.body;
+        var urlJson = jsonDecode(urlData)['results'][0];
+        var urlStatus = urlResponse.statusCode;
+        print(urlStatus);
+        if (urlStatus == 200) {
+          print(h['poi']['name']);
+          locationUrl = urlJson['annotations']['OSM']['url'];
+          placeName = urlJson['components']['town'];
+          print(locationUrl);
+          Hospital hospital = Hospital(h['poi']['name'], h['position']['lat'],
+              h['position']['lon'], locationUrl, placeName);
+          try {
+            hospitalList.add(hospital);
+          } catch (e) {
+            print(e);
+          }
+        }
+      }
+      print(hospitalList.length);
+      return hospitalList;
+    } else {
+      return [];
+    }
+  }
+}
+
+class Hospital {
+  String hospitalName, hospitalLocationUrl, hospitalPlace;
+  double hospitalLocationLatitude, hospitalLocationLongitude;
+
+  Hospital(this.hospitalName, this.hospitalLocationLatitude,
+      this.hospitalLocationLongitude,
+      [this.hospitalLocationUrl, this.hospitalPlace]);
+}
+
+class MyWebView extends StatelessWidget {
+  final String title;
+  final String selectedUrl;
+
+  final Completer<WebViewController> _controller =
+      Completer<WebViewController>();
+
+  MyWebView({
+    @required this.title,
+    @required this.selectedUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+        ),
+        body: WebView(
+          initialUrl: selectedUrl,
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) {
+            _controller.complete(webViewController);
+          },
+        ));
   }
 }

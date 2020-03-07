@@ -34,7 +34,6 @@ dependencies:
   path_provider: ^1.6.0
   sqflite: ^1.2.0
   intl: ^0.16.1
-  google_maps_flutter: ^0.5.23+1
   http: ^0.12.0+4
   json_serializable: ^3.2.5
   geolocator: ^5.2.1
@@ -42,7 +41,6 @@ dependencies:
   sweet_alert_dialogs: "^0.1.0"
   place_picker: ^0.9.11
   location: ^2.5.3
-  flutter_google_places: ^0.2.4
   flutter_android: ^0.4.0
   flutter_material_pickers: ^1.2.0
   image_picker: ^0.6.3+4
@@ -52,8 +50,9 @@ dependencies:
   flutter_sms: ^2.0.0+2
   sms: ^0.2.4
   flutter_beautiful_popup: ^1.5.0
-  google_maps_webservice: ^0.0.16
   flutter_map: ^0.8.2
+  webview_flutter: ^0.3.19+9
+
 
 
 
