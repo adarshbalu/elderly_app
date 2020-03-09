@@ -15,8 +15,11 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   Duration duration = Duration(seconds: 3);
 
+  Image image;
   @override
   void initState() {
+    image = Image.asset('lib/resources/images/loadingimage.jpg');
+
     getUser().then((user) {
       if (user != null) {
         Navigator.pushNamed(context, HomeScreen.id);
@@ -36,6 +39,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   bool showSpinner = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(image.image, context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

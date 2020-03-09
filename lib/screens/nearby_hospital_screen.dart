@@ -34,6 +34,7 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
 
   initState() {
     super.initState();
+
     getLocation();
   }
 
@@ -124,10 +125,12 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                         Icons.pin_drop,
                         color: Colors.red,
                       ),
-                      title: Text(
-                        snapshot.data[index].hospitalName,
-                      ),
-                      subtitle: Text(snapshot.data[index].hospitalPlace),
+                      title: snapshot.data[index].hospitalName != null
+                          ? Text(
+                              snapshot.data[index].hospitalName,
+                            )
+                          : Text(''),
+                      subtitle: Text('Hospital'),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (BuildContext context) => MyWebView(
@@ -147,7 +150,9 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
 
   Future<List<Hospital>> getNearbyHospitals() async {
     List<Hospital> hospitalList = [];
+
     await getLocation();
+
     print(latitude);
     print(longitude);
     http.Response response = await http.get(

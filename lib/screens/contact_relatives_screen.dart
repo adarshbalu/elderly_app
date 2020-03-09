@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sms/flutter_sms.dart' as sms;
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:sms/generated/i18n.dart';
 import 'profile_screen.dart';
 import 'package:get_it/get_it.dart';
 import '../resources/call_and_messages.dart';
@@ -21,19 +22,26 @@ class _ContactScreenState extends State<ContactScreen> {
   double latitude, longitude;
   String messageText = '';
   String username = 'user';
-  void getLatLong() async {
+  getLatLong() async {
     Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     latitude = position.latitude;
     longitude = position.longitude;
   }
 
-  void getContactDetails() async {
+  getContactDetails() async {
     UserProfile profile = await provider.getUserProfile();
     username = profile.fullName;
   }
 
-  void getLocationDetails() async {
+  Future waitForLocation() async {
+    await getLatLong();
+  }
+
+  getLocationDetails() async {
+    await getLatLong();
+    getContactDetails();
+
     http.Response response = await http.get(
         'https://api.opencagedata.com/geocode/v1/json?q=$latitude+$longitude&key=f29cf18b10224e27b8931981380b747a');
     String data = response.body;
@@ -48,6 +56,8 @@ class _ContactScreenState extends State<ContactScreen> {
 
       print(formattedAddress);
       getContactDetails();
+      getLatLong();
+
       messageText =
           'Hey , This is $username find me at $formattedAddress .\n Link to my location : $locationUrl';
     } else {
@@ -55,11 +65,13 @@ class _ContactScreenState extends State<ContactScreen> {
     }
   }
 
-  void setupLocator() {
+  setupLocator() {
     locator.registerSingleton(CallsAndMessagesService());
   }
 
-  void _sendSMS(String message, List<String> recipents) async {
+  _sendSMS(String message, List<String> recipents) async {
+    await getLocationDetails();
+
     String _result = await sms
         .sendSMS(message: message, recipients: recipents)
         .catchError((onError) {
@@ -76,7 +88,6 @@ class _ContactScreenState extends State<ContactScreen> {
   void initState() {
     super.initState();
     getLatLong();
-    getLocationDetails();
   }
 
   @override
@@ -163,10 +174,9 @@ class _ContactScreenState extends State<ContactScreen> {
                           FlatButton(
                             child: Text("Yes"),
                             onPressed: () async {
-                              setState(() {
-                                getLatLong();
-                                getLocationDetails();
-                              });
+                              getLatLong();
+                              getLocationDetails();
+
                               Navigator.pop(context);
                               _sendSMS(messageText, recipents);
                             },

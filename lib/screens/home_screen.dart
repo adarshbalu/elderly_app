@@ -129,27 +129,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: <Widget>[
                       InkWell(
-                        splashColor: Colors.redAccent,
+                        splashColor: Colors.purple,
                         child: CardButton(
                           height: screenHeight * 0.2,
                           width: screenWidth * (35 / 100),
-                          icon: FontAwesomeIcons.heartbeat,
+                          icon: FontAwesomeIcons.userMd,
                           size: screenWidth * (25 / 100),
-                          color: Color(0xffD83B36),
-                          borderColor: Color(0xffD83B36).withOpacity(0.75),
+                          color: Color(0xff7b1fa2),
+                          borderColor: Color(0xff7b1fa2).withOpacity(0.75),
                         ),
                         onTap: () {
-                          print('Heartbeat Tapped');
-                          if (heartRateSensor) {
-                            Navigator.pushNamed(context, HeartRateScreen.id);
-                          } else {
-                            print('Heart Rate Sensor not available');
-                          }
+                          print('Appoinment Tapped');
+                          Navigator.pushNamed(context, HeartRateScreen.id);
                         },
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 8.0),
-                        child: Text('Check your Heartrate'),
+                        child: Text('Appoinment Reminder'),
                       ),
                     ],
                   ),
@@ -250,23 +246,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: <Widget>[
                       InkWell(
-                        splashColor: Colors.purple,
+                        splashColor: Colors.redAccent,
                         child: CardButton(
                           height: screenHeight * 0.2,
                           width: screenWidth * (35 / 100),
-                          icon: FontAwesomeIcons.userMd,
+                          icon: FontAwesomeIcons.heartbeat,
                           size: screenWidth * (25 / 100),
-                          color: Color(0xff7b1fa2),
-                          borderColor: Color(0xff7b1fa2).withOpacity(0.75),
+                          color: Color(0xffD83B36),
+                          borderColor: Color(0xffD83B36).withOpacity(0.75),
                         ),
                         onTap: () {
-                          print('Appoinment Tapped');
-                          Navigator.pushNamed(context, HeartRateScreen.id);
+                          print('Heartbeat Tapped');
+                          if (heartRateSensor) {
+                            Navigator.pushNamed(context, HeartRateScreen.id);
+                          } else {
+                            print('Heart Rate Sensor not available');
+                          }
                         },
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 8.0),
-                        child: Text('Appoinment Reminder'),
+                        child: Text('Check your Heartrate'),
                       ),
                     ],
                   ),
