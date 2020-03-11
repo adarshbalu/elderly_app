@@ -42,6 +42,13 @@ class _LoginScreenState extends State<LoginScreen> {
   bool showSpinner = false;
 
   @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

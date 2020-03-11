@@ -13,6 +13,11 @@ class _MedicineReminderState extends State<MedicineReminder> {
   int rem_count = 1;
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double screenWidth = getDeviceWidth(context);
     double screenHeight = getDeviceHeight(context);

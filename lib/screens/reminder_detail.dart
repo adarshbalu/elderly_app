@@ -41,6 +41,13 @@ class _ReminderDetailState extends State<ReminderDetail> {
     });
   }
 
+  @override
+  void dispose() {
+    nameController.dispose();
+    typeController.dispose();
+    super.dispose();
+  }
+
   final nameController = TextEditingController();
   final typeController = TextEditingController();
 

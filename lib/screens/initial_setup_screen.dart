@@ -1,3 +1,4 @@
+import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'profile_screen.dart';
@@ -11,8 +12,15 @@ class InitialSetupScreen extends StatefulWidget {
 
 class _InitialSetupScreenState extends State<InitialSetupScreen> {
   bool isCompleted = false;
-  final usernameController = new TextEditingController();
-  String username;
+  final userNameController = new TextEditingController();
+  String userName;
+  int age;
+  @override
+  void dispose() {
+    userNameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,29 +80,34 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'The app requires you to give some data during this setup. Kindly enter all required data to all the fields below for bedt performance.',
+                'The app requires you to give some data during this setup. Kindly enter all required data to all the fields below for best performance.',
                 style: TextStyle(
                     fontWeight: FontWeight.w200, color: Colors.indigo),
               ),
             ),
-            TextInputField(
-              editingController: usernameController,
-              helperText: 'Enter Full Name',
-              hintText: 'Enter your Name ',
-              icon: Icons.perm_identity,
-              valueGetter: (value) {
-                username = value;
-              },
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(child: Text('Name : ')),
+                  Expanded(
+                    flex: 6,
+                    child: FormItem(
+                      helperText: 'Name of the user',
+                      hintText: 'Enter type of User Name',
+                      controller: userNameController,
+                      onChanged: () {
+                        print('Name Saved');
+                        setState(() {
+                          userName = userNameController.text;
+                        });
+                      },
+                      isNumber: false,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            TextInputField(),
-            TextInputField(),
-            TextInputField(),
-            TextInputField(),
-            FlatButton(
-              onPressed: () {
-                Navigator.pushNamed(context, HomeScreen.id);
-              },
-            )
           ],
         ),
       ),

@@ -112,21 +112,25 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
             return ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
+                  getLocation();
+                  var hosLon =
+                      snapshot.data[index].hospitalLocationLongitude.toString();
+                  var hosLat =
+                      snapshot.data[index].hospitalLocationLatitude.toString();
                   return Card(
                     margin: EdgeInsets.all(15),
                     color: Colors.white,
                     elevation: 2.5,
                     child: ListTile(
                       leading: CircleAvatar(
-                        child: Icon(Icons.place, color: Colors.blue),
-                      ),
-                      trailing: Icon(
-                        Icons.pin_drop,
-                        color: Colors.red,
+                        backgroundColor: Colors.transparent,
+                        child: Icon(Icons.place, color: Colors.red),
                       ),
                       title: snapshot.data[index].hospitalName != null
                           ? Text(
                               snapshot.data[index].hospitalName,
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.blueGrey),
                             )
                           : Text(''),
                       onTap: () {
@@ -134,7 +138,7 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                             builder: (BuildContext context) => MyWebView(
                                   title: snapshot.data[index].hospitalName,
                                   selectedUrl:
-                                      snapshot.data[index].hospitalLocationUrl,
+                                      'https://www.google.com/maps/dir/$hosLat,$hosLon/$latitude,$longitude',
                                 )));
                       },
                     ),
@@ -210,11 +214,6 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
     } else {
       return [];
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }
 

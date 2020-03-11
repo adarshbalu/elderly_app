@@ -43,8 +43,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     double kTextSize = 19.0, kValueSize = 18.0;
     if (screenHeight > 641) {
-      kTextSize = 25.0;
-      kValueSize = 22.0;
+      kTextSize = 23.0;
+      kValueSize = 20.0;
     }
 
     return Scaffold(
