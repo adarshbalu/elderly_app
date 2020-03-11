@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'profile_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:elderly_app/models/reminder.dart';
 
 class ReminderDetail extends StatefulWidget {
   static const String id = 'Medicine_detail_screen';
@@ -16,23 +17,61 @@ class ReminderDetail extends StatefulWidget {
 }
 
 class _ReminderDetailState extends State<ReminderDetail> {
+  Reminder reminder;
   TimeOfDay selectedTime1 = TimeOfDay.now();
   TimeOfDay selectedTime2 = TimeOfDay.now();
   TimeOfDay selectedTime3 = TimeOfDay.now();
   TimeOfDay timeNow = TimeOfDay.now();
 
-  File _image;
+  int times = 2;
+  String remindOn = 'Daily';
 
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+  String medicineName = '', tempName = '', medicineType = '';
+
+  File pickedImage;
+
+  bool isImageLoaded = false;
+
+  Future pickImage() async {
+    var tempStore = await ImagePicker.pickImage(source: ImageSource.camera);
 
     setState(() {
-      _image = image;
+      pickedImage = tempStore;
+      isImageLoaded = true;
     });
   }
 
-  int times = 2;
-  String remindOn = 'Daily';
+  final nameController = TextEditingController();
+  final typeController = TextEditingController();
+
+  Future readText() async {
+    setState(() {
+      medicineName = '';
+    });
+
+    FirebaseVisionImage firebaseVisionImage =
+        FirebaseVisionImage.fromFile(pickedImage);
+    TextRecognizer recognizeText = FirebaseVision.instance.textRecognizer();
+    VisionText readText = await recognizeText.processImage(firebaseVisionImage);
+
+    for (TextBlock block in readText.blocks) {
+      for (TextLine line in block.lines) {
+        for (TextElement word in line.elements) {
+          tempName += word.text;
+          print(medicineName);
+        }
+      }
+    }
+    setState(() {
+      if (medicineName != null) {
+        medicineName = tempName;
+        nameController.text = medicineName;
+      } else {
+        medicineName = '';
+        isImageLoaded = false;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,20 +123,48 @@ class _ReminderDetailState extends State<ReminderDetail> {
                 ),
               ),
             ),
-            ReminderFormItem(
-              helperText: 'This name will be dispalyed on Reminder',
-              hintText: 'Enter Medicine Name',
-              onChanged: () {
-                print('Name Saved');
-              },
-              isNumber: false,
-              icon: FontAwesomeIcons.capsules,
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 5,
+                  child: ReminderFormItem(
+                    helperText: 'This name will be dispalyed on Reminder',
+                    hintText: 'Enter Medicine Name',
+                    controller: nameController,
+                    onChanged: (value) {
+                      print('Name Saved');
+                      setState(() {
+                        medicineName = value.toString();
+                      });
+                    },
+                    isNumber: false,
+                    icon: FontAwesomeIcons.capsules,
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    child: Icon(
+                      Icons.photo_camera,
+                      color: isImageLoaded ? Colors.green : Colors.amberAccent,
+                      size: 43,
+                    ),
+                    onTap: () async {
+                      await pickImage();
+                      await readText();
+                    },
+                  ),
+                )
+              ],
             ),
             ReminderFormItem(
               helperText: 'Give the type for reference',
               hintText: 'Enter type of medicine',
+              controller: typeController,
               onChanged: () {
                 print('Name Saved');
+                setState(() {
+                  medicineType = typeController.text;
+                });
               },
               isNumber: false,
               icon: FontAwesomeIcons.syringe,
@@ -251,62 +318,62 @@ class _ReminderDetailState extends State<ReminderDetail> {
             SizedBox(
               height: 20,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Remind on :',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-              child: DropdownButton(
-                iconEnabledColor: Color(0xffff8f00),
-                style: TextStyle(fontSize: 20, color: Colors.black),
-                value: remindOn,
-                items: [
-                  DropdownMenuItem(
-                    value: 'Daily',
-                    child: Text('Daily'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'Weekly',
-                    child: Text('Weekly'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'Monthy',
-                    child: Text('Monthly'),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    remindOn = value;
-                  });
-                },
-                focusColor: Color(0xffff8f00),
-              ),
-            ),
-            Text(
-              _image == null ? 'Optional : Add an Image' : 'Image Loaded',
-              textAlign: TextAlign.center,
-            ),
-            _image == null
-                ? InkWell(
-                    onTap: () async {
-                      Map<PermissionGroup, PermissionStatus> permissions =
-                          await PermissionHandler().requestPermissions(
-                              [PermissionGroup.mediaLibrary]);
-                      getImage();
-                    },
-                    child: Container(
-                      child: Icon(
-                        Icons.image,
-                        size: 100,
-                        color: Color(0xffE3952D),
-                      ),
-                    ),
-                  )
-                : SizedBox(),
+//            Padding(
+//              padding: const EdgeInsets.all(8.0),
+//              child: Text(
+//                'Remind on :',
+//                style: TextStyle(fontSize: 20),
+//              ),
+//            ),
+//            Padding(
+//              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+//              child: DropdownButton(
+//                iconEnabledColor: Color(0xffff8f00),
+//                style: TextStyle(fontSize: 20, color: Colors.black),
+//                value: remindOn,
+//                items: [
+//                  DropdownMenuItem(
+//                    value: 'Daily',
+//                    child: Text('Daily'),
+//                  ),
+//                  DropdownMenuItem(
+//                    value: 'Weekly',
+//                    child: Text('Weekly'),
+//                  ),
+//                  DropdownMenuItem(
+//                    value: 'Monthy',
+//                    child: Text('Monthly'),
+//                  ),
+//                ],
+//                onChanged: (value) {
+//                  setState(() {
+//                    remindOn = value;
+//                  });
+//                },
+//                focusColor: Color(0xffff8f00),
+//              ),
+//            ),
+//            Text(
+//              _image == null ? 'Optional : Add an Image' : 'Image Loaded',
+//              textAlign: TextAlign.center,
+//            ),
+//            _image == null
+//                ? InkWell(
+//                    onTap: () async {
+//                      Map<PermissionGroup, PermissionStatus> permissions =
+//                          await PermissionHandler().requestPermissions(
+//                              [PermissionGroup.mediaLibrary]);
+//                      getImage();
+//                    },
+//                    child: Container(
+//                      child: Icon(
+//                        Icons.image,
+//                        size: 100,
+//                        color: Color(0xffE3952D),
+//                      ),
+//                    ),
+//                  )
+//                : SizedBox(),
             Padding(
               padding: const EdgeInsets.fromLTRB(8.0, 20, 8, 8),
               child: Text(
@@ -357,6 +424,14 @@ class _ReminderDetailState extends State<ReminderDetail> {
               child: InkWell(
                 onTap: () {
                   print('tap');
+                  setState(() {
+                    reminder.times = times;
+                    reminder.reminderName = medicineName;
+                    reminder.reminderType = medicineType;
+                    reminder.time1 = selectedTime1.toString();
+                    reminder.time2 = selectedTime2.toString();
+                    reminder.time3 = selectedTime3.toString();
+                  });
                 },
                 child: Container(
                   margin: EdgeInsets.all(20),
@@ -384,14 +459,15 @@ class ReminderFormItem extends StatelessWidget {
   Function onChanged;
   final bool isNumber;
   IconData icon;
+  final controller;
 
-  ReminderFormItem({
-    this.hintText,
-    this.helperText,
-    this.onChanged,
-    this.icon,
-    this.isNumber: false,
-  });
+  ReminderFormItem(
+      {this.hintText,
+      this.helperText,
+      this.onChanged,
+      this.icon,
+      this.isNumber: false,
+      this.controller});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -417,6 +493,7 @@ class ReminderFormItem extends StatelessWidget {
         onChanged: (String value) {
           onChanged(value);
         },
+        controller: controller,
         keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       ),
     );

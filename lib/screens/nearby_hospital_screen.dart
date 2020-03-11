@@ -12,13 +12,12 @@ import 'dart:convert';
 
 const kTomsApiKey = 'vA9uQILIGUAG86z9xCTSkETjqg7ZCiGa';
 double latitude, longitude;
+LocationManager.Location location = LocationManager.Location();
 getLocation() async {
-  LocationManager.Location location = LocationManager.Location();
+//  LocationManager.Location location = LocationManager.Location();
   var pos = await location.getLocation();
   latitude = pos.latitude;
   longitude = pos.longitude;
-  print(longitude);
-  print(latitude);
 }
 
 class NearbyHospitalScreen extends StatefulWidget {
@@ -130,7 +129,6 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                               snapshot.data[index].hospitalName,
                             )
                           : Text(''),
-                      subtitle: Text('Hospital'),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (BuildContext context) => MyWebView(
@@ -152,7 +150,14 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
     List<Hospital> hospitalList = [];
 
     await getLocation();
-
+//    setState(() {
+//      location
+//          .onLocationChanged()
+//          .listen((LocationManager.LocationData currentLocation) {
+//        longitude = currentLocation.longitude;
+//        latitude = currentLocation.latitude;
+//      });
+//    });
     print(latitude);
     print(longitude);
     http.Response response = await http.get(
@@ -162,13 +167,23 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
     print(status);
     if (status == 200) {
       var jsonData = jsonDecode(data)['results'];
-
       for (var h in jsonData) {
         String locationUrl, placeName;
         double locationLat = h['position']['lat'];
         print(locationLat);
         double locationLon = h['position']['lon'];
         print(locationLon);
+//        http.Response distanceResponse = await http.get(
+//            'https://api.tomtom.com/routing/1/calculateRoute/$latitude,$longitude:$locationLat,$locationLon/json?key=G5IOmgbhnBgevPJeglEK2zGJyYv6TG1Z');
+//        int distanceStatus = distanceResponse.statusCode;
+//
+//        print('Distance status :$distanceStatus');
+//        var distanceData = distanceResponse.body;
+//
+//        var hospitalDistance =
+//            jsonDecode(distanceData)['routes'][0]['summary']['lengthInMeters'];
+//        print(hospitalDistance);
+
         http.Response urlResponse = await http.get(
             'https://api.opencagedata.com/geocode/v1/json?q=$locationLat+$locationLon&key=f29cf18b10224e27b8931981380b747a');
         String urlData = urlResponse.body;
@@ -180,6 +195,7 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
           locationUrl = urlJson['annotations']['OSM']['url'];
           placeName = urlJson['components']['town'];
           print(locationUrl);
+
           Hospital hospital = Hospital(h['poi']['name'], h['position']['lat'],
               h['position']['lon'], locationUrl, placeName);
           try {
@@ -195,15 +211,20 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
       return [];
     }
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }
 
 class Hospital {
   String hospitalName, hospitalLocationUrl, hospitalPlace;
-  double hospitalLocationLatitude, hospitalLocationLongitude;
+  double hospitalLocationLatitude, hospitalLocationLongitude, hospitalDistance;
 
   Hospital(this.hospitalName, this.hospitalLocationLatitude,
       this.hospitalLocationLongitude,
-      [this.hospitalLocationUrl, this.hospitalPlace]);
+      [this.hospitalLocationUrl, this.hospitalPlace, this.hospitalDistance]);
 }
 
 class MyWebView extends StatelessWidget {

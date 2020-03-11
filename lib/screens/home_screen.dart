@@ -9,12 +9,13 @@ import 'package:elderly_app/widgets/home_screen_widgets.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:elderly_app/screens/contact_relatives_screen.dart';
 import 'package:elderly_app/others/functions.dart';
+import 'package:location/location.dart';
 import 'login_screen.dart';
 import 'nearby_hospital_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
-import 'dart:io';
-import 'edit_relatives.dart';
+import 'package:permission_handler/permission_handler.dart'
+    as PermissionManager;
 import 'package:flutter_android/android_hardware.dart'
     show Sensor, SensorEvent, SensorManager;
 
@@ -48,12 +49,44 @@ class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
   FirebaseUser loggedInUser;
 
+  Future checkLocationPermission() async {
+    print('Checking Permissions');
+
+    permission = await PermissionManager.PermissionHandler()
+        .checkPermissionStatus(
+            PermissionManager.PermissionGroup.location); //checking permissiom
+    PermissionManager.ServiceStatus serviceStatus =
+        await PermissionManager.PermissionHandler().checkServiceStatus(
+            PermissionManager
+                .PermissionGroup.location); //checking service status
+    print(permission.toString());
+    print(serviceStatus.toString());
+    if (permission == PermissionManager.PermissionStatus.granted) {
+      setState(() {
+        permissionGranted = true;
+      });
+
+      if (serviceStatus == PermissionManager.ServiceStatus.enabled) {
+        setState(() {
+          serviceEnabled = true;
+        });
+      } else {
+        await location.requestService();
+      }
+    } else if (permission == PermissionManager.PermissionStatus.denied) {
+      await location.requestPermission();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getCurrentUser();
   }
 
+  bool permissionGranted = false;
+  bool serviceEnabled = false;
+  PermissionManager.PermissionStatus permission;
   @override
   Widget build(BuildContext context) {
     double screenWidth = getDeviceWidth(context);
@@ -196,9 +229,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Color(0xff3c513d),
                           borderColor: Color(0xff3c513d).withOpacity(0.75),
                         ),
-                        onTap: () {
+                        onTap: () async {
                           print('Hospital Tapped');
-                          Navigator.pushNamed(context, NearbyHospitalScreen.id);
+                          await checkLocationPermission();
+                          if (serviceEnabled && permissionGranted) {
+                            Navigator.pushNamed(
+                                context, NearbyHospitalScreen.id);
+                          }
                         },
                       ),
                       Padding(
@@ -223,9 +260,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Color(0xffaf5676),
                           borderColor: Color(0xffaf5676).withOpacity(0.75),
                         ),
-                        onTap: () {
+                        onTap: () async {
                           print('Relatives Tapped');
-                          Navigator.pushNamed(context, ContactScreen.id);
+                          await checkLocationPermission();
+                          if (serviceEnabled && permissionGranted) {
+                            Navigator.pushNamed(context, ContactScreen.id);
+                          }
                         },
                       ),
                       Padding(
@@ -261,6 +301,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.pushNamed(context, HeartRateScreen.id);
                           } else {
                             print('Heart Rate Sensor not available');
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    actions: [
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("Close"),
+                                      )
+                                    ],
+                                    title: Text("Functionality not Supported"),
+                                    content: Text(
+                                        "Heart rate sensor not available in your device"),
+                                  );
+                                });
                           }
                         },
                       ),
@@ -401,6 +458,8 @@ class _HomeScreenState extends State<HomeScreen> {
       if (user != null) {
         loggedInUser = user;
         print(loggedInUser.email);
+      } else {
+        Navigator.pushNamed(context, LoginScreen.id);
       }
     } catch (e) {
       print(e);
