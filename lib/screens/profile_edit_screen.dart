@@ -321,23 +321,28 @@ class _ProfileEditState extends State<ProfileEdit> {
                 ],
               ),
             ),
-            Container(
-              margin: EdgeInsets.fromLTRB(50, 20, 50, 30),
-              padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 65.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.redAccent,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.red,
-                    blurRadius: 3.0,
-                    offset: Offset(0, 4.0),
-                  ),
-                ],
-              ),
-              child: Text(
-                'Save Changes',
-                style: TextStyle(color: Colors.white, fontSize: 20.0),
+            GestureDetector(
+              onTap: () {
+                print('Changed');
+              },
+              child: Container(
+                margin: EdgeInsets.fromLTRB(50, 20, 50, 30),
+                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 65.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.greenAccent,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.green,
+                      blurRadius: 3.0,
+                      offset: Offset(0, 4.0),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  'Save Changes',
+                  style: TextStyle(color: Colors.white, fontSize: 20.0),
+                ),
               ),
             ),
           ],

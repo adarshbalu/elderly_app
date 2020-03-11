@@ -1,7 +1,6 @@
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
-import 'profile_screen.dart';
 import 'home_screen.dart';
 
 class InitialSetupScreen extends StatefulWidget {
@@ -13,11 +12,21 @@ class InitialSetupScreen extends StatefulWidget {
 class _InitialSetupScreenState extends State<InitialSetupScreen> {
   bool isCompleted = false;
   final userNameController = new TextEditingController();
-  String userName;
-  int age;
+  final relative1Controller = new TextEditingController();
+  final relative2Controller = new TextEditingController();
+  final relative1NumController = new TextEditingController();
+  final relative2NumController = new TextEditingController();
+
+  String userName, relative1name, relative2name;
+  int age, relative1num, relative2num;
+  var gender;
   @override
   void dispose() {
     userNameController.dispose();
+    relative1Controller.dispose();
+    relative2Controller.dispose();
+    relative2NumController.dispose();
+    relative1NumController.dispose();
     super.dispose();
   }
 
@@ -93,8 +102,7 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                   Expanded(
                     flex: 6,
                     child: FormItem(
-                      helperText: 'Name of the user',
-                      hintText: 'Enter type of User Name',
+                      hintText: 'Enter  User Name',
                       controller: userNameController,
                       onChanged: () {
                         print('Name Saved');
@@ -108,12 +116,173 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 0),
+              child: Text(
+                'Gender : ',
+                style: TextStyle(fontSize: 17),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Male : '),
+                  Radio(
+                    onChanged: (value) {
+                      setState(() {
+                        gender = value;
+                      });
+                    },
+                    activeColor: Color(0xffE3952D),
+                    value: 1,
+                    groupValue: gender,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text('Female : '),
+                  Radio(
+                    onChanged: (value) {
+                      setState(() {
+                        gender = value;
+                      });
+                    },
+                    activeColor: Color(0xffE3952D),
+                    value: 2,
+                    groupValue: gender,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(child: Text(' Relative Name : ')),
+                  Expanded(
+                    flex: 6,
+                    child: FormItem(
+                      helperText: 'Name of the user',
+                      hintText: 'Enter Relative Name',
+                      controller: relative1Controller,
+                      onChanged: () {
+                        print('Name Saved');
+                        setState(() {
+                          relative1name = relative1Controller.text;
+                        });
+                      },
+                      isNumber: false,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(child: Text('Relative 1 : ')),
+                  Expanded(
+                    flex: 6,
+                    child: FormItem(
+                      hintText: 'Enter mobile Number ',
+                      controller: relative1NumController,
+                      onChanged: () {
+                        print('Name Saved');
+                        setState(() {
+                          relative1num = relative1NumController.text as int;
+                        });
+                      },
+                      isNumber: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 14, 0, 0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(child: Text(' Relative Name : ')),
+                  Expanded(
+                    flex: 6,
+                    child: FormItem(
+                      helperText: 'Name of the user',
+                      hintText: 'Enter Relative Name',
+                      controller: relative2Controller,
+                      onChanged: () {
+                        print('Name Saved');
+                        setState(() {
+                          relative2name = relative2Controller.text;
+                        });
+                      },
+                      isNumber: false,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(child: Text('Relative 2 : ')),
+                  Expanded(
+                    flex: 6,
+                    child: FormItem(
+                      hintText: 'Enter mobile Number ',
+                      controller: relative2NumController,
+                      onChanged: () {
+                        print('Name Saved');
+                        setState(() {
+                          relative2num = relative2NumController.text as int;
+                        });
+                      },
+                      isNumber: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                print('Changed');
+                initialSetupComplete = true;
+                Navigator.pushNamed(context, HomeScreen.id);
+              },
+              child: Container(
+                margin: EdgeInsets.fromLTRB(50, 20, 50, 30),
+                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 65.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.greenAccent,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.green,
+                      blurRadius: 3.0,
+                      offset: Offset(0, 4.0),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  'Save Changes',
+                  style: TextStyle(color: Colors.white, fontSize: 20.0),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
+bool initialSetupComplete = false;
 
 class TextInputField extends StatelessWidget {
   var editingController = TextEditingController();
