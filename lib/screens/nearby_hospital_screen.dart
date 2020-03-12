@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'profile_screen.dart';
 import 'package:location/location.dart' as LocationManager;
@@ -129,7 +128,8 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundColor: Colors.transparent,
-                        child: Icon(Icons.place, color: Colors.red),
+                        child: Icon(Icons.local_hospital,
+                            size: 40, color: Colors.red),
                       ),
                       subtitle: Text(
                           snapshot.data[index].hospitalDistance.toString() +
@@ -235,32 +235,4 @@ class Hospital {
   Hospital(this.hospitalName, this.hospitalLocationLatitude,
       this.hospitalLocationLongitude,
       [this.hospitalLocationUrl, this.hospitalPlace, this.hospitalDistance]);
-}
-
-class MyWebView extends StatelessWidget {
-  final String title;
-  final String selectedUrl;
-
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
-
-  MyWebView({
-    @required this.title,
-    @required this.selectedUrl,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-        ),
-        body: WebView(
-          initialUrl: selectedUrl,
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
-            _controller.complete(webViewController);
-          },
-        ));
-  }
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sms/flutter_sms.dart' as sms;
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:sms/generated/i18n.dart';
 import 'profile_screen.dart';
 import 'package:get_it/get_it.dart';
 import '../resources/call_and_messages.dart';
