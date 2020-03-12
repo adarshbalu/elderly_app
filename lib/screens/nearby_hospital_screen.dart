@@ -35,18 +35,15 @@ class NearbyHospitalScreen extends StatefulWidget {
 class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
   bool showSpinner = true;
 
-  initState() {
-    super.initState();
-
-    getLocation();
+  @override
+  void dispose() {
+    super.dispose();
   }
 
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+  @override
+  initState() {
+    getLocation();
+    super.initState();
   }
 
   double lat, tempLon;
@@ -56,6 +53,13 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: AppDrawer(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.refresh),
+        onPressed: () async {
+          await getLocation();
+          await getNearbyHospitals();
+        },
+      ),
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -106,9 +110,9 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Please wait Fetching data.'),
+                    child: Text('Fetching data . Please wait ..'),
                   ),
-                  Text(' It may take a few moments.'),
+                  Text(' It may take a few moments .'),
                 ],
               ),
             );
@@ -149,7 +153,7 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
 //                                      'https://www.google.com/maps/dir/$hosLat,$hosLon/$latitude,$longitude',
 //                                )));
                         launch(
-                            'https://www.google.com/maps/dir/$hosLat,$hosLon/$latitude,$longitude');
+                            'https://www.google.com/maps/dir/$latitude,$longitude/$hosLat,$hosLon');
                       },
                     ),
                   );
@@ -172,21 +176,21 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
 //        latitude = currentLocation.latitude;
 //      });
 //    });
-    print(latitude);
-    print(longitude);
+    print('Latitude : ' + latitude.toString());
+    print('Longitude : ' + longitude.toString());
     http.Response response = await http.get(
         'https://api.tomtom.com/search/2/nearbySearch/.JSON?key=$kTomsApiKey&lat=$latitude&lon=$longitude&radius=4000&limit=20&categorySet=7321');
     var data = response.body;
     var status = response.statusCode;
-    print(status);
+    print('Hospital Search Status : ' + status.toString());
     if (status == 200) {
       var jsonData = jsonDecode(data)['results'];
       for (var h in jsonData) {
         String locationUrl, placeName;
         double locationLat = h['position']['lat'];
-        print(locationLat);
+        print('Hospital Latitude : ' + locationLat.toString());
         double locationLon = h['position']['lon'];
-        print(locationLon);
+        print('Hospital Longitude : ' + locationLon.toString());
 
         http.Response urlResponse = await http.get(
             'https://api.opencagedata.com/geocode/v1/json?q=$locationLat+$locationLon&key=f29cf18b10224e27b8931981380b747a');
