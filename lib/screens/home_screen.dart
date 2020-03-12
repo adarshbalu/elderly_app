@@ -329,19 +329,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      actions: [
+                                    return RichAlertDialog(
+                                      alertTitle:
+                                          richTitle("Function not available"),
+                                      alertSubtitle: richSubtitle(
+                                          'Sensor not available in device '),
+                                      alertType: RichAlertType.WARNING,
+                                      actions: <Widget>[
                                         FlatButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text("Close"),
-                                        )
+                                            child: Text("Ok"),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            }),
                                       ],
-                                      title:
-                                          Text("Functionality not Supported"),
-                                      content: Text(
-                                          "Heart rate sensor not available in your device"),
                                     );
                                   });
                             }
