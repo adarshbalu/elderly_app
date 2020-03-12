@@ -1,3 +1,4 @@
+import 'package:elderly_app/screens/appoinment_reminder_screen.dart';
 import 'package:elderly_app/screens/heart_rate_screen.dart';
 import 'package:elderly_app/screens/initial_setup_screen.dart';
 import 'package:elderly_app/screens/medicine_reminder.dart';
@@ -11,6 +12,7 @@ import 'package:elderly_app/widgets/app_default.dart';
 import 'package:elderly_app/screens/contact_relatives_screen.dart';
 import 'package:elderly_app/others/functions.dart';
 import 'package:location/location.dart';
+import 'add_documents_screen.dart';
 import 'login_screen.dart';
 import 'nearby_hospital_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -174,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           onTap: () {
                             print('Appoinment Tapped');
-                            Navigator.pushNamed(context, HeartRateScreen.id);
+                            Navigator.pushNamed(context, AppoinmentReminder.id);
                           },
                         ),
                         Padding(
@@ -370,7 +372,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             print('Documents Tapped');
 
-                            Navigator.pushNamed(context, MedicineReminder.id);
+                            Navigator.pushNamed(context, AddDocuments.id);
                           },
                         ),
                         Padding(

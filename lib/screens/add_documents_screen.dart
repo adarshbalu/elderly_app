@@ -1,10 +1,11 @@
 import 'dart:io';
+
 import 'package:elderly_app/screens/initial_setup_screen.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
@@ -16,27 +17,42 @@ class AddDocuments extends StatefulWidget {
 }
 
 class _AddDocumentsState extends State<AddDocuments> {
-  File localImage;
-  Future pickImage() async {
-    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  File image;
+  var fileName;
+  File loadedImage;
 
-    if (image == null) return;
-
-    var path;
-    path = await getApplicationDocumentsDirectory();
-
-    var fileName = basename(image.path);
-    localImage = await image.copy('$path/$fileName');
-  }
-
+  Directory directory;
+  var path;
   TextEditingController docNameController = TextEditingController();
   String docName;
+  bool imageLoaded = false;
+
+  Future pickImage() async {
+    directory = await getApplicationDocumentsDirectory();
+    path = directory.path;
+    print(path);
+    loadedImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (loadedImage == null) return;
+    print(loadedImage.path);
+  }
 
   Future saveImage() async {
     String name = docName.toLowerCase();
-    name = name.replaceAll(' ', '');
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('$name', localImage.path);
+    prefs.setString(name, image.path);
+  }
+
+  Future copyImage() async {
+    String extension = Path.basename(loadedImage.path);
+    var s = extension.indexOf('.', 0);
+    String ext = extension.substring(s, extension.length);
+    image = await loadedImage.copy('$path/${docName + ext}');
+  }
+
+  void saveName(String value) {
+    setState(() {
+      docName = value;
+    });
   }
 
   @override
@@ -94,15 +110,49 @@ class _AddDocumentsState extends State<AddDocuments> {
           SizedBox(
             height: 50,
           ),
-          FormItem(
-            isNumber: false,
-            hintText: 'File Name :',
-            controller: docNameController,
-            onChanged: (value) {
-              setState(() {
-                docName = value;
-              });
-            },
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Text('File Name : '),
+                ),
+              ),
+              Expanded(
+                flex: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: TextField(
+                    style: TextStyle(fontSize: 20),
+                    decoration: InputDecoration(
+                        hintText: 'Enter File name',
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Colors.indigo,
+                                style: BorderStyle.solid)),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Color(0xffaf5676),
+                                style: BorderStyle.solid)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Color(0xffaf5676),
+                                style: BorderStyle.solid))),
+                    onEditingComplete: () {
+                      docName = docNameController.text;
+                    },
+                    onSubmitted: (value) {
+                      setState(() {
+                        docName = value;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(
             height: 20,
@@ -112,6 +162,7 @@ class _AddDocumentsState extends State<AddDocuments> {
               onTap: () async {
                 if (docName != null) {
                   await pickImage();
+                  imageLoaded = true;
                 } else {
                   showDialog(
                       context: context,
@@ -133,34 +184,67 @@ class _AddDocumentsState extends State<AddDocuments> {
                       });
                 }
               },
-              child: Icon(Icons.image),
+              child: Icon(
+                Icons.image,
+                size: 140,
+                color: imageLoaded ? Colors.green : Colors.amberAccent,
+              ),
             ),
           ),
           SizedBox(
             height: 20,
           ),
           Center(
-            child: Container(
-              margin: EdgeInsets.fromLTRB(50, 20, 50, 30),
-              padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 65.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.blueAccent,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.blue,
-                    blurRadius: 3.0,
-                    offset: Offset(0, 4.0),
-                  ),
-                ],
-              ),
-              child: Text(
-                'Save Image',
-                style: TextStyle(color: Colors.white, fontSize: 20.0),
+            child: InkWell(
+              onTap: () async {
+                await copyImage();
+                print(image.path);
+                print(path);
+                await saveImage();
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return RichAlertDialog(
+                        alertTitle: richTitle("Image Saved"),
+                        alertSubtitle: richSubtitle('Please remember the name'),
+                        alertType: RichAlertType.SUCCESS,
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    });
+              },
+              child: Container(
+                margin: EdgeInsets.fromLTRB(50, 20, 50, 30),
+                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 65.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.blueAccent,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue,
+                      blurRadius: 3.0,
+                      offset: Offset(0, 4.0),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  'Save Image',
+                  style: TextStyle(color: Colors.white, fontSize: 20.0),
+                ),
               ),
             ),
           ),
-          Text('Remember the File name.Don\'t add spaces between words')
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:
+                Text('Remember the File name.Don\'t add spaces between words'),
+          )
         ],
       ),
     );

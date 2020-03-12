@@ -1,5 +1,6 @@
 import 'package:elderly_app/screens/edit_relatives.dart';
 import 'package:elderly_app/screens/note_home_screen.dart';
+import 'package:elderly_app/screens/view_documents_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/others/constants.dart';
@@ -67,7 +68,7 @@ class AppDrawer extends StatelessWidget {
                   InkWell(
                     splashColor: Color(0xff3c513d),
                     onTap: () {
-                      print('Drawer item Tapped');
+                      Navigator.pushNamed(context, ViewDocuments.id);
                     },
                     child: ListButtons(
                       icon: Icons.description,

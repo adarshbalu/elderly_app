@@ -50,8 +50,8 @@ dependencies:
   sms: ^0.2.4
   flutter_beautiful_popup: ^1.5.0
   firebase_ml_vision : any
-  flutter_local_notifications: ^1.2.2
-  android_alarm_manager: ^0.4.5+5
+  #flutter_local_notifications: ^1.2.2
+  #android_alarm_manager: ^0.4.5+5
   path: ^1.6.4
 
 
@@ -76,7 +76,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - lib/resources/images/
-    - lib/resources/videos/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
