@@ -107,7 +107,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           Center(
             child: Text(
-              'user',
+              loggedInUser.displayName == ''
+                  ? 'user'
+                  : loggedInUser.displayName,
               style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w100),
             ),
           ),
@@ -175,6 +177,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             detailName: 'BLOOD Sugar',
             detailValue: 'Normal',
           ),
+          ProfileDetails(
+            textSize: kTextSize,
+            valueSize: kValueSize,
+            detailName: 'E-mail Address',
+            detailValue: loggedInUser.email,
+          ),
           SizedBox(
             height: 25.0,
           )
@@ -201,16 +209,21 @@ class ProfileDetails extends StatelessWidget {
       margin: EdgeInsets.only(right: 1, left: 10, top: 18),
       child: Row(
         children: <Widget>[
-          Text(
-            '$detailName : ',
-            style: TextStyle(fontSize: textSize, fontWeight: FontWeight.w500),
+          Expanded(
+            flex: 2,
+            child: Text(
+              '$detailName : ',
+              style: TextStyle(fontSize: textSize, fontWeight: FontWeight.w500),
+            ),
           ),
-          Text(
-            '$detailValue',
-            style: TextStyle(
-                fontSize: valueSize,
-                fontWeight: FontWeight.w500,
-                fontStyle: FontStyle.italic),
+          Expanded(
+            child: Text(
+              '$detailValue',
+              style: TextStyle(
+                  fontSize: valueSize,
+                  fontWeight: FontWeight.w500,
+                  fontStyle: FontStyle.italic),
+            ),
           )
         ],
       ),

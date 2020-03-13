@@ -485,9 +485,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (user != null) {
         loggedInUser = user;
         print(loggedInUser.email);
-      } else {
-        Navigator.pushNamed(context, LoginScreen.id);
-      }
+      } //else {
+      //await Navigator.pushNamed(context, LoginScreen.id);
+      //}
     } catch (e) {
       print(e);
     }

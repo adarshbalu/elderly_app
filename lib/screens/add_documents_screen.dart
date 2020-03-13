@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:elderly_app/screens/home_screen.dart';
 import 'package:elderly_app/screens/initial_setup_screen.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
+import 'package:elderly_app/screens/view_documents_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -32,7 +34,12 @@ class _AddDocumentsState extends State<AddDocuments> {
     path = directory.path;
     print(path);
     loadedImage = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (loadedImage == null) return;
+    if (loadedImage == null)
+      return;
+    else
+      setState(() {
+        imageLoaded = true;
+      });
     print(loadedImage.path);
   }
 
@@ -58,6 +65,7 @@ class _AddDocumentsState extends State<AddDocuments> {
   @override
   void dispose() {
     docNameController.dispose();
+
     super.dispose();
   }
 
@@ -141,13 +149,18 @@ class _AddDocumentsState extends State<AddDocuments> {
                             borderSide: BorderSide(
                                 color: Color(0xffaf5676),
                                 style: BorderStyle.solid))),
-                    onEditingComplete: () {
-                      docName = docNameController.text;
-                    },
                     onSubmitted: (value) {
                       setState(() {
                         docName = value;
                       });
+                      print('sumbited' + docName);
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        docName = value;
+                      });
+
+                      print('val' + value);
                     },
                   ),
                 ),
@@ -162,7 +175,6 @@ class _AddDocumentsState extends State<AddDocuments> {
               onTap: () async {
                 if (docName != null) {
                   await pickImage();
-                  imageLoaded = true;
                 } else {
                   showDialog(
                       context: context,
@@ -213,6 +225,8 @@ class _AddDocumentsState extends State<AddDocuments> {
                             child: Text("OK"),
                             onPressed: () {
                               Navigator.pop(context);
+                              Navigator.pushNamed(context, ViewDocuments.id);
+                              docNameController.clear();
                             },
                           ),
                         ],

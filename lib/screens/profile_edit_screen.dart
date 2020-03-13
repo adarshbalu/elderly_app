@@ -1,3 +1,5 @@
+import 'package:elderly_app/screens/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:elderly_app/others/functions.dart';
@@ -33,6 +35,21 @@ class _ProfileEditState extends State<ProfileEdit> {
     heightController.dispose();
     super.dispose();
   }
+
+  getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser();
+      if (user != null) {
+        loggedInUser = user;
+        print(loggedInUser.email);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  final _auth = FirebaseAuth.instance;
+  FirebaseUser loggedInUser;
 
   @override
   Widget build(BuildContext context) {

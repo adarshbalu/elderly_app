@@ -146,12 +146,7 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                             )
                           : Text(''),
                       onTap: () {
-//                        Navigator.of(context).push(MaterialPageRoute(
-//                            builder: (BuildContext context) => MyWebView(
-//                                  title: snapshot.data[index].hospitalName,
-//                                  selectedUrl:
-//                                      'https://www.google.com/maps/dir/$hosLat,$hosLon/$latitude,$longitude',
-//                                )));
+//
                         launch(
                             'https://www.google.com/maps/dir/$latitude,$longitude/$hosLat,$hosLon');
                       },
@@ -179,7 +174,7 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
     print('Latitude : ' + latitude.toString());
     print('Longitude : ' + longitude.toString());
     http.Response response = await http.get(
-        'https://api.tomtom.com/search/2/nearbySearch/.JSON?key=$kTomsApiKey&lat=$latitude&lon=$longitude&radius=4000&limit=20&categorySet=7321');
+        'https://api.tomtom.com/search/2/nearbySearch/.JSON?key=$kTomsApiKey&lat=$latitude&lon=$longitude&radius=3000&limit=20&categorySet=7321');
     var data = response.body;
     var status = response.statusCode;
     print('Hospital Search Status : ' + status.toString());
