@@ -1,26 +1,32 @@
 import 'package:elderly_app/screens/login_screen.dart';
+import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:elderly_app/others/functions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileEdit extends StatefulWidget {
   static const String id = 'profile_edit_screen';
+  ProfileEdit({this.userId});
+  final userId;
   @override
   _ProfileEditState createState() => _ProfileEditState();
 }
 
 class _ProfileEditState extends State<ProfileEdit> {
-  final userNameController = TextEditingController();
-  final ageController = TextEditingController();
-  final weightController = TextEditingController();
-  final heightController = TextEditingController();
-  final bloodGroupController = TextEditingController();
-  String userName, bloodPressure, bloodSugar, bloodGroup, allergies;
-  final bloodPressureController = TextEditingController();
-  int age;
-  final allergiesController = TextEditingController();
-  final bloodSugarController = TextEditingController();
+  TextEditingController userNameController; // = TextEditingController();
+  TextEditingController ageController;
+  TextEditingController weightController;
+  TextEditingController heightController;
+  TextEditingController bloodGroupController;
+  TextEditingController emailController;
+  String userName, bloodPressure, bloodSugar, bloodGroup, allergies, email;
+
+  int age, genderValue;
+  TextEditingController allergiesController;
+  TextEditingController bloodSugarController;
+  TextEditingController bloodPressureController;
   double weight, height;
   var gender;
   @override
@@ -33,6 +39,7 @@ class _ProfileEditState extends State<ProfileEdit> {
     userNameController.dispose();
     weightController.dispose();
     heightController.dispose();
+    emailController.dispose();
     super.dispose();
   }
 
@@ -42,14 +49,93 @@ class _ProfileEditState extends State<ProfileEdit> {
       if (user != null) {
         loggedInUser = user;
         print(loggedInUser.email);
+        await getUserDetails();
+        await populateData();
       }
     } catch (e) {
       print(e);
     }
   }
 
+  Future populateData() async {
+    await fireStoreDatabase
+        .collection('profile')
+        .document(widget.userId)
+        .get()
+        .then((DocumentSnapshot snapshot) {
+      print(snapshot.data);
+      setState(() {
+        age = snapshot.data['age'];
+        userName = snapshot.data['userName'];
+        weight = snapshot.data['weight'];
+        height = snapshot.data['height'];
+        bloodGroup = snapshot.data['bloodGroup'];
+        gender = snapshot.data['gender'];
+        email = snapshot.data['email'];
+      });
+    });
+  }
+
+  final fireStoreDatabase = Firestore.instance;
+  Future getUserDetails() async {
+    await fireStoreDatabase
+        .collection('profile')
+        .document(widget.userId.toString())
+        .get()
+        .then((DocumentSnapshot snapshot) {
+      print(snapshot.data['age']);
+      setState(() {
+        ageController =
+            TextEditingController(text: snapshot.data['age'].toString());
+        userNameController =
+            TextEditingController(text: snapshot.data['userName']);
+        weightController =
+            TextEditingController(text: snapshot.data['weight'].toString());
+        heightController =
+            TextEditingController(text: snapshot.data['height'].toString());
+        bloodGroupController =
+            TextEditingController(text: snapshot.data['bloodGroup']);
+        allergiesController =
+            TextEditingController(text: snapshot.data['allergies']);
+        gender = snapshot.data['gender'];
+        if (gender == 'Male')
+          genderValue = 0;
+        else
+          genderValue = 1;
+        email = snapshot.data['email'];
+      });
+    });
+  }
+
+  Future updateData() async {
+    try {
+      await fireStoreDatabase
+          .collection('profile')
+          .document(widget.userId)
+          .updateData({
+        'age': age,
+        'userName': userName,
+        'height': height,
+        'weight': weight,
+        'allergies': allergies,
+        'gender': gender,
+        'bloodGroup': bloodGroup
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   final _auth = FirebaseAuth.instance;
   FirebaseUser loggedInUser;
+
+  @override
+  void initState() {
+    getCurrentUser();
+    getUserDetails();
+    populateData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,10 +198,10 @@ class _ProfileEditState extends State<ProfileEdit> {
                       helperText: 'Name of the user',
                       hintText: 'Enter type of User Name',
                       controller: userNameController,
-                      onChanged: () {
+                      onChanged: (value) {
                         print('Name Saved');
                         setState(() {
-                          userName = userNameController.text;
+                          userName = value;
                         });
                       },
                       isNumber: false,
@@ -140,12 +226,12 @@ class _ProfileEditState extends State<ProfileEdit> {
                   Radio(
                     onChanged: (value) {
                       setState(() {
-                        gender = value;
+                        gender = 'Male';
                       });
                     },
                     activeColor: Color(0xffE3952D),
                     value: 1,
-                    groupValue: gender,
+                    groupValue: genderValue,
                   ),
                   SizedBox(
                     width: 10,
@@ -154,12 +240,12 @@ class _ProfileEditState extends State<ProfileEdit> {
                   Radio(
                     onChanged: (value) {
                       setState(() {
-                        gender = value;
+                        gender = 'Female';
                       });
                     },
                     activeColor: Color(0xffE3952D),
                     value: 2,
-                    groupValue: gender,
+                    groupValue: genderValue,
                   ),
                   SizedBox(
                     width: 10,
@@ -177,11 +263,11 @@ class _ProfileEditState extends State<ProfileEdit> {
                     child: FormItem(
                       helperText: 'Age',
                       hintText: 'Enter Age ',
-                      controller: weightController,
-                      onChanged: () {
+                      controller: ageController,
+                      onChanged: (value) {
                         print('Name Saved');
                         setState(() {
-                          age = ageController.text as int;
+                          age = int.parse(value);
                         });
                       },
                       isNumber: true,
@@ -201,10 +287,10 @@ class _ProfileEditState extends State<ProfileEdit> {
                       helperText: 'Weight ',
                       hintText: 'Enter weight',
                       controller: weightController,
-                      onChanged: () {
+                      onChanged: (value) {
                         print('Name Saved');
                         setState(() {
-                          weight = weightController.text as double;
+                          weight = double.parse(value);
                         });
                       },
                       isNumber: true,
@@ -217,17 +303,17 @@ class _ProfileEditState extends State<ProfileEdit> {
               padding: const EdgeInsets.only(left: 6),
               child: Row(
                 children: <Widget>[
-                  Expanded(child: Text('Weight:')),
+                  Expanded(child: Text('Height:')),
                   Expanded(
                     flex: 6,
                     child: FormItem(
-                      helperText: 'Weight ',
-                      hintText: 'Enter weight',
-                      controller: weightController,
-                      onChanged: () {
+                      helperText: 'Height ',
+                      hintText: 'Enter Height',
+                      controller: heightController,
+                      onChanged: (value) {
                         print('Name Saved');
                         setState(() {
-                          height = heightController.text as double;
+                          height = double.parse(value);
                         });
                       },
                       isNumber: true,
@@ -247,10 +333,10 @@ class _ProfileEditState extends State<ProfileEdit> {
                       helperText: 'Weight ',
                       hintText: 'Enter Blood Group',
                       controller: bloodGroupController,
-                      onChanged: () {
+                      onChanged: (value) {
                         print('Name Saved');
                         setState(() {
-                          bloodGroup = bloodGroupController.text;
+                          bloodGroup = value;
                         });
                       },
                       isNumber: false,
@@ -326,10 +412,10 @@ class _ProfileEditState extends State<ProfileEdit> {
                     child: FormItem(
                       hintText: 'Enter Allergies ',
                       controller: allergiesController,
-                      onChanged: () {
+                      onChanged: (value) {
                         print('Name Saved');
                         setState(() {
-                          allergies = allergiesController.text;
+                          allergies = value;
                         });
                       },
                       isNumber: false,
@@ -339,8 +425,10 @@ class _ProfileEditState extends State<ProfileEdit> {
               ),
             ),
             GestureDetector(
-              onTap: () {
+              onTap: () async {
                 print('Changed');
+                await updateData();
+                Navigator.pushNamed(context, ProfileScreen.id);
               },
               child: Container(
                 margin: EdgeInsets.fromLTRB(50, 20, 50, 30),

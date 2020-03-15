@@ -1,7 +1,10 @@
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'home_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class InitialSetupScreen extends StatefulWidget {
   static const String id = 'Initial_Screen';
@@ -16,10 +19,10 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
   final relative2Controller = new TextEditingController();
   final relative1NumController = new TextEditingController();
   final relative2NumController = new TextEditingController();
-
-  String userName, relative1name, relative2name;
-  int age, relative1num, relative2num;
-  var gender;
+  final fireStoreDatabase = Firestore.instance;
+  String userName, relative1name, relative2name, relative1num, relative2num;
+  int age, gender;
+  String genderValue;
   @override
   void dispose() {
     userNameController.dispose();
@@ -28,6 +31,26 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
     relative2NumController.dispose();
     relative1NumController.dispose();
     super.dispose();
+  }
+
+  FirebaseUser loggedInUser;
+  String email, userId;
+  void getCurrentUser() async {
+    try {
+      final user = await auth.currentUser();
+      loggedInUser = user;
+      email = loggedInUser.email;
+      userId = loggedInUser.uid;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  final auth = FirebaseAuth.instance;
+  @override
+  void initState() {
+    getCurrentUser();
+    super.initState();
   }
 
   @override
@@ -104,10 +127,10 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                     child: FormItem(
                       hintText: 'Enter  User Name',
                       controller: userNameController,
-                      onChanged: () {
+                      onChanged: (value) {
                         print('Name Saved');
                         setState(() {
-                          userName = userNameController.text;
+                          userName = value;
                         });
                       },
                       isNumber: false,
@@ -132,7 +155,7 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                   Radio(
                     onChanged: (value) {
                       setState(() {
-                        gender = value;
+                        genderValue = 'Male';
                       });
                     },
                     activeColor: Color(0xffE3952D),
@@ -146,7 +169,7 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                   Radio(
                     onChanged: (value) {
                       setState(() {
-                        gender = value;
+                        genderValue = 'Female';
                       });
                     },
                     activeColor: Color(0xffE3952D),
@@ -170,10 +193,10 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                       helperText: 'Name of the user',
                       hintText: 'Enter Relative Name',
                       controller: relative1Controller,
-                      onChanged: () {
+                      onChanged: (value) {
                         print('Name Saved');
                         setState(() {
-                          relative1name = relative1Controller.text;
+                          relative1name = value;
                         });
                       },
                       isNumber: false,
@@ -192,10 +215,10 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                     child: FormItem(
                       hintText: 'Enter mobile Number ',
                       controller: relative1NumController,
-                      onChanged: () {
+                      onChanged: (value) {
                         print('Name Saved');
                         setState(() {
-                          relative1num = relative1NumController.text as int;
+                          relative1num = value;
                         });
                       },
                       isNumber: true,
@@ -215,10 +238,10 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                       helperText: 'Name of the user',
                       hintText: 'Enter Relative Name',
                       controller: relative2Controller,
-                      onChanged: () {
+                      onChanged: (value) {
                         print('Name Saved');
                         setState(() {
-                          relative2name = relative2Controller.text;
+                          relative2name = value;
                         });
                       },
                       isNumber: false,
@@ -237,10 +260,10 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                     child: FormItem(
                       hintText: 'Enter mobile Number ',
                       controller: relative2NumController,
-                      onChanged: () {
+                      onChanged: (value) {
                         print('Name Saved');
                         setState(() {
-                          relative2num = relative2NumController.text as int;
+                          relative2num = value;
                         });
                       },
                       isNumber: true,
@@ -250,9 +273,10 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
               ),
             ),
             GestureDetector(
-              onTap: () {
+              onTap: () async {
                 print('Changed');
                 initialSetupComplete = true;
+                createRecord();
                 Navigator.pushNamed(context, HomeScreen.id);
               },
               child: Container(
@@ -279,6 +303,29 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
         ),
       ),
     );
+  }
+
+  void createRecord() async {
+    await fireStoreDatabase.collection("profile").document(userId).setData({
+      'userName': userName,
+      'email': email,
+      'userId': userId,
+      'height': 0,
+      'weight': 0,
+      'age': 0,
+      'gender': genderValue,
+      'bloodGroup': 'Not Set',
+      'allergies': 'Not Set',
+      'relative1number': relative1num,
+      'relative1name': relative1name,
+      'relative2number': relative2num,
+      'relative2name': relative2name,
+    });
+
+//    DocumentReference ref = await fireStoreDatabase.collection("books").add({
+//      'title': 'Flutter in Action',
+//      'description': 'Complete Programming Guide to learn Flutter'
+//    });
   }
 }
 

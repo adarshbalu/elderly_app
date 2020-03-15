@@ -5,6 +5,7 @@ import 'package:elderly_app/widgets/app_default.dart';
 import 'package:elderly_app/others/functions.dart';
 import 'profile_edit_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'Profile_Screen';
@@ -14,20 +15,27 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String username = 'NameofUser';
-
+  final fireStoreDatabase = Firestore.instance;
   final _auth = FirebaseAuth.instance;
-
+  String gender, userId, bloodGroup, allergies, email;
+  int age;
+  double height, weight;
   FirebaseUser loggedInUser;
+
   @override
   void initState() {
-    super.initState();
     getCurrentUser();
+    getUserDetails();
+    super.initState();
   }
 
-  void getCurrentUser() async {
+  Future getCurrentUser() async {
     try {
       final user = await _auth.currentUser();
       loggedInUser = user;
+      userId = loggedInUser.uid;
+      print(userId);
+      await getUserDetails();
 //      if (loggedInUser.displayName != null) {
 //        username = loggedInUser.displayName.toString();
 //      }
@@ -36,8 +44,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future getUserDetails() async {
+    await fireStoreDatabase
+        .collection('profile')
+        .document(userId)
+        .get()
+        .then((DocumentSnapshot snapshot) {
+      print(snapshot.data);
+      setState(() {
+        age = snapshot.data['age'];
+        username = snapshot.data['userName'];
+        weight = snapshot.data['weight'];
+        height = snapshot.data['height'];
+        bloodGroup = snapshot.data['bloodGroup'];
+        gender = snapshot.data['gender'];
+        email = snapshot.data['email'];
+        allergies = snapshot.data['allergies'];
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    getCurrentUser();
+    getUserDetails();
     double screenWidth = getDeviceWidth(context);
     double screenHeight = getDeviceHeight(context);
 
@@ -55,7 +85,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         onPressed: () {
           print('Edit Button');
-          Navigator.pushNamed(context, ProfileEdit.id);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return ProfileEdit(
+                userId: userId,
+              );
+            }),
+          );
         },
         backgroundColor: Color(0xff3c513d),
       ),
@@ -107,9 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           Center(
             child: Text(
-              loggedInUser.displayName == ''
-                  ? 'user'
-                  : loggedInUser.displayName,
+              username,
               style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w100),
             ),
           ),
@@ -137,7 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           ProfileDetails(
             detailName: 'AGE',
-            detailValue: '67',
+            detailValue: age.toString(),
             textSize: kTextSize,
             valueSize: kValueSize,
           ),
@@ -145,11 +180,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             textSize: kTextSize,
             valueSize: kValueSize,
             detailName: 'Gender',
-            detailValue: 'Male',
+            detailValue: gender,
           ),
           ProfileDetails(
             detailName: 'HEIGHT',
-            detailValue: '200',
+            detailValue: height.toString(),
             textSize: kTextSize,
             valueSize: kValueSize,
           ),
@@ -157,13 +192,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             detailName: 'WEIGHT',
             valueSize: kValueSize,
             textSize: kTextSize,
-            detailValue: '50',
+            detailValue: weight.toString(),
           ),
           ProfileDetails(
             valueSize: kValueSize,
             textSize: kTextSize,
             detailName: 'BLOOD GROUP',
-            detailValue: 'O+ve',
+            detailValue: bloodGroup,
           ),
           ProfileDetails(
             textSize: kTextSize,
@@ -174,14 +209,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ProfileDetails(
             textSize: kTextSize,
             valueSize: kValueSize,
-            detailName: 'BLOOD Sugar',
-            detailValue: 'Normal',
+            detailName: 'Allergies',
+            detailValue: allergies,
           ),
           ProfileDetails(
             textSize: kTextSize,
             valueSize: kValueSize,
             detailName: 'E-mail Address',
-            detailValue: loggedInUser.email,
+            detailValue: email,
           ),
           SizedBox(
             height: 25.0,
