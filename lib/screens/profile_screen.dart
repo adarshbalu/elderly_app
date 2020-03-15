@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:elderly_app/others/functions.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'profile_edit_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int age;
   double height, weight;
   FirebaseUser loggedInUser;
-
+  bool load = false;
   @override
   void initState() {
     getCurrentUser();
@@ -51,16 +52,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .get()
         .then((DocumentSnapshot snapshot) {
       print(snapshot.data);
-      setState(() {
-        age = snapshot.data['age'];
-        username = snapshot.data['userName'];
-        weight = snapshot.data['weight'];
-        height = snapshot.data['height'];
-        bloodGroup = snapshot.data['bloodGroup'];
-        gender = snapshot.data['gender'];
-        email = snapshot.data['email'];
-        allergies = snapshot.data['allergies'];
-      });
+      if (mounted)
+        setState(() {
+          age = snapshot.data['age'];
+          username = snapshot.data['userName'];
+          weight = snapshot.data['weight'];
+          height = snapshot.data['height'];
+          bloodGroup = snapshot.data['bloodGroup'];
+          gender = snapshot.data['gender'];
+          email = snapshot.data['email'];
+          allergies = snapshot.data['allergies'];
+          load = true;
+        });
     });
   }
 
@@ -126,103 +129,111 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      body: ListView(
-        children: <Widget>[
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
-              child: CircleAvatar(
-                radius: 50.0,
-                backgroundColor: Color(0xff3c513d),
-                child: Icon(
-                  Icons.account_circle,
-                  size: 90.0,
-                  color: Colors.white,
+      body: load
+          ? ListView(
+              children: <Widget>[
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+                    child: CircleAvatar(
+                      radius: 50.0,
+                      backgroundColor: Color(0xff3c513d),
+                      child: Icon(
+                        Icons.account_circle,
+                        size: 90.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
+                Center(
+                  child: Text(
+                    username,
+                    style:
+                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.w100),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.green, style: BorderStyle.solid),
+                      ),
+                    ),
+                    margin: EdgeInsets.only(top: 10.0, bottom: 20),
+                    child: Text(
+                      'Profile Details',
+                      style: TextStyle(
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xffE3952D),
+                      ),
+                    ),
+                  ),
+                ),
+                ProfileDetails(
+                  detailName: 'AGE',
+                  detailValue: age.toString(),
+                  textSize: kTextSize,
+                  valueSize: kValueSize,
+                ),
+                ProfileDetails(
+                  textSize: kTextSize,
+                  valueSize: kValueSize,
+                  detailName: 'Gender',
+                  detailValue: gender,
+                ),
+                ProfileDetails(
+                  detailName: 'HEIGHT',
+                  detailValue: height.toString(),
+                  textSize: kTextSize,
+                  valueSize: kValueSize,
+                ),
+                ProfileDetails(
+                  detailName: 'WEIGHT',
+                  valueSize: kValueSize,
+                  textSize: kTextSize,
+                  detailValue: weight.toString(),
+                ),
+                ProfileDetails(
+                  valueSize: kValueSize,
+                  textSize: kTextSize,
+                  detailName: 'BLOOD GROUP',
+                  detailValue: bloodGroup,
+                ),
+                ProfileDetails(
+                  textSize: kTextSize,
+                  valueSize: kValueSize,
+                  detailName: 'BLOOD PRESSURE',
+                  detailValue: 'Normal',
+                ),
+                ProfileDetails(
+                  textSize: kTextSize,
+                  valueSize: kValueSize,
+                  detailName: 'Allergies',
+                  detailValue: allergies,
+                ),
+                ProfileDetails(
+                  textSize: kTextSize,
+                  valueSize: kValueSize,
+                  detailName: 'E-mail Address',
+                  detailValue: email,
+                ),
+                SizedBox(
+                  height: 25.0,
+                )
+              ],
+            )
+          : Container(
+              child: SpinKitWanderingCubes(
+                color: Colors.green,
+                size: 100.0,
               ),
             ),
-          ),
-          Center(
-            child: Text(
-              username,
-              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w100),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Center(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom:
-                      BorderSide(color: Colors.green, style: BorderStyle.solid),
-                ),
-              ),
-              margin: EdgeInsets.only(top: 10.0, bottom: 20),
-              child: Text(
-                'Profile Details',
-                style: TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xffE3952D),
-                ),
-              ),
-            ),
-          ),
-          ProfileDetails(
-            detailName: 'AGE',
-            detailValue: age.toString(),
-            textSize: kTextSize,
-            valueSize: kValueSize,
-          ),
-          ProfileDetails(
-            textSize: kTextSize,
-            valueSize: kValueSize,
-            detailName: 'Gender',
-            detailValue: gender,
-          ),
-          ProfileDetails(
-            detailName: 'HEIGHT',
-            detailValue: height.toString(),
-            textSize: kTextSize,
-            valueSize: kValueSize,
-          ),
-          ProfileDetails(
-            detailName: 'WEIGHT',
-            valueSize: kValueSize,
-            textSize: kTextSize,
-            detailValue: weight.toString(),
-          ),
-          ProfileDetails(
-            valueSize: kValueSize,
-            textSize: kTextSize,
-            detailName: 'BLOOD GROUP',
-            detailValue: bloodGroup,
-          ),
-          ProfileDetails(
-            textSize: kTextSize,
-            valueSize: kValueSize,
-            detailName: 'BLOOD PRESSURE',
-            detailValue: 'Normal',
-          ),
-          ProfileDetails(
-            textSize: kTextSize,
-            valueSize: kValueSize,
-            detailName: 'Allergies',
-            detailValue: allergies,
-          ),
-          ProfileDetails(
-            textSize: kTextSize,
-            valueSize: kValueSize,
-            detailName: 'E-mail Address',
-            detailValue: email,
-          ),
-          SizedBox(
-            height: 25.0,
-          )
-        ],
-      ),
     );
   }
 }

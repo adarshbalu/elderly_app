@@ -101,8 +101,8 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SpinKitRotatingCircle(
-                    color: Colors.blue,
+                  SpinKitWanderingCubes(
+                    color: Colors.green,
                     size: 100.0,
                   ),
                   SizedBox(

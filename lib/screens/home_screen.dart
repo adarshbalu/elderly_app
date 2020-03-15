@@ -31,6 +31,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var sensor;
+  bool initialSetupComplete = true;
   bool heartRateSensor = false;
   checkSensor() async {
     try {

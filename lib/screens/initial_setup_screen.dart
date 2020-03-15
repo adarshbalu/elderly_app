@@ -275,8 +275,11 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
             GestureDetector(
               onTap: () async {
                 print('Changed');
-                initialSetupComplete = true;
-                createRecord();
+
+                await createRecord();
+                setState(() {
+                  initialSetupComplete = true;
+                });
                 Navigator.pushNamed(context, HomeScreen.id);
               },
               child: Container(
@@ -305,7 +308,7 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
     );
   }
 
-  void createRecord() async {
+  Future createRecord() async {
     await fireStoreDatabase.collection("profile").document(userId).setData({
       'userName': userName,
       'email': email,
