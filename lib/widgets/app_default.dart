@@ -87,8 +87,8 @@ class AppDrawer extends StatelessWidget {
                         Navigator.pushNamed(context, EditRelativesScreen.id);
                       },
                       child: ListButtons(
-                        icon: Icons.person_add,
-                        text: 'Add Relatives',
+                        icon: Icons.person,
+                        text: 'Edit Relatives',
                       ),
                     ),
                     InkWell(

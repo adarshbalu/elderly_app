@@ -316,8 +316,8 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
       'relative1name': relative1name,
       'relative2number': relative2num,
       'relative2name': relative2name,
-      'bloodSugar': 'Normal',
-      'bloodPressure': 'Normal',
+      'bloodSugar': 'Not set',
+      'bloodPressure': 'Not set',
     });
 
 //    DocumentReference ref = await fireStoreDatabase.collection("books").add({

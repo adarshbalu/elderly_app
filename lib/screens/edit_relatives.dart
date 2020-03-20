@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'profile_screen.dart';
@@ -12,6 +14,103 @@ class EditRelativesScreen extends StatefulWidget {
 }
 
 class _EditRelativesScreenState extends State<EditRelativesScreen> {
+  TextEditingController relative1nameController;
+  TextEditingController relative2nameController;
+  TextEditingController relative2numController;
+  TextEditingController relative1numController;
+
+  @override
+  void dispose() {
+    relative1nameController.dispose();
+    relative1numController.dispose();
+    relative2nameController.dispose();
+    relative2numController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    getCurrentUser();
+    populateData();
+    super.initState();
+  }
+
+  String relative1name = '',
+      relative2name = '',
+      relative1num = '',
+      relative2num = '';
+  bool load = false;
+  FirebaseUser loggedInUser;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  String userId, username;
+  Future getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser();
+      loggedInUser = user;
+      userId = loggedInUser.uid;
+      print(userId);
+      await getUserRelativeData();
+      await populateData();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  final fireStoreDatabase = Firestore.instance;
+  Future getUserRelativeData() async {
+    await fireStoreDatabase
+        .collection('profile')
+        .document(userId)
+        .get()
+        .then((DocumentSnapshot snapshot) {
+      print(snapshot.data);
+      if (mounted)
+        setState(() {
+          relative2name = snapshot.data['relative2name'];
+          relative1name = snapshot.data['relative1name'];
+          relative2num = snapshot.data['relative2number'];
+          relative1num = snapshot.data['relative1number'];
+          username = snapshot.data['userName'];
+
+          load = true;
+        });
+    });
+  }
+
+  Future populateData() async {
+    await fireStoreDatabase
+        .collection('profile')
+        .document(userId)
+        .get()
+        .then((DocumentSnapshot snapshot) {
+      print(snapshot.data['age']);
+      if (mounted)
+        setState(() {
+          relative2numController = TextEditingController(text: relative2num);
+          relative2nameController = TextEditingController(text: relative2name);
+          relative1nameController = TextEditingController(text: relative1name);
+          relative1numController = TextEditingController(text: relative1num);
+          load = true;
+        });
+    });
+  }
+
+  Future updateRelativeData() async {
+    try {
+      await fireStoreDatabase
+          .collection('profile')
+          .document(userId)
+          .updateData({
+        'relative1num': relative1num,
+        'relative2num': relative2num,
+        'relative1name': relative1name,
+        'relative2name': relative2name,
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,47 +146,145 @@ class _EditRelativesScreenState extends State<EditRelativesScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: ListView(
         children: <Widget>[
-          FlatButton(
-            onPressed: () async {
-              print('Printed');
-
-//              var url = '{{baseURL}}/api/auth/login';
-//              var body = json.encode({
-//                'Body=Body of the messageFrom=+917012250352To=+919072122524'
-//              });
-//              print(body);
-//
-//              var response = await http.post(
-//                'https://api.twilio.com/2010-04-01/Accounts/AC07a649c710761cf3a0e6b96048accf58/Messages.json',
-//                headers: {
-//                  'accept': 'application/json',
-//                },
-//                body: body,
-              //{
-//                    'Body': 'Body of the message',
-//                    'From': '+917012250352',
-//                    'To': '+919072122524',
-//                    'AC07a649c710761cf3a0e6b96048accf58':
-//                        'ea627e873b85a03ae83b33a60e657c1d',
-              //}
-//              );
-
-              //            print(response.body);
-
-//              var uname = 'AC07a649c710761cf3a0e6b96048accf58';
-//              var pword = 'ea627e873b85a03ae83b33a60e657c1d';
-//              var authn = 'Basic ' + base64Encode(utf8.encode('$uname:$pword'));
-//
-//              var res = await http.post(
-//                  'https://api.twilio.com/2010-04-01/Accounts/AC07a649c710761cf3a0e6b96048accf58/Messages.json',
-//                  body: body,
-//                  headers: {'Authorization': authn});
-//              if (res.statusCode != 200) print(res.statusCode);
-//              print(res.body);
-            },
-            child: Text('Text'),
+          Padding(
+            padding: const EdgeInsets.only(top: 25.0, bottom: 10),
+            child: Center(
+              child: Text(
+                'Edit Relatives Details',
+                style: TextStyle(fontSize: 30, color: Colors.amber),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Center(
+            child: Text(
+              'Relative 1 ',
+              style: TextStyle(fontSize: 17, color: Colors.blueGrey),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            child: Row(
+              children: <Widget>[
+                Expanded(child: Text('Name : ')),
+                Expanded(
+                  flex: 6,
+                  child: FormItem(
+                    helperText: 'Name of the Relative 1',
+                    hintText: 'Enter  Name',
+                    controller: relative1nameController,
+                    onChanged: (value) {
+                      print('Name Saved');
+                      setState(() {
+                        relative1name = value;
+                      });
+                    },
+                    isNumber: false,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            child: Row(
+              children: <Widget>[
+                Expanded(child: Text('Num : ')),
+                Expanded(
+                  flex: 6,
+                  child: FormItem(
+                    helperText: 'Number of the Relative 1',
+                    hintText: 'Enter  Number',
+                    controller: relative1numController,
+                    onChanged: (value) {
+                      print('Name Saved');
+                      setState(() {
+                        relative1num = value.toString();
+                      });
+                    },
+                    isNumber: true,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Center(
+            child: Text(
+              'Relative 2 ',
+              style: TextStyle(fontSize: 17, color: Colors.blueGrey),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            child: Row(
+              children: <Widget>[
+                Expanded(child: Text('Name : ')),
+                Expanded(
+                  flex: 6,
+                  child: FormItem(
+                    helperText: 'Name of the Relative 2',
+                    hintText: 'Enter  Name',
+                    controller: relative2nameController,
+                    onChanged: (value) {
+                      print('Name Saved');
+                      setState(() {
+                        relative2name = value;
+                      });
+                    },
+                    isNumber: false,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            child: Row(
+              children: <Widget>[
+                Expanded(child: Text('Num : ')),
+                Expanded(
+                  flex: 6,
+                  child: FormItem(
+                    helperText: 'Number of the Relative 2',
+                    hintText: 'Enter  Number',
+                    controller: relative2numController,
+                    onChanged: (value) {
+                      print('Name Saved');
+                      setState(() {
+                        relative2num = value.toString();
+                      });
+                    },
+                    isNumber: true,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Center(
+            child: MaterialButton(
+              color: Colors.green,
+              onPressed: () {
+                print('pressed');
+              },
+              padding: EdgeInsets.all(15),
+              child: Text(
+                'Update Details',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
           )
         ],
       ),
