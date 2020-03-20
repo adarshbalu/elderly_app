@@ -1,5 +1,6 @@
 import 'package:elderly_app/screens/edit_relatives.dart';
 import 'package:elderly_app/screens/home_screen.dart';
+import 'package:elderly_app/screens/image_label.dart';
 import 'package:elderly_app/screens/note_home_screen.dart';
 import 'package:elderly_app/screens/view_documents_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -62,12 +63,12 @@ class AppDrawer extends StatelessWidget {
                     Divider(),
                     InkWell(
                       onTap: () {
-                        print('Drawer item Tapped');
+                        Navigator.pushNamed(context, ImageLabel.id);
                       },
                       splashColor: Color(0xff3c513d),
                       child: ListButtons(
-                        icon: Icons.attach_file,
-                        text: 'Add Documents',
+                        icon: Icons.photo_camera,
+                        text: 'Image Detection',
                       ),
                     ),
                     InkWell(

@@ -18,9 +18,9 @@ class ReminderDetail extends StatefulWidget {
 
 class _ReminderDetailState extends State<ReminderDetail> {
   Reminder reminder;
-  TimeOfDay selectedTime1 = TimeOfDay.now();
-  TimeOfDay selectedTime2 = TimeOfDay.now();
-  TimeOfDay selectedTime3 = TimeOfDay.now();
+  TimeOfDay selectedTime1;
+  TimeOfDay selectedTime2;
+  TimeOfDay selectedTime3;
   TimeOfDay timeNow = TimeOfDay.now();
 
   int times = 2;
@@ -29,7 +29,6 @@ class _ReminderDetailState extends State<ReminderDetail> {
   String medicineName = '', tempName = '', medicineType = '';
 
   File pickedImage;
-
   bool isImageLoaded = false;
 
   Future pickImage() async {
@@ -53,7 +52,11 @@ class _ReminderDetailState extends State<ReminderDetail> {
 
   Future readText() async {
     setState(() {
+      nameController.value = TextEditingValue(text: '');
+      nameController.text = '';
       medicineName = '';
+      tempName = null;
+      isImageLoaded = false;
     });
 
     FirebaseVisionImage firebaseVisionImage =
@@ -64,18 +67,19 @@ class _ReminderDetailState extends State<ReminderDetail> {
     for (TextBlock block in readText.blocks) {
       for (TextLine line in block.lines) {
         for (TextElement word in line.elements) {
-          tempName += word.text;
-          print(medicineName);
+          tempName = word.text;
         }
       }
     }
     setState(() {
-      if (medicineName != null) {
+      if (medicineName == '') {
         medicineName = tempName;
         nameController.text = medicineName;
       } else {
         medicineName = '';
+        nameController.clear();
         isImageLoaded = false;
+        tempName = '';
       }
     });
   }
@@ -139,7 +143,6 @@ class _ReminderDetailState extends State<ReminderDetail> {
                     hintText: 'Enter Medicine Name',
                     controller: nameController,
                     onChanged: (value) {
-                      print('Name Saved');
                       setState(() {
                         medicineName = value.toString();
                       });
@@ -149,16 +152,22 @@ class _ReminderDetailState extends State<ReminderDetail> {
                   ),
                 ),
                 Expanded(
-                  child: GestureDetector(
-                    child: Icon(
-                      Icons.photo_camera,
-                      color: isImageLoaded ? Colors.green : Colors.amberAccent,
-                      size: 43,
+                  child: Tooltip(
+                    message: 'Detect Name from Image',
+                    child: GestureDetector(
+                      child: Icon(
+                        Icons.photo_camera,
+                        color:
+                            isImageLoaded ? Colors.green : Colors.amberAccent,
+                        size: 43,
+                      ),
+                      onTap: () async {
+                        await pickImage();
+                        nameController.clear();
+                        medicineName = '';
+                        await readText();
+                      },
                     ),
-                    onTap: () async {
-                      await pickImage();
-                      await readText();
-                    },
                   ),
                 )
               ],
@@ -167,10 +176,9 @@ class _ReminderDetailState extends State<ReminderDetail> {
               helperText: 'Give the type for reference',
               hintText: 'Enter type of medicine',
               controller: typeController,
-              onChanged: () {
-                print('Name Saved');
+              onChanged: (value) {
                 setState(() {
-                  medicineType = typeController.text;
+                  medicineType = value;
                 });
               },
               isNumber: false,
@@ -381,52 +389,52 @@ class _ReminderDetailState extends State<ReminderDetail> {
 //                    ),
 //                  )
 //                : SizedBox(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 20, 8, 8),
-              child: Text(
-                'Reminder set on : ',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Reminder 1 : ' +
-                        selectedTime1.hour.toString() +
-                        ' : ' +
-                        selectedTime1.minute.toString(),
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  times >= 2
-                      ? Text(
-                          'Reminder 2 : ' +
-                              selectedTime2.hour.toString() +
-                              ' : ' +
-                              selectedTime2.minute.toString(),
-                          style: TextStyle(fontSize: 15),
-                        )
-                      : SizedBox(),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  times == 3
-                      ? Text(
-                          'Reminder 3 : ' +
-                              selectedTime3.hour.toString() +
-                              ' : ' +
-                              selectedTime3.minute.toString(),
-                          style: TextStyle(fontSize: 15),
-                        )
-                      : SizedBox(),
-                ],
-              ),
-            ),
+//            Padding(
+//              padding: const EdgeInsets.fromLTRB(8.0, 20, 8, 8),
+//              child: Text(
+//                'Reminder set on : ',
+//                style: TextStyle(fontSize: 20),
+//              ),
+//            ),
+//            Padding(
+//              padding: const EdgeInsets.all(8.0),
+//              child: Column(
+//                mainAxisAlignment: MainAxisAlignment.center,
+//                children: <Widget>[
+//                  Text('Reminder 1 : '),
+//                  Text(
+//                    selectedTime1.hour.toString() +
+//                        ' : ' +
+//                        selectedTime1.minute.toString(),
+//                    style: TextStyle(fontSize: 18),
+//                  ),
+//                  SizedBox(
+//                    width: 10,
+//                  ),
+//                  times >= 2
+//                      ? Text(
+//                          'Reminder 2 : ' +
+//                              selectedTime2.hour.toString() +
+//                              ' : ' +
+//                              selectedTime2.minute.toString(),
+//                          style: TextStyle(fontSize: 15),
+//                        )
+//                      : SizedBox(),
+//                  SizedBox(
+//                    width: 10,
+//                  ),
+//                  times == 3
+//                      ? Text(
+//                          'Reminder 3 : ' +
+//                              selectedTime3.hour.toString() +
+//                              ' : ' +
+//                              selectedTime3.minute.toString(),
+//                          style: TextStyle(fontSize: 15),
+//                        )
+//                      : SizedBox(),
+//                ],
+//              ),
+//            ),
             Center(
               child: InkWell(
                 onTap: () {
@@ -435,9 +443,9 @@ class _ReminderDetailState extends State<ReminderDetail> {
                     reminder.times = times;
                     reminder.reminderName = medicineName;
                     reminder.reminderType = medicineType;
-                    reminder.time1 = selectedTime1.toString();
-                    reminder.time2 = selectedTime2.toString();
-                    reminder.time3 = selectedTime3.toString();
+                    if (times == 1) reminder.time1 = selectedTime1.toString();
+                    if (times >= 2) reminder.time2 = selectedTime2.toString();
+                    if (times >= 3) reminder.time3 = selectedTime3.toString();
                   });
                 },
                 child: Container(

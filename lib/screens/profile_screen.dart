@@ -18,7 +18,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String username = 'NameofUser';
   final fireStoreDatabase = Firestore.instance;
   final _auth = FirebaseAuth.instance;
-  String gender, userId, bloodGroup, allergies, email;
+  String gender,
+      userId,
+      bloodGroup,
+      allergies,
+      email,
+      bloodPressure,
+      bloodSugar;
   int age;
   double height, weight;
   FirebaseUser loggedInUser;
@@ -62,6 +68,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           gender = snapshot.data['gender'];
           email = snapshot.data['email'];
           allergies = snapshot.data['allergies'];
+          bloodSugar = snapshot.data['bloodSugar'];
+          bloodPressure = snapshot.data['bloodPressure'];
           load = true;
         });
     });
@@ -209,7 +217,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   textSize: kTextSize,
                   valueSize: kValueSize,
                   detailName: 'BLOOD PRESSURE',
-                  detailValue: 'Normal',
+                  detailValue: bloodPressure,
+                ),
+                ProfileDetails(
+                  textSize: kTextSize,
+                  valueSize: kValueSize,
+                  detailName: 'BLOOD SUGAR',
+                  detailValue: bloodSugar,
                 ),
                 ProfileDetails(
                   textSize: kTextSize,

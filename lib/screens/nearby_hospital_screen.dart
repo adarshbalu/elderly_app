@@ -174,7 +174,7 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
     print('Latitude : ' + latitude.toString());
     print('Longitude : ' + longitude.toString());
     http.Response response = await http.get(
-        'https://api.tomtom.com/search/2/nearbySearch/.JSON?key=$kTomsApiKey&lat=$latitude&lon=$longitude&radius=3000&limit=20&categorySet=7321');
+        'https://api.tomtom.com/search/2/nearbySearch/.JSON?key=$kTomsApiKey&lat=$latitude&lon=$longitude&radius=2500&limit=15&categorySet=7321');
     var data = response.body;
     var status = response.statusCode;
     print('Hospital Search Status : ' + status.toString());

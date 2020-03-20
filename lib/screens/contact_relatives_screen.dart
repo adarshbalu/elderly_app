@@ -126,9 +126,9 @@ class _ContactScreenState extends State<ContactScreen> {
 
   @override
   void initState() {
-    super.initState();
     getLatLong();
     getCurrentUser();
+    super.initState();
   }
 
   @override

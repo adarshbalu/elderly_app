@@ -1,6 +1,5 @@
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -194,7 +193,6 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                       hintText: 'Enter Relative Name',
                       controller: relative1Controller,
                       onChanged: (value) {
-                        print('Name Saved');
                         setState(() {
                           relative1name = value;
                         });
@@ -216,7 +214,6 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                       hintText: 'Enter mobile Number ',
                       controller: relative1NumController,
                       onChanged: (value) {
-                        print('Name Saved');
                         setState(() {
                           relative1num = value;
                         });
@@ -239,7 +236,6 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                       hintText: 'Enter Relative Name',
                       controller: relative2Controller,
                       onChanged: (value) {
-                        print('Name Saved');
                         setState(() {
                           relative2name = value;
                         });
@@ -261,7 +257,6 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                       hintText: 'Enter mobile Number ',
                       controller: relative2NumController,
                       onChanged: (value) {
-                        print('Name Saved');
                         setState(() {
                           relative2num = value;
                         });
@@ -274,8 +269,6 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
             ),
             GestureDetector(
               onTap: () async {
-                print('Changed');
-
                 await createRecord();
                 setState(() {
                   initialSetupComplete = true;
@@ -323,6 +316,8 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
       'relative1name': relative1name,
       'relative2number': relative2num,
       'relative2name': relative2name,
+      'bloodSugar': 'Normal',
+      'bloodPressure': 'Normal',
     });
 
 //    DocumentReference ref = await fireStoreDatabase.collection("books").add({

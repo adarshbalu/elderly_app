@@ -3,6 +3,7 @@ import 'package:elderly_app/screens/appoinment_detail_screen.dart';
 import 'package:elderly_app/screens/appoinment_reminder_screen.dart';
 import 'package:elderly_app/screens/heart_rate_screen.dart';
 import 'package:elderly_app/screens/home_screen.dart';
+import 'package:elderly_app/screens/image_label.dart';
 import 'package:elderly_app/screens/loading_screen.dart';
 import 'package:elderly_app/screens/view_documents_screen.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:elderly_app/screens/contact_relatives_screen.dart';
 import 'package:elderly_app/screens/medicine_reminder.dart';
 import 'package:elderly_app/screens/login_screen.dart';
 import 'package:elderly_app/screens/profile_edit_screen.dart';
-import 'package:elderly_app/screens/note_edit_screen.dart';
 import 'package:elderly_app/screens/note_home_screen.dart';
 import 'screens/reminder_detail.dart';
 import 'screens/nearby_hospital_screen.dart';
@@ -49,6 +49,7 @@ class ElderlyApp extends StatelessWidget {
         AppoinmentDetail.id: (context) => AppoinmentDetail(),
         ViewDocuments.id: (context) => ViewDocuments(),
         AddDocuments.id: (context) => AddDocuments(),
+        ImageLabel.id: (context) => ImageLabel(),
       },
       theme: ThemeData(
         fontFamily: 'OpenSans',

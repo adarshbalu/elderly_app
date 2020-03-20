@@ -415,6 +415,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.8"
+  mlkit:
+    dependency: "direct main"
+    description:
+      name: mlkit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.15.0"
   modal_progress_hud:
     dependency: "direct main"
     description:

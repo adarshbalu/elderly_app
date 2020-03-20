@@ -54,6 +54,7 @@ dependencies:
   #android_alarm_manager: ^0.4.5+5
   path: ^1.6.4
   cloud_firestore: any
+  mlkit: any
 
 
 

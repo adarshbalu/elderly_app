@@ -1,6 +1,7 @@
 import 'package:elderly_app/screens/login_screen.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:elderly_app/others/functions.dart';
@@ -75,6 +76,8 @@ class _ProfileEditState extends State<ProfileEdit> {
           bloodGroup = snapshot.data['bloodGroup'];
           gender = snapshot.data['gender'];
           email = snapshot.data['email'];
+          bloodPressure = snapshot.data['bloodPressure'];
+          bloodSugar = snapshot.data['bloodSugar'];
         });
     });
     setState(() {
@@ -104,6 +107,10 @@ class _ProfileEditState extends State<ProfileEdit> {
               TextEditingController(text: snapshot.data['bloodGroup']);
           allergiesController =
               TextEditingController(text: snapshot.data['allergies']);
+          bloodPressureController =
+              TextEditingController(text: snapshot.data['bloodPressure']);
+          bloodSugarController =
+              TextEditingController(text: snapshot.data['bloodSugar']);
           gender = snapshot.data['gender'];
           if (gender == 'Male')
             genderValue = 0;
@@ -126,7 +133,9 @@ class _ProfileEditState extends State<ProfileEdit> {
         'weight': weight,
         'allergies': allergies,
         'gender': gender,
-        'bloodGroup': bloodGroup
+        'bloodGroup': bloodGroup,
+        'bloodSugar': bloodSugar,
+        'bloodPressure': bloodPressure,
       });
     } catch (e) {
       print(e.toString());
