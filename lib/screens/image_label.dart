@@ -94,11 +94,21 @@ class _ImageLabelState extends State<ImageLabel> {
             child: Center(
               child: Text(
                 'Image Detector',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 30, color: Colors.amber),
               ),
             ),
           ),
+          SizedBox(
+            height: 20,
+          ),
           displaySelectedFile(_file),
+          SizedBox(
+            height: 30,
+          ),
+          Text(
+            'Objects',
+            style: TextStyle(fontSize: 29, color: Colors.blueGrey),
+          ),
           _buildList(_currentLabels)
         ],
       ),
@@ -128,8 +138,8 @@ class _ImageLabelState extends State<ImageLabel> {
   Widget displaySelectedFile(File file) {
     return Center(
       child: SizedBox(
-        // height: 200.0,
-        width: 150.0,
+        height: 150.0,
+        width: 200.0,
         child: file == null ? Text(' ') : Image.file(file),
       ),
     );
@@ -137,11 +147,16 @@ class _ImageLabelState extends State<ImageLabel> {
 
   //Display labels
   Widget _buildRow(String label, String confidence, String entityID) {
-    return new ListTile(
-      title: new Text(
-        "\nName: $label \nConfidence: $confidence ",
+    double confidValue = double.parse(confidence) * 100;
+    confidValue = confidValue.roundToDouble();
+    return ListTile(
+      //leading: Icon(Icons.check),
+      title: Text(
+        label,
+        style: TextStyle(fontSize: 20),
         //\nEntityID: $entityID
       ),
+      subtitle: Text(' Confidence: $confidValue '),
       dense: true,
     );
   }

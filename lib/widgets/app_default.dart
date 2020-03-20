@@ -7,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/others/constants.dart';
 import 'package:elderly_app/screens/loading_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
 final auth = FirebaseAuth.instance;
 final user = FirebaseUser;
@@ -92,16 +94,6 @@ class AppDrawer extends StatelessWidget {
                       ),
                     ),
                     InkWell(
-                      splashColor: Color(0xff3c513d),
-                      onTap: () {
-                        print('Drawer item Tapped');
-                      },
-                      child: ListButtons(
-                        icon: Icons.supervisor_account,
-                        text: 'View Relatives',
-                      ),
-                    ),
-                    InkWell(
                       onTap: () {
                         print('Drawer item Tapped');
                       },
@@ -135,14 +127,69 @@ class AppDrawer extends StatelessWidget {
                     InkWell(
                       splashColor: Color(0xff3c513d),
                       onTap: () async {
-                        await auth.signOut();
-                        Navigator.pushNamed(context, LoadingScreen.id);
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return RichAlertDialog(
+                                alertTitle: richTitle("Log-out from the App"),
+                                alertSubtitle: richSubtitle('Are you Sure '),
+                                alertType: RichAlertType.WARNING,
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text("Yes"),
+                                    onPressed: () async {
+                                      await auth.signOut();
+                                      Navigator.pushNamed(
+                                          context, LoadingScreen.id);
+                                    },
+                                  ),
+                                  FlatButton(
+                                    child: Text("No"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
                       },
                       child: ListButtons(
-                        icon: Icons.cancel,
+                        icon: Icons.report,
                         text: 'Log Out',
                       ),
-                    )
+                    ),
+                    InkWell(
+                      splashColor: Color(0xff3c513d),
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return RichAlertDialog(
+                                alertTitle: richTitle("Exit the App"),
+                                alertSubtitle: richSubtitle('Are you Sure '),
+                                alertType: RichAlertType.WARNING,
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text("Yes"),
+                                    onPressed: () {
+                                      SystemNavigator.pop();
+                                    },
+                                  ),
+                                  FlatButton(
+                                    child: Text("No"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
+                      },
+                      child: ListButtons(
+                        icon: Icons.close,
+                        text: 'Exit App',
+                      ),
+                    ),
                   ],
                 ),
               ),
