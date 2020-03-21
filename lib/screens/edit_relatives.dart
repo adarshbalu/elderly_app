@@ -273,8 +273,8 @@ class _EditRelativesScreenState extends State<EditRelativesScreen> {
           Center(
             child: MaterialButton(
               color: Colors.green,
-              onPressed: () {
-                print('pressed');
+              onPressed: () async {
+                await updateRelativeData();
               },
               padding: EdgeInsets.all(15),
               child: Text(

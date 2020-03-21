@@ -22,12 +22,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     getUser().then((user) {
       if (user != null) {
-        Navigator.pushNamed(context, HomeScreen.id);
-      }
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return HomeScreen(true);
+        }));
+      } else
+        Navigator.pushNamed(context, LoginScreen.id);
     });
 
     Future.delayed(duration, () {
-      Navigator.pushNamed(context, LoginScreen.id);
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return HomeScreen(true);
+      }));
     });
 
     super.initState();

@@ -17,15 +17,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
-    super.initState();
     getUser().then((user) {
       if (user != null) {
         setState(() {
           showSpinner = !showSpinner;
         });
-        Navigator.pushNamed(context, HomeScreen.id);
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return HomeScreen(true);
+        }));
       }
     });
+    super.initState();
   }
 
   Future<FirebaseUser> getUser() async {
@@ -160,17 +162,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                     setState(() {
                                       showSpinner = !showSpinner;
                                     });
-
-                                    print(e);
-
                                     showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
                                           return RichAlertDialog(
                                             alertTitle:
-                                                richTitle("Some Error Occured"),
-                                            alertSubtitle: richSubtitle(
-                                                'Please try again'),
+                                                richTitle("An Error Occured"),
+                                            alertSubtitle:
+                                                richSubtitle(e.toString()),
                                             alertType: RichAlertType.ERROR,
                                             actions: <Widget>[
                                               FlatButton(
@@ -237,16 +236,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                       showSpinner = !showSpinner;
                                     });
 
-                                    print(e);
-
                                     showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
                                           return RichAlertDialog(
                                             alertTitle:
-                                                richTitle("Some Error Occured"),
-                                            alertSubtitle: richSubtitle(
-                                                'Please try again'),
+                                                richTitle("An Error Occured"),
+                                            alertSubtitle:
+                                                richSubtitle(e.toString()),
                                             alertType: RichAlertType.ERROR,
                                             actions: <Widget>[
                                               FlatButton(

@@ -273,7 +273,10 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                 setState(() {
                   initialSetupComplete = true;
                 });
-                Navigator.pushNamed(context, HomeScreen.id);
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return HomeScreen(true);
+                }));
               },
               child: Container(
                 margin: EdgeInsets.fromLTRB(50, 20, 50, 30),

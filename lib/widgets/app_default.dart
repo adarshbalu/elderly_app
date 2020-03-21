@@ -27,7 +27,9 @@ class AppDrawer extends StatelessWidget {
             Expanded(
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, HomeScreen.id);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return HomeScreen(true);
+                  }));
                 },
                 child: Column(
                   children: <Widget>[

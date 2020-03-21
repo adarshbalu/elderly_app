@@ -24,6 +24,8 @@ import 'package:flutter_android/android_hardware.dart'
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'Home_Screen';
+  bool isUserLoggedIn = true;
+  HomeScreen([this.isUserLoggedIn]);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -39,13 +41,17 @@ class _HomeScreenState extends State<HomeScreen> {
       var events = await sensor.subscribe();
       events.listen((SensorEvent event) {
         print(event.values[0]);
-        setState(() {
-          heartRateSensor = true;
-        });
+        if (mounted)
+          setState(() {
+            heartRateSensor = true;
+          });
       });
     } catch (e) {
       if (e == NoSuchMethodError) {
-        heartRateSensor = false;
+        if (mounted)
+          setState(() {
+            heartRateSensor = false;
+          });
       }
     }
   }
@@ -54,8 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
   FirebaseUser loggedInUser;
 
   Future checkLocationPermission() async {
-    print('Checking Permissions');
-
     permission = await PermissionManager.PermissionHandler()
         .checkPermissionStatus(
             PermissionManager.PermissionGroup.location); //checking permissiom
@@ -63,8 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         await PermissionManager.PermissionHandler().checkServiceStatus(
             PermissionManager
                 .PermissionGroup.location); //checking service status
-    print(permission.toString());
-    print(serviceStatus.toString());
+
     if (permission == PermissionManager.PermissionStatus.granted) {
       setState(() {
         permissionGranted = true;
@@ -84,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    getCurrentUser();
+    if (!widget.isUserLoggedIn) getCurrentUser();
     super.initState();
   }
 
@@ -485,17 +488,9 @@ class _HomeScreenState extends State<HomeScreen> {
       final user = await _auth.currentUser();
       if (user != null) {
         loggedInUser = user;
-        print(loggedInUser.email);
-      } //else {
-      //await Navigator.pushNamed(context, LoginScreen.id);
-      //}
+      }
     } catch (e) {
       print(e);
     }
   }
-}
-
-void dimensions(double a, double b) {
-  print('Height : $a');
-  print('Width : $b');
 }
