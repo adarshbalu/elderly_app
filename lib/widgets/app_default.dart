@@ -1,6 +1,8 @@
+import 'package:elderly_app/screens/appoinment_decision_screen.dart';
 import 'package:elderly_app/screens/edit_relatives.dart';
 import 'package:elderly_app/screens/home_screen.dart';
 import 'package:elderly_app/screens/image_label.dart';
+import 'package:elderly_app/screens/medicine_decision_screen.dart';
 import 'package:elderly_app/screens/note_home_screen.dart';
 import 'package:elderly_app/screens/view_documents_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,7 +33,7 @@ class AppDrawer extends StatelessWidget {
                     return HomeScreen(true);
                   }));
                 },
-                child: Column(
+                child: ListView(
                   children: <Widget>[
                     Container(
                       margin: EdgeInsets.all(20.0),
@@ -119,11 +121,21 @@ class AppDrawer extends StatelessWidget {
                     InkWell(
                       splashColor: Color(0xff3c513d),
                       onTap: () {
-                        print('Drawer item Tapped');
+                        Navigator.pushNamed(context, AppoinmentDecision.id);
                       },
                       child: ListButtons(
                         icon: Icons.local_hospital,
-                        text: 'Appoinment Reminder',
+                        text: 'Appoinment Decision',
+                      ),
+                    ),
+                    InkWell(
+                      splashColor: Color(0xff3c513d),
+                      onTap: () {
+                        Navigator.pushNamed(context, MedicineScreen.id);
+                      },
+                      child: ListButtons(
+                        icon: Icons.alarm_on,
+                        text: 'Medicine Decision',
                       ),
                     ),
                     InkWell(

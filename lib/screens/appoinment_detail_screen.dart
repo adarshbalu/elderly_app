@@ -1,6 +1,9 @@
 import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_material_pickers/flutter_material_pickers.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 class AppoinmentDetail extends StatefulWidget {
   static const String id = 'Appoinment_Detail_Screen';
@@ -9,6 +12,32 @@ class AppoinmentDetail extends StatefulWidget {
 }
 
 class _AppoinmentDetailState extends State<AppoinmentDetail> {
+  String doctorName, place, address;
+  DateTime date, tempDate = DateTime(0, 0, 0, 0, 0);
+  TimeOfDay timeSelected = TimeOfDay(minute: 0, hour: 0);
+
+  TextEditingController nameController;
+  TextEditingController placeController;
+  TextEditingController addressController;
+  final dateFormat = DateFormat("EEEE, MMMM d, yyyy 'at' h:mma");
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    placeController.dispose();
+    addressController.dispose();
+    super.dispose();
+  }
+
+  Future _selectDate() async {
+    DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2020),
+        lastDate: DateTime(2025));
+    if (picked != null) setState(() => date = picked);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +72,145 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
             ),
           ),
         ],
+      ),
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: 15,
+          ),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                'Appoinment Reminder',
+                style: TextStyle(color: Colors.green, fontSize: 28),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          AppoinmentFormItem(
+            helperText: 'Full name',
+            hintText: 'Enter name of the Doctor',
+            controller: nameController,
+            onChanged: (value) {
+              setState(() {
+                doctorName = value;
+              });
+            },
+            isNumber: false,
+            icon: FontAwesomeIcons.userMd,
+          ),
+          AppoinmentFormItem(
+            helperText: 'Hospital , Home',
+            hintText: 'Enter place of Visit',
+            controller: placeController,
+            onChanged: (value) {
+              setState(() {
+                place = value;
+              });
+            },
+            isNumber: false,
+            icon: FontAwesomeIcons.clinicMedical,
+          ),
+          AppoinmentFormItem(
+            helperText: 'Brief address',
+            hintText: 'Enter address ',
+            controller: addressController,
+            onChanged: (value) {
+              setState(() {
+                address = value;
+              });
+            },
+            isNumber: false,
+            icon: FontAwesomeIcons.briefcaseMedical,
+          ),
+          RaisedButton(
+            child: Text('date pick'),
+            onPressed: () async {
+              await _selectDate();
+              print(tempDate.toString());
+            },
+          ),
+          RaisedButton(
+            child: Text('time'),
+            onPressed: () async {
+              showMaterialTimePicker(
+                context: context,
+                selectedTime: timeSelected,
+                onChanged: (value) => setState(() {
+                  timeSelected = value;
+                }),
+              );
+            },
+          ),
+          RaisedButton(
+            onPressed: () {
+//              if (!(timeSelected.minute == 0 && timeSelected.hour == 0)) {
+//                if (!(tempDate.year == 0 &&
+//                    tempDate.month == 0 &&
+//                    tempDate.day == 0)) {
+              setState(() {
+                date = DateTime(tempDate.year, tempDate.month, tempDate.day,
+                    timeSelected.hour, timeSelected.minute);
+              });
+              print(date.toString());
+//                } else {
+//                  print('fail');
+//                }
+//              }
+            },
+            child: Text('submit'),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class AppoinmentFormItem extends StatelessWidget {
+  final String hintText;
+  final String helperText;
+  Function onChanged;
+  final bool isNumber;
+  IconData icon;
+  final controller;
+
+  AppoinmentFormItem(
+      {this.hintText,
+      this.helperText,
+      this.onChanged,
+      this.icon,
+      this.isNumber: false,
+      this.controller});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 10, 10, 8),
+      child: TextField(
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(
+                  color: Color(0xffaf5676), style: BorderStyle.solid)),
+          helperText: helperText,
+          icon: Icon(icon, color: Colors.green),
+          hintText: hintText,
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide:
+                  BorderSide(color: Colors.indigo, style: BorderStyle.solid)),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(
+                  color: Color(0xffaf5676), style: BorderStyle.solid)),
+        ),
+        onChanged: (String value) {
+          onChanged(value);
+        },
+        controller: controller,
+        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       ),
     );
   }

@@ -18,6 +18,8 @@ import 'screens/nearby_hospital_screen.dart';
 import 'screens/initial_setup_screen.dart';
 import 'screens/edit_relatives.dart';
 import 'resources/service_locator.dart';
+import 'screens/medicine_decision_screen.dart';
+import 'screens/appoinment_decision_screen.dart';
 
 void main() {
   setupLocator();
@@ -50,6 +52,8 @@ class ElderlyApp extends StatelessWidget {
         ViewDocuments.id: (context) => ViewDocuments(),
         AddDocuments.id: (context) => AddDocuments(),
         ImageLabel.id: (context) => ImageLabel(),
+        AppoinmentDecision.id: (context) => AppoinmentDecision(),
+        MedicineScreen.id: (context) => MedicineScreen(),
       },
       theme: ThemeData(
         fontFamily: 'OpenSans',

@@ -1,3 +1,4 @@
+import 'package:elderly_app/screens/appoinment_detail_screen.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,16 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: AppDrawer(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.amber,
+        onPressed: () {
+          Navigator.pushNamed(context, AppoinmentDetail.id);
+        },
+      ),
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
