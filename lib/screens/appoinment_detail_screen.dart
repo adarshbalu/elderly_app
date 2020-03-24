@@ -1,5 +1,7 @@
+import 'package:elderly_app/screens/home_screen.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,7 +15,7 @@ class AppoinmentDetail extends StatefulWidget {
 
 class _AppoinmentDetailState extends State<AppoinmentDetail> {
   String doctorName, place, address;
-  DateTime date, tempDate = DateTime(0, 0, 0, 0, 0);
+  DateTime date, tempDate = DateTime(0000, 00, 00, 00, 00);
   TimeOfDay timeSelected = TimeOfDay(minute: 0, hour: 0);
 
   TextEditingController nameController;
@@ -33,9 +35,9 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
     DateTime picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
-        firstDate: DateTime(2020),
+        firstDate: DateTime(2019),
         lastDate: DateTime(2025));
-    if (picked != null) setState(() => date = picked);
+    if (picked != null) setState(() => tempDate = picked);
   }
 
   @override
@@ -126,42 +128,106 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
             isNumber: false,
             icon: FontAwesomeIcons.briefcaseMedical,
           ),
-          RaisedButton(
-            child: Text('date pick'),
-            onPressed: () async {
-              await _selectDate();
-              print(tempDate.toString());
-            },
+          SizedBox(
+            height: 20,
           ),
-          RaisedButton(
-            child: Text('time'),
-            onPressed: () async {
-              showMaterialTimePicker(
-                context: context,
-                selectedTime: timeSelected,
-                onChanged: (value) => setState(() {
-                  timeSelected = value;
-                }),
-              );
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      'Date',
+                      style: TextStyle(color: Colors.teal),
+                    ),
+                    InkWell(
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.green,
+                        child: Icon(
+                          Icons.event_note,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onTap: () async {
+                        await _selectDate();
+                        print(tempDate.toString());
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      'Time',
+                      style: TextStyle(color: Colors.teal),
+                    ),
+                    InkWell(
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.green,
+                        child: Icon(
+                          Icons.alarm_add,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onTap: () async {
+                        showMaterialTimePicker(
+                          context: context,
+                          selectedTime: timeSelected,
+                          onChanged: (value) => setState(() {
+                            timeSelected = value;
+                            print(timeSelected.toString());
+                          }),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          RaisedButton(
-            onPressed: () {
-//              if (!(timeSelected.minute == 0 && timeSelected.hour == 0)) {
-//                if (!(tempDate.year == 0 &&
-//                    tempDate.month == 0 &&
-//                    tempDate.day == 0)) {
-              setState(() {
-                date = DateTime(tempDate.year, tempDate.month, tempDate.day,
-                    timeSelected.hour, timeSelected.minute);
-              });
-              print(date.toString());
-//                } else {
-//                  print('fail');
-//                }
-//              }
-            },
-            child: Text('submit'),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: MaterialButton(
+              elevation: 10,
+              hoverElevation: 5,
+              highlightColor: Colors.green.withAlpha(10),
+              color: Colors.green,
+              padding: EdgeInsets.all(20),
+              onPressed: () {
+                if (!(timeSelected.minute == 0 && timeSelected.hour == 0)) {
+                  if (!(tempDate.year == 0 &&
+                      tempDate.month == 0 &&
+                      tempDate.day == 0)) {
+                    setState(() {
+                      date = DateTime(tempDate.year, tempDate.month,
+                          tempDate.day, timeSelected.hour, timeSelected.minute);
+                    });
+
+                    print(date.toString());
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return HomeScreen(true);
+                    }));
+                  } else {
+                    print('fail');
+                  }
+                }
+              },
+              child: Text(
+                'Add Appoinment',
+                style: TextStyle(color: Colors.white, fontSize: 23),
+              ),
+            ),
           )
         ],
       ),
