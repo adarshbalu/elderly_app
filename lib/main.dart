@@ -1,3 +1,4 @@
+import 'package:elderly_app/models/reminder.dart';
 import 'package:elderly_app/screens/add_documents_screen.dart';
 import 'package:elderly_app/screens/appoinment_detail_screen.dart';
 import 'package:elderly_app/screens/appoinment_reminder_screen.dart';
@@ -27,6 +28,7 @@ void main() {
 }
 
 class ElderlyApp extends StatelessWidget {
+  Reminder reminder;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,7 +45,7 @@ class ElderlyApp extends StatelessWidget {
         LoginScreen.id: (context) => LoginScreen(),
         ProfileEdit.id: (context) => ProfileEdit(),
         NoteList.id: (context) => NoteList(),
-        ReminderDetail.id: (context) => ReminderDetail(),
+        ReminderDetail.id: (context) => ReminderDetail(reminder, ''),
         NearbyHospitalScreen.id: (context) => NearbyHospitalScreen(),
         InitialSetupScreen.id: (context) => InitialSetupScreen(),
         EditRelativesScreen.id: (context) => EditRelativesScreen(),

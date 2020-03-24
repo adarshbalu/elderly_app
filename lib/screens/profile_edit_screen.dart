@@ -78,6 +78,7 @@ class _ProfileEditState extends State<ProfileEdit> {
           email = snapshot.data['email'];
           bloodPressure = snapshot.data['bloodPressure'];
           bloodSugar = snapshot.data['bloodSugar'];
+          allergies = snapshot.data['allergies'];
         });
     });
     setState(() {
@@ -244,6 +245,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                           onChanged: (value) {
                             setState(() {
                               gender = 'Male';
+                              genderValue = value;
                             });
                           },
                           activeColor: Color(0xffE3952D),
@@ -258,6 +260,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                           onChanged: (value) {
                             setState(() {
                               gender = 'Female';
+                              genderValue = value;
                             });
                           },
                           activeColor: Color(0xffE3952D),
@@ -376,10 +379,10 @@ class _ProfileEditState extends State<ProfileEdit> {
                           child: FormItem(
                             hintText: 'Enter Blood Pressure',
                             controller: bloodPressureController,
-                            onChanged: () {
+                            onChanged: (value) {
                               print('Name Saved');
                               setState(() {
-                                bloodPressure = bloodPressureController.text;
+                                bloodPressure = value;
                               });
                             },
                             isNumber: false,
@@ -403,10 +406,10 @@ class _ProfileEditState extends State<ProfileEdit> {
                             helperText: 'Weight ',
                             hintText: 'Enter Blood Sugar',
                             controller: bloodSugarController,
-                            onChanged: () {
+                            onChanged: (value) {
                               print('Name Saved');
                               setState(() {
-                                bloodSugar = bloodSugarController.text;
+                                bloodSugar = value;
                               });
                             },
                             isNumber: false,
@@ -443,9 +446,9 @@ class _ProfileEditState extends State<ProfileEdit> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      print('Changed');
                       await updateData();
                       Navigator.pushNamed(context, ProfileScreen.id);
+                      print('Changed');
                     },
                     child: Container(
                       margin: EdgeInsets.fromLTRB(50, 20, 50, 30),

@@ -1,28 +1,28 @@
 class Reminder {
   int _id;
-  String _reminderName;
-  String _reminderType;
+  String _name;
+  String _type;
   int _times;
   String _time1, _time2, _time3;
 
   Reminder(
-    this._reminderName,
-    this._reminderType,
+    this._name,
+    this._type,
     this._time1,
     this._time2,
     this._time3,
     this._times,
   );
 
-  Reminder.withId(this._id, this._reminderName, this._reminderType, this._time1,
-      this._time2, this._time3, this._times);
+  Reminder.withId(this._id, this._name, this._type, this._time1, this._time2,
+      this._time3, this._times);
 
   int get id => _id;
   int get times => _times;
 
-  String get reminderName => _reminderName;
+  String get name => _name;
 
-  String get reminderType => _reminderType;
+  String get type => _type;
 
   String get time3 => _time3;
 
@@ -30,15 +30,15 @@ class Reminder {
 
   String get time1 => _time1;
 
-  set reminderName(String newReminderName) {
-    if (newReminderName.length <= 255) {
-      this._reminderName = newReminderName;
+  set name(String newName) {
+    if (newName.length <= 255) {
+      this._name = newName;
     }
   }
 
-  set reminderType(String newReminderType) {
+  set type(String newReminderType) {
     if (newReminderType.length <= 255) {
-      this._reminderType = newReminderType;
+      this._type = newReminderType;
     }
   }
 
@@ -65,8 +65,8 @@ class Reminder {
     if (_id != null) {
       map['id'] = _id;
     }
-    map['reminderName'] = _reminderName;
-    map['reminderType'] = _reminderType;
+    map['name'] = _name;
+    map['type'] = _type;
     map['times'] = _times;
     map['time1'] = _time1;
     map['time2'] = _time2;
@@ -80,8 +80,7 @@ class Reminder {
     this._time2 = map['time2'];
     this._time3 = map['time3'];
     this._times = map['times'];
-
-    this._reminderType = map['reminderType'];
-    this._reminderName = map['reminderName'];
+    this._type = map['type'];
+    this._name = map['name'];
   }
 }

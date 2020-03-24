@@ -1,9 +1,11 @@
 import 'dart:io';
-import 'dart:math';
+import 'package:elderly_app/others/database_helper.dart';
+import 'package:elderly_app/screens/medicine_reminder.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'profile_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
@@ -12,19 +14,31 @@ import 'package:elderly_app/models/reminder.dart';
 
 class ReminderDetail extends StatefulWidget {
   static const String id = 'Medicine_detail_screen';
+
+  final String pageTitle;
+  final Reminder reminder;
+
+  ReminderDetail(this.reminder, [this.pageTitle]);
+
   @override
-  _ReminderDetailState createState() => _ReminderDetailState();
+  State<StatefulWidget> createState() {
+    return _ReminderDetailState(this.reminder, this.pageTitle);
+  }
 }
 
 class _ReminderDetailState extends State<ReminderDetail> {
+  DatabaseHelper helper = DatabaseHelper();
   Reminder reminder;
-  TimeOfDay selectedTime1;
-  TimeOfDay selectedTime2;
-  TimeOfDay selectedTime3;
+  String pageTitle;
+
+  _ReminderDetailState(this.reminder, this.pageTitle);
+
+  TimeOfDay selectedTime1 = TimeOfDay(hour: 0, minute: 0);
+  TimeOfDay selectedTime2 = TimeOfDay(hour: 0, minute: 0);
+  TimeOfDay selectedTime3 = TimeOfDay(hour: 0, minute: 0);
   TimeOfDay timeNow = TimeOfDay.now();
 
   int times = 2;
-  String remindOn = 'Daily';
 
   String medicineName = '', tempName = '', medicineType = '';
 
@@ -45,6 +59,18 @@ class _ReminderDetailState extends State<ReminderDetail> {
     nameController.dispose();
     typeController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    medicineName = nameController.text = reminder.name;
+    medicineType = typeController.text = reminder.type;
+    times = reminder.times;
+    String tempTime1 = reminder.time1;
+    var tempTime2 = reminder.time2;
+    var tempTime3 = reminder.time3;
+
+    super.initState();
   }
 
   final nameController = TextEditingController();
@@ -124,9 +150,9 @@ class _ReminderDetailState extends State<ReminderDetail> {
           children: <Widget>[
             Center(
               child: Container(
-                margin: EdgeInsets.all(20),
+                margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
                 child: Text(
-                  'Edit Details',
+                  '$pageTitle' ?? 'Reminder ',
                   style: TextStyle(
                     fontSize: 32,
                     color: Color(0xffE3952D),
@@ -139,7 +165,7 @@ class _ReminderDetailState extends State<ReminderDetail> {
                 Expanded(
                   flex: 5,
                   child: ReminderFormItem(
-                    helperText: 'This name will be dispalyed on Reminder',
+                    helperText: 'Name of Reminder',
                     hintText: 'Enter Medicine Name',
                     controller: nameController,
                     onChanged: (value) {
@@ -172,6 +198,9 @@ class _ReminderDetailState extends State<ReminderDetail> {
                 )
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
             ReminderFormItem(
               helperText: 'Give the type for reference',
               hintText: 'Enter type of medicine',
@@ -184,8 +213,11 @@ class _ReminderDetailState extends State<ReminderDetail> {
               isNumber: false,
               icon: FontAwesomeIcons.syringe,
             ),
+            SizedBox(
+              height: 10,
+            ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 0),
+              padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 10),
               child: Text(
                 'Times a day : ',
                 style: TextStyle(fontSize: 20),
@@ -239,7 +271,7 @@ class _ReminderDetailState extends State<ReminderDetail> {
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 13,
             ),
             Row(
               children: <Widget>[
@@ -331,125 +363,30 @@ class _ReminderDetailState extends State<ReminderDetail> {
               ],
             ),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
-//            Padding(
-//              padding: const EdgeInsets.all(8.0),
-//              child: Text(
-//                'Remind on :',
-//                style: TextStyle(fontSize: 20),
-//              ),
-//            ),
-//            Padding(
-//              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-//              child: DropdownButton(
-//                iconEnabledColor: Color(0xffff8f00),
-//                style: TextStyle(fontSize: 20, color: Colors.black),
-//                value: remindOn,
-//                items: [
-//                  DropdownMenuItem(
-//                    value: 'Daily',
-//                    child: Text('Daily'),
-//                  ),
-//                  DropdownMenuItem(
-//                    value: 'Weekly',
-//                    child: Text('Weekly'),
-//                  ),
-//                  DropdownMenuItem(
-//                    value: 'Monthy',
-//                    child: Text('Monthly'),
-//                  ),
-//                ],
-//                onChanged: (value) {
-//                  setState(() {
-//                    remindOn = value;
-//                  });
-//                },
-//                focusColor: Color(0xffff8f00),
-//              ),
-//            ),
-//            Text(
-//              _image == null ? 'Optional : Add an Image' : 'Image Loaded',
-//              textAlign: TextAlign.center,
-//            ),
-//            _image == null
-//                ? InkWell(
-//                    onTap: () async {
-//                      Map<PermissionGroup, PermissionStatus> permissions =
-//                          await PermissionHandler().requestPermissions(
-//                              [PermissionGroup.mediaLibrary]);
-//                      getImage();
-//                    },
-//                    child: Container(
-//                      child: Icon(
-//                        Icons.image,
-//                        size: 100,
-//                        color: Color(0xffE3952D),
-//                      ),
-//                    ),
-//                  )
-//                : SizedBox(),
-//            Padding(
-//              padding: const EdgeInsets.fromLTRB(8.0, 20, 8, 8),
-//              child: Text(
-//                'Reminder set on : ',
-//                style: TextStyle(fontSize: 20),
-//              ),
-//            ),
-//            Padding(
-//              padding: const EdgeInsets.all(8.0),
-//              child: Column(
-//                mainAxisAlignment: MainAxisAlignment.center,
-//                children: <Widget>[
-//                  Text('Reminder 1 : '),
-//                  Text(
-//                    selectedTime1.hour.toString() +
-//                        ' : ' +
-//                        selectedTime1.minute.toString(),
-//                    style: TextStyle(fontSize: 18),
-//                  ),
-//                  SizedBox(
-//                    width: 10,
-//                  ),
-//                  times >= 2
-//                      ? Text(
-//                          'Reminder 2 : ' +
-//                              selectedTime2.hour.toString() +
-//                              ' : ' +
-//                              selectedTime2.minute.toString(),
-//                          style: TextStyle(fontSize: 15),
-//                        )
-//                      : SizedBox(),
-//                  SizedBox(
-//                    width: 10,
-//                  ),
-//                  times == 3
-//                      ? Text(
-//                          'Reminder 3 : ' +
-//                              selectedTime3.hour.toString() +
-//                              ' : ' +
-//                              selectedTime3.minute.toString(),
-//                          style: TextStyle(fontSize: 15),
-//                        )
-//                      : SizedBox(),
-//                ],
-//              ),
-//            ),
             Center(
               child: InkWell(
-                onTap: () {
+                onTap: () async {
                   print('tap');
                   setState(() {
                     reminder.times = times;
-                    reminder.reminderName = medicineName;
-                    reminder.reminderType = medicineType;
+                    reminder.name = medicineName;
+                    reminder.type = medicineType;
                     if (times == 1) reminder.time1 = selectedTime1.toString();
-                    if (times >= 2) reminder.time2 = selectedTime2.toString();
-                    if (times >= 3) reminder.time3 = selectedTime3.toString();
+                    if (times >= 2)
+                      reminder.time2 = selectedTime2.toString();
+                    else
+                      reminder.time2 = '0';
+                    if (times >= 3)
+                      reminder.time3 = selectedTime3.toString();
+                    else
+                      reminder.time3 = '0';
                   });
+                  _save();
                 },
                 child: Container(
-                  margin: EdgeInsets.all(20),
+                  margin: EdgeInsets.fromLTRB(20, 20, 20, 10),
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                       color: Colors.green,
@@ -465,6 +402,41 @@ class _ReminderDetailState extends State<ReminderDetail> {
         ),
       ),
     );
+  }
+
+  // Save data to database
+  void _save() async {
+    int result;
+    if (reminder.id != null) {
+      // Case 1: Update operation
+      result = await helper.updateReminder(reminder);
+    } else {
+      // Case 2: Insert Operation
+      result = await helper.insertReminder(reminder);
+    }
+
+    if (result != 0) {
+      // Success
+      _showAlertDialog('Status', 'Reminder Saved Successfully');
+//      await Navigator.push(context, MaterialPageRoute(builder: (context) {
+//        return MedicineReminder();
+//      }));
+
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => MedicineReminder()),
+          (Route<dynamic> route) => false);
+    } else {
+      // Failure
+      _showAlertDialog('Status', 'Problem Saving Reminder');
+    }
+  }
+
+  void _showAlertDialog(String title, String message) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    showDialog(context: context, builder: (_) => alertDialog);
   }
 }
 
@@ -486,8 +458,9 @@ class ReminderFormItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
       child: TextField(
+        maxLines: 1,
         decoration: InputDecoration(
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
