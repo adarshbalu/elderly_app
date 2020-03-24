@@ -22,17 +22,22 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     getUser().then((user) {
       if (user != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return HomeScreen(true);
-        }));
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => HomeScreen(true)),
+            (Route<dynamic> route) => false);
       } else
-        Navigator.pushNamed(context, LoginScreen.id);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+            (Route<dynamic> route) => false);
     });
 
     Future.delayed(duration, () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return HomeScreen(true);
-      }));
+//      Navigator.push(context, MaterialPageRoute(builder: (context) {
+//        return HomeScreen(true);
+//      }));
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => HomeScreen(true)),
+          (Route<dynamic> route) => false);
     });
 
     super.initState();

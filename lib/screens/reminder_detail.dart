@@ -6,6 +6,7 @@ import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'profile_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
@@ -144,261 +145,292 @@ class _ReminderDetailState extends State<ReminderDetail> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: ListView(
-          children: <Widget>[
-            Center(
-              child: Container(
-                margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                child: Text(
-                  '$pageTitle' ?? 'Reminder ',
-                  style: TextStyle(
-                    fontSize: 32,
-                    color: Color(0xffE3952D),
-                  ),
-                ),
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 5,
-                  child: ReminderFormItem(
-                    helperText: 'Name of Reminder',
-                    hintText: 'Enter Medicine Name',
-                    controller: nameController,
-                    onChanged: (value) {
-                      setState(() {
-                        medicineName = value.toString();
-                      });
-                    },
-                    isNumber: false,
-                    icon: FontAwesomeIcons.capsules,
-                  ),
-                ),
-                Expanded(
-                  child: Tooltip(
-                    message: 'Detect Name from Image',
-                    child: GestureDetector(
-                      child: Icon(
-                        Icons.photo_camera,
-                        color:
-                            isImageLoaded ? Colors.green : Colors.amberAccent,
-                        size: 43,
-                      ),
-                      onTap: () async {
-                        await pickImage();
-                        nameController.clear();
-                        medicineName = '';
-                        await readText();
+      body: WillPopScope(
+        onWillPop: () {
+          return showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return RichAlertDialog(
+                  alertTitle: richTitle("Reminder Not Saved"),
+                  alertSubtitle: richSubtitle('Changes will be discarded '),
+                  alertType: RichAlertType.WARNING,
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text("OK"),
+                      onPressed: () {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => MedicineReminder()),
+                            (Route<dynamic> route) => false);
                       },
                     ),
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            ReminderFormItem(
-              helperText: 'Give the type for reference',
-              hintText: 'Enter type of medicine',
-              controller: typeController,
-              onChanged: (value) {
-                setState(() {
-                  medicineType = value;
-                });
-              },
-              isNumber: false,
-              icon: FontAwesomeIcons.syringe,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 10),
-              child: Text(
-                'Times a day : ',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('Once : '),
-                  Radio(
-                    onChanged: (value) {
-                      setState(() {
-                        times = value;
-                      });
-                    },
-                    activeColor: Color(0xffE3952D),
-                    value: 1,
-                    groupValue: times,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text('Twice : '),
-                  Radio(
-                    onChanged: (value) {
-                      setState(() {
-                        times = value;
-                      });
-                    },
-                    activeColor: Color(0xffE3952D),
-                    value: 2,
-                    groupValue: times,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text('Thrice : '),
-                  Radio(
-                    activeColor: Color(0xffE3952D),
-                    onChanged: (value) {
-                      setState(() {
-                        times = value;
-                      });
-                    },
-                    value: 3,
-                    groupValue: times,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 13,
-            ),
-            Row(
-              children: <Widget>[
-                times == 1
-                    ? SizedBox(
-                        width: 80,
-                      )
-                    : SizedBox(),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      showMaterialTimePicker(
-                        context: context,
-                        selectedTime: selectedTime1,
-                        onChanged: (value) =>
-                            setState(() => selectedTime1 = value),
-                      );
-                    },
-                    child: Container(
-                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Icon(
-                        Icons.access_alarm,
-                        color: Colors.white,
-                      ),
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          color: Color(0xffff8f00),
-                          borderRadius: BorderRadiusDirectional.circular(100)),
+                    FlatButton(
+                      child: Text("No"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                );
+              });
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ListView(
+            children: <Widget>[
+              Center(
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                  child: Text(
+                    '$pageTitle' ?? 'Reminder ',
+                    style: TextStyle(
+                      fontSize: 32,
+                      color: Color(0xffE3952D),
                     ),
                   ),
                 ),
-                times >= 2
-                    ? Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            showMaterialTimePicker(
-                              context: context,
-                              selectedTime: selectedTime2,
-                              onChanged: (value) =>
-                                  setState(() => selectedTime2 = value),
-                            );
-                          },
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            child: Icon(
-                              Icons.access_alarm,
-                              color: Colors.white,
-                            ),
-                            padding: EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                                color: Color(0xffff8f00),
-                                borderRadius:
-                                    BorderRadiusDirectional.circular(100)),
-                          ),
-                        ),
-                      )
-                    : SizedBox(),
-                times == 3
-                    ? Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            showMaterialTimePicker(
-                              context: context,
-                              selectedTime: selectedTime3,
-                              onChanged: (value) =>
-                                  setState(() => selectedTime3 = value),
-                            );
-                          },
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            child: Icon(
-                              Icons.access_alarm,
-                              color: Colors.white,
-                            ),
-                            padding: EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                                color: Color(0xffff8f00),
-                                borderRadius:
-                                    BorderRadiusDirectional.circular(100)),
-                          ),
-                        ),
-                      )
-                    : SizedBox(),
-                times == 1
-                    ? SizedBox(
-                        width: 80,
-                      )
-                    : SizedBox(),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Center(
-              child: InkWell(
-                onTap: () async {
-                  print('tap');
-                  setState(() {
-                    reminder.times = times;
-                    reminder.name = medicineName;
-                    reminder.type = medicineType;
-                    if (times == 1) reminder.time1 = selectedTime1.toString();
-                    if (times >= 2)
-                      reminder.time2 = selectedTime2.toString();
-                    else
-                      reminder.time2 = '0';
-                    if (times >= 3)
-                      reminder.time3 = selectedTime3.toString();
-                    else
-                      reminder.time3 = '0';
-                  });
-                  _save();
-                },
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(20, 20, 20, 10),
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Text(
-                    'Create Reminder',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 5,
+                    child: ReminderFormItem(
+                      helperText: 'Name of Reminder',
+                      hintText: 'Enter Medicine Name',
+                      controller: nameController,
+                      onChanged: (value) {
+                        setState(() {
+                          medicineName = value.toString();
+                        });
+                      },
+                      isNumber: false,
+                      icon: FontAwesomeIcons.capsules,
+                    ),
                   ),
+                  Expanded(
+                    child: Tooltip(
+                      message: 'Detect Name from Image',
+                      child: GestureDetector(
+                        child: Icon(
+                          Icons.photo_camera,
+                          color:
+                              isImageLoaded ? Colors.green : Colors.amberAccent,
+                          size: 43,
+                        ),
+                        onTap: () async {
+                          await pickImage();
+                          nameController.clear();
+                          medicineName = '';
+                          await readText();
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              ReminderFormItem(
+                helperText: 'Give the type for reference',
+                hintText: 'Enter type of medicine',
+                controller: typeController,
+                onChanged: (value) {
+                  setState(() {
+                    medicineType = value;
+                  });
+                },
+                isNumber: false,
+                icon: FontAwesomeIcons.syringe,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 10),
+                child: Text(
+                  'Times a day : ',
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Once : '),
+                    Radio(
+                      onChanged: (value) {
+                        setState(() {
+                          times = value;
+                        });
+                      },
+                      activeColor: Color(0xffE3952D),
+                      value: 1,
+                      groupValue: times,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Twice : '),
+                    Radio(
+                      onChanged: (value) {
+                        setState(() {
+                          times = value;
+                        });
+                      },
+                      activeColor: Color(0xffE3952D),
+                      value: 2,
+                      groupValue: times,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Thrice : '),
+                    Radio(
+                      activeColor: Color(0xffE3952D),
+                      onChanged: (value) {
+                        setState(() {
+                          times = value;
+                        });
+                      },
+                      value: 3,
+                      groupValue: times,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 13,
+              ),
+              Row(
+                children: <Widget>[
+                  times == 1
+                      ? SizedBox(
+                          width: 80,
+                        )
+                      : SizedBox(),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        showMaterialTimePicker(
+                          context: context,
+                          selectedTime: selectedTime1,
+                          onChanged: (value) =>
+                              setState(() => selectedTime1 = value),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: Icon(
+                          Icons.access_alarm,
+                          color: Colors.white,
+                        ),
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: Color(0xffff8f00),
+                            borderRadius:
+                                BorderRadiusDirectional.circular(100)),
+                      ),
+                    ),
+                  ),
+                  times >= 2
+                      ? Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              showMaterialTimePicker(
+                                context: context,
+                                selectedTime: selectedTime2,
+                                onChanged: (value) =>
+                                    setState(() => selectedTime2 = value),
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: Icon(
+                                Icons.access_alarm,
+                                color: Colors.white,
+                              ),
+                              padding: EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                  color: Color(0xffff8f00),
+                                  borderRadius:
+                                      BorderRadiusDirectional.circular(100)),
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+                  times == 3
+                      ? Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              showMaterialTimePicker(
+                                context: context,
+                                selectedTime: selectedTime3,
+                                onChanged: (value) =>
+                                    setState(() => selectedTime3 = value),
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: Icon(
+                                Icons.access_alarm,
+                                color: Colors.white,
+                              ),
+                              padding: EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                  color: Color(0xffff8f00),
+                                  borderRadius:
+                                      BorderRadiusDirectional.circular(100)),
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+                  times == 1
+                      ? SizedBox(
+                          width: 80,
+                        )
+                      : SizedBox(),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Center(
+                child: InkWell(
+                  onTap: () async {
+                    print('tap');
+                    setState(() {
+                      reminder.times = times;
+                      reminder.name = medicineName;
+                      reminder.type = medicineType;
+                      if (times == 1) reminder.time1 = selectedTime1.toString();
+                      if (times >= 2)
+                        reminder.time2 = selectedTime2.toString();
+                      else
+                        reminder.time2 = '0';
+                      if (times >= 3)
+                        reminder.time3 = selectedTime3.toString();
+                      else
+                        reminder.time3 = '0';
+                    });
+                    _save();
+                  },
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(20, 20, 20, 10),
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Text(
+                      '$pageTitle Reminder',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

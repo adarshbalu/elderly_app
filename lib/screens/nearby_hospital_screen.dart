@@ -14,6 +14,7 @@ const kTomsApiKey = 'vA9uQILIGUAG86z9xCTSkETjqg7ZCiGa';
 double latitude, longitude;
 LocationManager.Location location = LocationManager.Location();
 Geolocator _geolocator = Geolocator();
+bool first = true;
 getLocation() async {
   var a = await _geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high);
@@ -125,33 +126,77 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                       snapshot.data[index].hospitalLocationLongitude.toString();
                   var hosLat =
                       snapshot.data[index].hospitalLocationLatitude.toString();
-                  return Card(
-                    margin: EdgeInsets.all(15),
-                    color: Colors.white,
-                    elevation: 2.5,
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        child: Icon(Icons.local_hospital,
-                            size: 40, color: Colors.red),
-                      ),
-                      subtitle: Text(
-                          snapshot.data[index].hospitalDistance.toString() +
-                              ' KM'),
-                      title: snapshot.data[index].hospitalName != null
-                          ? Text(
-                              snapshot.data[index].hospitalName,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.blueGrey),
-                            )
-                          : Text(''),
-                      onTap: () {
+                  if (first) {
+                    first = false;
+                    return Column(
+                      children: <Widget>[
+                        Text(
+                          'Nearby Hospitals',
+                          style: TextStyle(
+                            fontSize: 30,
+                            color: Color(0xffE3952D),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Card(
+                          margin: EdgeInsets.all(15),
+                          color: Colors.white,
+                          elevation: 2.5,
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              child: Icon(Icons.local_hospital,
+                                  size: 40, color: Colors.red),
+                            ),
+                            subtitle: Text(snapshot.data[index].hospitalDistance
+                                    .toString() +
+                                ' KM'),
+                            title: snapshot.data[index].hospitalName != null
+                                ? Text(
+                                    snapshot.data[index].hospitalName,
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.blueGrey),
+                                  )
+                                : Text(''),
+                            onTap: () {
 //
-                        launch(
-                            'https://www.google.com/maps/dir/$latitude,$longitude/$hosLat,$hosLon');
-                      },
-                    ),
-                  );
+                              launch(
+                                  'https://www.google.com/maps/dir/$latitude,$longitude/$hosLat,$hosLon');
+                            },
+                          ),
+                        )
+                      ],
+                    );
+                  } else
+                    return Card(
+                      margin: EdgeInsets.all(15),
+                      color: Colors.white,
+                      elevation: 2.5,
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: Icon(Icons.local_hospital,
+                              size: 40, color: Colors.red),
+                        ),
+                        subtitle: Text(
+                            snapshot.data[index].hospitalDistance.toString() +
+                                ' KM'),
+                        title: snapshot.data[index].hospitalName != null
+                            ? Text(
+                                snapshot.data[index].hospitalName,
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.blueGrey),
+                              )
+                            : Text(''),
+                        onTap: () {
+//
+                          launch(
+                              'https://www.google.com/maps/dir/$latitude,$longitude/$hosLat,$hosLon');
+                        },
+                      ),
+                    );
                 });
           }
         },

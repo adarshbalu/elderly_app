@@ -22,9 +22,9 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           showSpinner = !showSpinner;
         });
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return HomeScreen(true);
-        }));
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => HomeScreen(true)),
+            (Route<dynamic> route) => false);
       }
     });
     super.initState();
@@ -151,8 +151,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                       setState(() {
                                         showSpinner = !showSpinner;
                                       });
-                                      Navigator.pushNamed(
-                                          context, HomeScreen.id);
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  HomeScreen(true)),
+                                          (Route<dynamic> route) => false);
                                     } else {
                                       setState(() {
                                         showSpinner = !showSpinner;
@@ -224,8 +227,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                       setState(() {
                                         showSpinner = !showSpinner;
                                       });
-                                      Navigator.pushNamed(
-                                          context, InitialSetupScreen.id);
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  InitialSetupScreen()),
+                                          (Route<dynamic> route) => false);
                                     } else {
                                       setState(() {
                                         showSpinner = !showSpinner;

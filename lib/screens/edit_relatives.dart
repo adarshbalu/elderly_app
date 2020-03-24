@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:elderly_app/screens/contact_relatives_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/app_default.dart';
@@ -275,6 +276,9 @@ class _EditRelativesScreenState extends State<EditRelativesScreen> {
               color: Colors.green,
               onPressed: () async {
                 await updateRelativeData();
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => ContactScreen()),
+                    (Route<dynamic> route) => false);
               },
               padding: EdgeInsets.all(15),
               child: Text(

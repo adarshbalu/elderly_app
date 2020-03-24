@@ -1,3 +1,4 @@
+import 'package:elderly_app/screens/edit_relatives.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sms/flutter_sms.dart' as sms;
@@ -133,9 +134,11 @@ class _ContactScreenState extends State<ContactScreen> {
 
   @override
   Widget build(BuildContext context) {
-    getCurrentUser();
-    getLatLong();
-    getLocationDetails();
+    if (load < 2) {
+      getCurrentUser();
+      getLatLong();
+      getLocationDetails();
+    }
     MediaQueryData deviceInfo = MediaQuery.of(context);
     double screenWidth = deviceInfo.size.width;
     double screenHeight = deviceInfo.size.height;
@@ -178,7 +181,7 @@ class _ContactScreenState extends State<ContactScreen> {
               children: <Widget>[
                 Center(
                   child: Container(
-                    margin: EdgeInsets.all(20),
+                    margin: EdgeInsets.fromLTRB(20, 30, 20, 20),
                     child: Text(
                       'Relatives Details',
                       style: TextStyle(
@@ -187,6 +190,9 @@ class _ContactScreenState extends State<ContactScreen> {
                       ),
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: 30,
                 ),
                 Container(
                     margin: EdgeInsets.all(10),
@@ -197,7 +203,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     child: RelativeDetail(
                         name: relative2name, number: relative2num)),
                 SizedBox(
-                  height: 40,
+                  height: 100,
                 ),
                 Center(
                   child: GestureDetector(
@@ -249,6 +255,35 @@ class _ContactScreenState extends State<ContactScreen> {
                         style: TextStyle(color: Colors.white, fontSize: 20.0),
                       ),
                     ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: GestureDetector(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 55.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.deepPurple,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.purple,
+                            blurRadius: 3.0,
+                            offset: Offset(0, 4.0),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        'Edit Relatives',
+                        style: TextStyle(color: Colors.white, fontSize: 20.0),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, EditRelativesScreen.id);
+                    },
                   ),
                 )
               ],
