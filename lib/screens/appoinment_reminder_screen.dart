@@ -3,7 +3,10 @@ import 'package:elderly_app/others/database_helper.dart';
 import 'package:elderly_app/screens/appoinment_detail_screen.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
 class AppoinmentReminder extends StatefulWidget {
@@ -20,6 +23,82 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   int count = 0;
   int tempDay, tempMonth, tempYear, tempHour, tempMinute;
 
+  DateTime dateTime = DateTime.now();
+  String year = DateTime.now().year.toString();
+  String month = '';
+  Map<int, String> months = {
+    1: 'January',
+    2: 'February',
+    3: 'March',
+    4: 'April',
+    5: 'May',
+    6: 'June',
+    7: 'July',
+    8: 'August',
+    9: 'September',
+    10: 'October',
+    11: 'November',
+    12: 'December',
+  };
+
+  getMonth() {
+    int monthDay = dateTime.month;
+    month = months[monthDay];
+  }
+
+  @override
+  void initState() {
+    getMonth();
+    getTextWidgets();
+    super.initState();
+  }
+
+  List<Widget> textWidgets = [];
+
+  getTextWidgets() {
+    int month = dateTime.month;
+    int year = dateTime.year;
+    int day = dateTime.day;
+    int endDay;
+    if (month == 1 ||
+        month == 3 ||
+        month == 5 ||
+        month == 7 ||
+        month == 8 ||
+        month == 12 ||
+        month == 10) {
+      endDay = 31;
+    } else if (month == 2) {
+      if (year % 4 == 0)
+        endDay = 29;
+      else
+        endDay = 28;
+    } else {
+      endDay = 30;
+    }
+    Widget today = CircleAvatar(
+      child: Text(
+        day.toString(),
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: Colors.blue,
+    );
+    int start = 1;
+    for (var i = day; i <= day + 4; i++) {
+      if (i > endDay) {
+        textWidgets.add(Text(start.toString()));
+        start++;
+      } else {
+        if (i == day)
+          textWidgets.add(today);
+        else
+          textWidgets.add(Text(i.toString()));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (appoinmentList == null) {
@@ -27,7 +106,108 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
       updateListView();
     }
     return Scaffold(
-      body: getAppoinmentListView(),
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: 35,
+          ),
+          Text(
+            month + '  ' + year,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 25, color: Colors.green),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: textWidgets),
+          SizedBox(
+            height: 20,
+          ),
+//          Text(
+//            'No appoinment today',
+//            textAlign: TextAlign.center,
+//          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(8, 10, 8, 10),
+            padding: EdgeInsets.fromLTRB(4, 8, 4, 8),
+            decoration: BoxDecoration(
+              color: Color(0xfff5f5f5),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: <Widget>[
+                      CircleAvatar(
+                        backgroundColor: Colors.green,
+                        radius: 47,
+                        child: Icon(
+                          FontAwesomeIcons.userMd,
+                          size: 65,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 8),
+                        child: Text('5:00 pm'),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Text(' Appoinment Place'),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Text('Doctor Name'),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Text('Date'),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 25,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 20),
+            child: Text(
+              'Upcoming :',
+              style: TextStyle(
+                  color: Colors.teal,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            child: Row(
+              children: <Widget>[
+                Column(),
+                Column(),
+              ],
+            ),
+          )
+        ],
+      ),
       drawer: AppDrawer(),
       floatingActionButton: FloatingActionButton(
         child: Icon(
