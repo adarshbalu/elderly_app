@@ -52,14 +52,14 @@ class Appoinment {
     map['name'] = _name;
     map['place'] = _place;
     map['address'] = _address;
-    map['dateAndTime'] = _dateAndTime;
+    map['date_time'] = _dateAndTime;
 
     return map;
   }
 
   Appoinment.fromMapObject(Map<String, dynamic> map) {
     this._id = map['id'];
-    this._dateAndTime = map['dateAndTime'];
+    this._dateAndTime = map['date_time'];
     this._address = map['address'];
     this._place = map['place'];
     this._name = map['name'];

@@ -30,13 +30,13 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
 
   _AppoinmentDetailState(this.appoinment, this.pageTitle);
 
-  String doctorName, place, address;
+  String doctorName = '', place = '', address = '';
   DateTime date, tempDate = DateTime(0000, 00, 00, 00, 00);
   TimeOfDay timeSelected = TimeOfDay(minute: 0, hour: 0);
 
-  TextEditingController nameController;
-  TextEditingController placeController;
-  TextEditingController addressController;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController placeController = TextEditingController();
+  TextEditingController addressController = TextEditingController(text: '');
   final dateFormat = DateFormat("EEEE, MMMM d, yyyy 'at' h:mma");
 
   @override
@@ -52,7 +52,7 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
     doctorName = nameController.text = appoinment.name;
     place = placeController.text = appoinment.place;
     address = addressController.text = appoinment.address;
-    date = DateTime.parse(appoinment.dateAndTime);
+    //date = DateTime.parse(appoinment.dateAndTime);
     super.initState();
   }
 
@@ -103,19 +103,19 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
       body: ListView(
         children: <Widget>[
           SizedBox(
-            height: 15,
+            height: 0,
           ),
           Center(
             child: Padding(
               padding: EdgeInsets.all(10),
               child: Text(
-                '$pageTitle Reminder',
+                '$pageTitle Appoinment',
                 style: TextStyle(color: Colors.green, fontSize: 28),
               ),
             ),
           ),
           SizedBox(
-            height: 20,
+            height: 0,
           ),
           AppoinmentFormItem(
             helperText: 'Full name',
@@ -154,7 +154,7 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
             icon: FontAwesomeIcons.briefcaseMedical,
           ),
           SizedBox(
-            height: 20,
+            height: 15,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -218,17 +218,17 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
             ],
           ),
           SizedBox(
-            height: 10,
+            height: 5,
           ),
           Padding(
-            padding: const EdgeInsets.all(18.0),
+            padding: const EdgeInsets.fromLTRB(18.0, 16, 18, 1),
             child: MaterialButton(
               elevation: 10,
               hoverElevation: 5,
               highlightColor: Colors.green.withAlpha(10),
               color: Colors.green,
-              padding: EdgeInsets.all(20),
-              onPressed: () {
+              padding: EdgeInsets.all(15),
+              onPressed: () async {
                 if (!(timeSelected.minute == 0 && timeSelected.hour == 0)) {
                   if (!(tempDate.year == 0 &&
                       tempDate.month == 0 &&
@@ -240,10 +240,10 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
 
                     print(date.toString());
                     _save();
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return AppoinmentReminder();
-                    }));
+                    await Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => AppoinmentReminder()),
+                        (Route<dynamic> route) => false);
                   } else {
                     print('fail');
                   }
@@ -314,7 +314,7 @@ class AppoinmentFormItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(10, 10, 10, 8),
+      margin: EdgeInsets.fromLTRB(10, 7, 10, 7),
       child: TextField(
         decoration: InputDecoration(
           border: OutlineInputBorder(

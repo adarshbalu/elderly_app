@@ -1,3 +1,4 @@
+import 'package:elderly_app/models/appoinment.dart';
 import 'package:elderly_app/models/reminder.dart';
 import 'package:elderly_app/screens/add_documents_screen.dart';
 import 'package:elderly_app/screens/appoinment_detail_screen.dart';
@@ -50,7 +51,8 @@ class ElderlyApp extends StatelessWidget {
         InitialSetupScreen.id: (context) => InitialSetupScreen(),
         EditRelativesScreen.id: (context) => EditRelativesScreen(),
         AppoinmentReminder.id: (context) => AppoinmentReminder(),
-        AppoinmentDetail.id: (context) => AppoinmentDetail(),
+        AppoinmentDetail.id: (context) =>
+            AppoinmentDetail(Appoinment('', '', '', ''), ''),
         ViewDocuments.id: (context) => ViewDocuments(),
         AddDocuments.id: (context) => AddDocuments(),
         ImageLabel.id: (context) => ImageLabel(),

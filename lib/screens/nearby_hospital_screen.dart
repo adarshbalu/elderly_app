@@ -130,6 +130,9 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                     first = false;
                     return Column(
                       children: <Widget>[
+                        SizedBox(
+                          height: 20,
+                        ),
                         Text(
                           'Nearby Hospitals',
                           style: TextStyle(
