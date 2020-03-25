@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../models/note.dart';
 import '../models/reminder.dart';
+import '../models/appoinment.dart';
 
 class DatabaseHelper {
   static DatabaseHelper _databaseHelper; // Singleton DatabaseHelper
@@ -24,6 +25,13 @@ class DatabaseHelper {
   String remColTime1 = 'time1';
   String remColTime2 = 'time2';
   String remColTime3 = 'time3';
+
+  String appoinmentTable = 'appoinment_table';
+  String appoinmentColId = 'id';
+  String appoinmentColName = 'name';
+  String appoinmentColPlace = 'place';
+  String appoinmentColAddress = 'address';
+  String appoinmentColDateTime = 'date_time';
 
   DatabaseHelper._createInstance(); // Named constructor to create instance of DatabaseHelper
 
@@ -55,11 +63,15 @@ class DatabaseHelper {
   void _createDb(Database db, int newVersion) async {
     await db.execute(
         'CREATE TABLE $reminderTable($remColId INTEGER PRIMARY KEY AUTOINCREMENT, $remColName TEXT, '
-            '$remColType TEXT, $remColTimes INTEGER, $remColTime1 TEXT,$remColTime2 TEXT,$remColTime3 TEXT)');
+        '$remColType TEXT, $remColTimes INTEGER, $remColTime1 TEXT,$remColTime2 TEXT,$remColTime3 TEXT)');
+
+    await db.execute(
+        'CREATE TABLE $appoinmentTable($appoinmentColId INTEGER PRIMARY KEY AUTOINCREMENT, $appoinmentColName TEXT, '
+        '$appoinmentColPlace TEXT, $appoinmentColAddress TEXT, $appoinmentColDateTime TEXT)');
 
     await db.execute(
         'CREATE TABLE $noteTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colTitle TEXT, '
-            '$colDescription TEXT, $colPriority INTEGER, $colDate TEXT)');
+        '$colDescription TEXT, $colPriority INTEGER, $colDate TEXT)');
   }
 
   // Fetch Operation: Get all note objects from database
@@ -80,6 +92,15 @@ class DatabaseHelper {
     return result;
   }
 
+  // Fetch Operation: Get all appoinment objects from database
+  Future<List<Map<String, dynamic>>> getAppoinmentMapList() async {
+    Database db = await this.database;
+
+    var result = await db.rawQuery('SELECT * FROM $appoinmentTable ');
+    //   var result = await db.query(appoinmentTable, orderBy: '$appoinmentColId ASC');
+    return result;
+  }
+
   // Insert Operation: Insert a Note object to database
   Future<int> insertNote(Note note) async {
     Database db = await this.database;
@@ -91,6 +112,13 @@ class DatabaseHelper {
   Future<int> insertReminder(Reminder reminder) async {
     Database db = await this.database;
     var result = await db.insert(reminderTable, reminder.toMap());
+    return result;
+  }
+
+  // Insert Operation: Insert a appoinment object to database
+  Future<int> insertAppoinment(Appoinment appoinment) async {
+    Database db = await this.database;
+    var result = await db.insert(appoinmentTable, appoinment.toMap());
     return result;
   }
 
@@ -110,11 +138,19 @@ class DatabaseHelper {
     return result;
   }
 
+  // Update Operation: Update a appoinment object and save it to database
+  Future<int> updateAppoinment(Appoinment appoinment) async {
+    var db = await this.database;
+    var result = await db.update(appoinmentTable, appoinment.toMap(),
+        where: '$appoinmentColId = ?', whereArgs: [appoinment.id]);
+    return result;
+  }
+
   // Delete Operation: Delete a Note object from database
   Future<int> deleteNote(int id) async {
     var db = await this.database;
     int result =
-    await db.rawDelete('DELETE FROM $noteTable WHERE $colId = $id');
+        await db.rawDelete('DELETE FROM $noteTable WHERE $colId = $id');
     return result;
   }
 
@@ -122,7 +158,15 @@ class DatabaseHelper {
   Future<int> deleteReminder(int id) async {
     var db = await this.database;
     int result =
-    await db.rawDelete('DELETE FROM $reminderTable WHERE $remColId = $id');
+        await db.rawDelete('DELETE FROM $reminderTable WHERE $remColId = $id');
+    return result;
+  }
+
+  // Delete Operation: Delete a appoinment object from database
+  Future<int> deleteAppoinment(int id) async {
+    var db = await this.database;
+    int result = await db
+        .rawDelete('DELETE FROM $appoinmentTable WHERE $appoinmentColId = $id');
     return result;
   }
 
@@ -130,7 +174,7 @@ class DatabaseHelper {
   Future<int> getCount() async {
     Database db = await this.database;
     List<Map<String, dynamic>> x =
-    await db.rawQuery('SELECT COUNT (*) from $noteTable');
+        await db.rawQuery('SELECT COUNT (*) from $noteTable');
     int result = Sqflite.firstIntValue(x);
     return result;
   }
@@ -139,7 +183,16 @@ class DatabaseHelper {
   Future<int> getRemCount() async {
     Database db = await this.database;
     List<Map<String, dynamic>> x =
-    await db.rawQuery('SELECT COUNT (*) from $reminderTable');
+        await db.rawQuery('SELECT COUNT (*) from $reminderTable');
+    int result = Sqflite.firstIntValue(x);
+    return result;
+  }
+
+  // Get number of appoinment objects in database
+  Future<int> getAppoinmentCount() async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> x =
+        await db.rawQuery('SELECT COUNT (*) from $appoinmentTable');
     int result = Sqflite.firstIntValue(x);
     return result;
   }
@@ -162,16 +215,32 @@ class DatabaseHelper {
   // Get the 'Map List' [ List<Map> ] and convert it to 'Reminder List' [ List<Reminder> ]
   Future<List<Reminder>> getRemList() async {
     var reminderMapList =
-    await getReminderMapList(); // Get 'Map List' from database
+        await getReminderMapList(); // Get 'Map List' from database
     int count =
         reminderMapList.length; // Count the number of map entries in db table
 
     List<Reminder> reminderList = List<Reminder>();
-    // For loop to create a 'Note List' from a 'Map List'
+    // For loop to create a 'Reminder List' from a 'Map List'
     for (int i = 0; i < count; i++) {
       reminderList.add(Reminder.fromMapObject(reminderMapList[i]));
     }
 
     return reminderList;
+  }
+
+  // Get the 'Map List' [ List<Map> ] and convert it to 'Appoinment List' [ List<Appoinment> ]
+  Future<List<Appoinment>> getAppoinmentList() async {
+    var appoinmentMapList =
+        await getAppoinmentMapList(); // Get 'Map List' from database
+    int count =
+        appoinmentMapList.length; // Count the number of map entries in db table
+
+    List<Appoinment> appoinmentList = List<Appoinment>();
+    // For loop to create a 'Appoinment List' from a 'Map List'
+    for (int i = 0; i < count; i++) {
+      appoinmentList.add(Appoinment.fromMapObject(appoinmentMapList[i]));
+    }
+
+    return appoinmentList;
   }
 }

@@ -1,3 +1,5 @@
+import 'package:elderly_app/others/database_helper.dart';
+import 'package:elderly_app/screens/appoinment_reminder_screen.dart';
 import 'package:elderly_app/screens/home_screen.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
@@ -6,14 +8,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import '../models/appoinment.dart';
 
 class AppoinmentDetail extends StatefulWidget {
   static const String id = 'Appoinment_Detail_Screen';
+  final String pageTitle;
+  final Appoinment appoinment;
+
+  AppoinmentDetail(this.appoinment, [this.pageTitle]);
+
   @override
-  _AppoinmentDetailState createState() => _AppoinmentDetailState();
+  State<StatefulWidget> createState() {
+    return _AppoinmentDetailState(this.appoinment, this.pageTitle);
+  }
 }
 
 class _AppoinmentDetailState extends State<AppoinmentDetail> {
+  DatabaseHelper helper = DatabaseHelper();
+  Appoinment appoinment;
+  String pageTitle;
+
+  _AppoinmentDetailState(this.appoinment, this.pageTitle);
+
   String doctorName, place, address;
   DateTime date, tempDate = DateTime(0000, 00, 00, 00, 00);
   TimeOfDay timeSelected = TimeOfDay(minute: 0, hour: 0);
@@ -29,6 +45,15 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
     placeController.dispose();
     addressController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    doctorName = nameController.text = appoinment.name;
+    place = placeController.text = appoinment.place;
+    address = addressController.text = appoinment.address;
+    date = DateTime.parse(appoinment.dateAndTime);
+    super.initState();
   }
 
   Future _selectDate() async {
@@ -84,7 +109,7 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
             child: Padding(
               padding: EdgeInsets.all(10),
               child: Text(
-                'Appoinment Reminder',
+                '$pageTitle Reminder',
                 style: TextStyle(color: Colors.green, fontSize: 28),
               ),
             ),
@@ -214,9 +239,10 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
                     });
 
                     print(date.toString());
+                    _save();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return HomeScreen(true);
+                      return AppoinmentReminder();
                     }));
                   } else {
                     print('fail');
@@ -224,7 +250,7 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
                 }
               },
               child: Text(
-                'Add Appoinment',
+                '$pageTitle Appoinment',
                 style: TextStyle(color: Colors.white, fontSize: 23),
               ),
             ),
@@ -232,6 +258,41 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
         ],
       ),
     );
+  }
+
+  // Save data to database
+  void _save() async {
+    appoinment.dateAndTime = date.toString();
+    appoinment.name = doctorName;
+    appoinment.address = address;
+    appoinment.place = place;
+    int result;
+    if (appoinment.id != null) {
+      // Case 1: Update operation
+      result = await helper.updateAppoinment(appoinment);
+    } else {
+      // Case 2: Insert Operation
+      result = await helper.insertAppoinment(appoinment);
+    }
+
+    if (result != 0) {
+      // Success
+      _showAlertDialog('Status', 'Appoinment Saved Successfully');
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return AppoinmentReminder();
+      }));
+    } else {
+      // Failure
+      _showAlertDialog('Status', 'Problem Saving Appoinment');
+    }
+  }
+
+  void _showAlertDialog(String title, String message) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    showDialog(context: context, builder: (_) => alertDialog);
   }
 }
 
