@@ -142,8 +142,8 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
             icon: FontAwesomeIcons.clinicMedical,
           ),
           AppoinmentFormItem(
-            helperText: 'Brief address',
-            hintText: 'Enter address ',
+            helperText: 'Any Specialization',
+            hintText: 'Enter type ',
             controller: addressController,
             onChanged: (value) {
               setState(() {

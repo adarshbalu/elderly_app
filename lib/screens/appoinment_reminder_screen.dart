@@ -16,6 +16,8 @@ class AppoinmentReminder extends StatefulWidget {
 }
 
 class _AppoinmentReminderState extends State<AppoinmentReminder> {
+  var kTextStyle =
+      TextStyle(color: Colors.brown, fontSize: 15, fontWeight: FontWeight.w700);
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Appoinment> appoinmentList;
   Appoinment appoinment =
@@ -99,6 +101,186 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
     }
   }
 
+  List<Appoinment> todayAppoinment = [];
+  List<Appoinment> upcomingAppoinment = [];
+  List<Appoinment> pastAppoinment = [];
+
+  Future getTodayAppoinment() async {
+    int total = appoinmentList.length;
+    DateTime today = DateTime.now();
+    todayAppoinment = [];
+    Appoinment tempAppoinment;
+    for (int i = 0; i < total; i++) {
+      tempAppoinment = appoinmentList[i];
+
+      DateTime date = DateTime.parse(tempAppoinment.dateAndTime);
+
+      if (today.day == date.day &&
+          today.month == date.month &&
+          today.year == date.year) {
+        todayAppoinment.add(tempAppoinment);
+      }
+    }
+  }
+
+  Future getUpcomingAppoinment() async {
+    int total = appoinmentList.length;
+
+    DateTime today = DateTime.now();
+    upcomingAppoinment = [];
+    Appoinment tempAppoinment;
+    for (int i = 0; i < total; i++) {
+      tempAppoinment = appoinmentList[i];
+
+      DateTime date = DateTime.parse(tempAppoinment.dateAndTime);
+
+      if (date.isAfter(today)) {
+        if (!todayAppoinment.contains(tempAppoinment))
+          upcomingAppoinment.add(tempAppoinment);
+      }
+    }
+  }
+
+  Future getPastAppoinment() async {
+    int total = appoinmentList.length;
+
+    DateTime today = DateTime.now();
+    pastAppoinment = [];
+    Appoinment tempAppoinment;
+    for (int i = 0; i < total; i++) {
+      tempAppoinment = appoinmentList[i];
+
+      DateTime date = DateTime.parse(tempAppoinment.dateAndTime);
+
+      if (date.isBefore(today)) {
+        if (!todayAppoinment.contains(tempAppoinment))
+          pastAppoinment.add(tempAppoinment);
+      }
+    }
+  }
+
+  List<Widget> getPastAppoinmentWidget() {
+    getPastAppoinment();
+
+    Appoinment tempAppoinment;
+    int pastAppoinmentTotal = pastAppoinment.length, pos;
+    DateTime tempDateTime;
+    String date, time;
+    List<Widget> pastAppoinmentWidgetList = [];
+
+    for (int i = 0; i < pastAppoinmentTotal; i++) {
+      tempAppoinment = pastAppoinment[i];
+      pos = appoinmentList.indexOf(tempAppoinment);
+      dateTime = DateTime.parse(tempAppoinment.dateAndTime);
+      date = dateTime.day.toString() +
+          '/' +
+          dateTime.month.toString() +
+          '/' +
+          dateTime.year.toString();
+      if (dateTime.minute == 0) {
+        time =
+            dateTime.hour.toString() + ':' + dateTime.minute.toString() + '0';
+      } else
+        time = dateTime.hour.toString() + ':' + dateTime.minute.toString();
+      pastAppoinmentWidgetList.add(InkWell(
+          highlightColor: Colors.white70,
+          onLongPress: () {
+            _delete(context, tempAppoinment);
+          },
+          child: OtherAppoinment(
+            name: tempAppoinment.name,
+            type: tempAppoinment.address,
+            time: time,
+            date: date,
+          )));
+    }
+
+    return pastAppoinmentWidgetList;
+  }
+
+  List<Widget> getUpcomingAppoinmentWidget() {
+    getUpcomingAppoinment();
+
+    Appoinment tempAppoinment;
+    int upcomingAppoinmentTotal = upcomingAppoinment.length, pos;
+    DateTime tempDateTime;
+    String date, time;
+    List<Widget> upcomingAppoinmentWidgetList = [];
+
+    for (int i = 0; i < upcomingAppoinmentTotal; i++) {
+      tempAppoinment = upcomingAppoinment[i];
+      pos = appoinmentList.indexOf(tempAppoinment);
+      dateTime = DateTime.parse(tempAppoinment.dateAndTime);
+      date = dateTime.day.toString() +
+          '/' +
+          dateTime.month.toString() +
+          '/' +
+          dateTime.year.toString();
+      if (dateTime.minute == 0) {
+        time =
+            dateTime.hour.toString() + ':' + dateTime.minute.toString() + '0';
+      } else
+        time = dateTime.hour.toString() + ':' + dateTime.minute.toString();
+      upcomingAppoinmentWidgetList.add(InkWell(
+          onTap: () {
+            navigateToDetail(tempAppoinment, 'Edit');
+          },
+          onLongPress: () {
+            _delete(context, tempAppoinment);
+          },
+          child: OtherAppoinment(
+            name: tempAppoinment.name,
+            type: tempAppoinment.address,
+            time: time,
+            date: date,
+          )));
+    }
+
+    return upcomingAppoinmentWidgetList;
+  }
+
+  List<Widget> getTodayAppoinmentWidget() {
+    getTodayAppoinment();
+
+    Appoinment tempAppoinment;
+    int todayAppoinmentTotal = todayAppoinment.length, pos;
+    DateTime tempDateTime;
+    String date, time;
+    List<Widget> todayAppoinmentWidgetList = [];
+
+    for (int i = 0; i < todayAppoinmentTotal; i++) {
+      tempAppoinment = todayAppoinment[i];
+      pos = appoinmentList.indexOf(tempAppoinment);
+      dateTime = DateTime.parse(tempAppoinment.dateAndTime);
+      date = dateTime.day.toString() +
+          '/' +
+          dateTime.month.toString() +
+          '/' +
+          dateTime.year.toString();
+      if (dateTime.minute == 0) {
+        time =
+            dateTime.hour.toString() + ':' + dateTime.minute.toString() + '0';
+      } else
+        time = dateTime.hour.toString() + ':' + dateTime.minute.toString();
+      todayAppoinmentWidgetList.add(InkWell(
+          onTap: () {
+            navigateToDetail(tempAppoinment, 'Edit');
+          },
+          onLongPress: () {
+            _delete(context, tempAppoinment);
+          },
+          child: TodayAppoinment(
+            name: tempAppoinment.name,
+            kTextStyle: kTextStyle,
+            time: time,
+            type: tempAppoinment.address,
+            place: tempAppoinment.place,
+          )));
+    }
+
+    return todayAppoinmentWidgetList;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (appoinmentList == null) {
@@ -129,82 +311,34 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
 //            'No appoinment today',
 //            textAlign: TextAlign.center,
 //          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(8, 10, 8, 10),
-            padding: EdgeInsets.fromLTRB(4, 8, 4, 8),
-            decoration: BoxDecoration(
-              color: Color(0xfff5f5f5),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    children: <Widget>[
-                      CircleAvatar(
-                        backgroundColor: Colors.green,
-                        radius: 47,
-                        child: Icon(
-                          FontAwesomeIcons.userMd,
-                          size: 65,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 8),
-                        child: Text('5:00 pm'),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Text(' Appoinment Place'),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      Text('Doctor Name'),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      Text('Date'),
-                    ],
-                  ),
-                )
-              ],
-            ),
+          Column(
+            children: getTodayAppoinmentWidget(),
           ),
           SizedBox(
-            height: 25,
+            height: 17,
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 20),
-            child: Text(
-              'Upcoming :',
-              style: TextStyle(
-                  color: Colors.teal,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800),
-            ),
+          HeadingText(
+            title: 'Upcoming',
+            color: Colors.teal,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Column(
+            children: getUpcomingAppoinmentWidget(),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          HeadingText(
+            title: 'Past Appoinments',
+            color: Colors.deepOrangeAccent,
           ),
           SizedBox(
             height: 10,
           ),
-          Container(
-            child: Row(
-              children: <Widget>[
-                Column(),
-                Column(),
-              ],
-            ),
+          Column(
+            children: getPastAppoinmentWidget(),
           )
         ],
       ),
@@ -253,136 +387,6 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
     );
   }
 
-  ListView getAppoinmentListView() {
-    bool first = true;
-    return ListView.builder(
-      itemCount: count,
-      itemBuilder: (BuildContext context, int position) {
-        tempDay = DateTime.parse(this.appoinmentList[position].dateAndTime).day;
-        tempMonth =
-            DateTime.parse(this.appoinmentList[position].dateAndTime).month;
-        tempYear =
-            DateTime.parse(this.appoinmentList[position].dateAndTime).year;
-        tempHour =
-            DateTime.parse(this.appoinmentList[position].dateAndTime).hour;
-        tempMinute =
-            DateTime.parse(this.appoinmentList[position].dateAndTime).minute;
-
-        if (first) {
-          first = false;
-          return Column(children: <Widget>[
-            SizedBox(
-              height: 15,
-            ),
-            Text(
-              'Appoinments',
-              style: TextStyle(fontSize: 25, color: Colors.green),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Card(
-              margin: EdgeInsets.all(18),
-              color: Colors.white,
-              elevation: 2.0,
-              child: ListTile(
-                leading: Icon(Icons.local_hospital),
-                title: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        this.appoinmentList[position].name ?? ' ',
-                        style:
-                            TextStyle(color: Colors.blue, letterSpacing: 1.01),
-                      ),
-                    ),
-                    Expanded(
-                        child: Text(
-                            'To : ' + this.appoinmentList[position].place ??
-                                ' '))
-                  ],
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                  child: Text(tempDay.toString() +
-                          '/' +
-                          tempMonth.toString() +
-                          '/' +
-                          tempYear.toString() +
-                          '  at ' +
-                          tempHour.toString() +
-                          ':' +
-                          tempMinute.toString() ??
-                      ' '),
-                ),
-                trailing: GestureDetector(
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.grey,
-                  ),
-                  onTap: () {
-                    _delete(context, appoinmentList[position]);
-                  },
-                ),
-                onTap: () {
-                  debugPrint("ListTile Tapped");
-                  navigateToDetail(this.appoinmentList[position], 'Edit ');
-                },
-              ),
-            )
-          ]);
-        } else
-          return Card(
-            margin: EdgeInsets.all(18),
-            color: Colors.white,
-            elevation: 2.0,
-            child: ListTile(
-              leading: Icon(Icons.local_hospital),
-              title: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      this.appoinmentList[position].name ?? ' ',
-                      style: TextStyle(color: Colors.blue, letterSpacing: 1.01),
-                    ),
-                  ),
-                  Expanded(
-                      child: Text(
-                          'To : ' + this.appoinmentList[position].place ?? ' '))
-                ],
-              ),
-              subtitle: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                child: Text(tempDay.toString() +
-                        '/' +
-                        tempMonth.toString() +
-                        '/' +
-                        tempYear.toString() +
-                        '  at ' +
-                        tempHour.toString() +
-                        ':' +
-                        tempMinute.toString() ??
-                    ' '),
-              ),
-              trailing: GestureDetector(
-                child: Icon(
-                  Icons.delete,
-                  color: Colors.grey,
-                ),
-                onTap: () {
-                  _delete(context, appoinmentList[position]);
-                },
-              ),
-              onTap: () {
-                debugPrint("ListTile Tapped");
-                navigateToDetail(this.appoinmentList[position], 'Edit ');
-              },
-            ),
-          );
-      },
-    );
-  }
-
   void _delete(BuildContext context, Appoinment appoinment) async {
     int result = await databaseHelper.deleteAppoinment(appoinment.id);
     if (result != 0) {
@@ -420,5 +424,183 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
         });
       });
     });
+  }
+}
+
+class HeadingText extends StatelessWidget {
+  String title;
+  var color;
+  HeadingText({this.color, this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 20),
+      child: Text(
+        '$title :',
+        style:
+            TextStyle(color: color, fontSize: 23, fontWeight: FontWeight.w800),
+      ),
+    );
+  }
+}
+
+class OtherAppoinment extends StatelessWidget {
+  String time, date, type, name;
+  OtherAppoinment({this.name, this.date, this.type, this.time});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 5, 10, 8),
+      padding: EdgeInsets.all(3),
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.grey,
+            width: 0.5,
+          ),
+          //color: Colors.grey,
+          borderRadius: BorderRadius.horizontal(
+              left: Radius.circular(25), right: Radius.circular(25))),
+      child: Row(
+        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          SizedBox(
+            width: 25,
+          ),
+          Expanded(
+              flex: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    'Dr.' + name,
+                    style: TextStyle(
+                        fontSize: 19,
+                        color: Colors.brown,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    type,
+                    style: TextStyle(color: Colors.brown, fontSize: 16),
+                  ),
+                ],
+              )),
+          Expanded(
+              flex: 3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                //crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    date,
+                    style: TextStyle(
+                        color: Colors.blue, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    time,
+                    style: TextStyle(
+                        color: Colors.blue, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              )),
+        ],
+      ),
+    );
+  }
+}
+
+class TodayAppoinment extends StatelessWidget {
+  TodayAppoinment({
+    this.type,
+    this.name,
+    this.place,
+    this.time,
+    @required this.kTextStyle,
+  });
+
+  final TextStyle kTextStyle;
+  String time, place, name, type;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(8, 10, 8, 10),
+      padding: EdgeInsets.fromLTRB(4, 8, 4, 8),
+      decoration: BoxDecoration(
+        color: Color(0xfff5f5f5),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: <Widget>[
+                CircleAvatar(
+                  backgroundColor: Colors.green,
+                  radius: 38,
+                  child: Icon(
+                    FontAwesomeIcons.userMd,
+                    size: 43,
+                    color: Colors.white,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 8),
+                  child: Text(
+                    time,
+                    style: TextStyle(
+                        color: Colors.blue, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text(
+                  place,
+                  style: kTextStyle,
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Text(
+                  'Dr.' + name,
+                  style: kTextStyle.copyWith(
+                      letterSpacing: 1,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 19),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Text(
+                  type,
+                  style: kTextStyle,
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
