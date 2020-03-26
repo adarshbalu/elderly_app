@@ -278,9 +278,9 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
     if (result != 0) {
       // Success
       _showAlertDialog('Status', 'Appoinment Saved Successfully');
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return AppoinmentReminder();
-      }));
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => AppoinmentReminder()),
+          (Route<dynamic> route) => false);
     } else {
       // Failure
       _showAlertDialog('Status', 'Problem Saving Appoinment');

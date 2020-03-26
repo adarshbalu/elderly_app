@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
 class AppoinmentReminder extends StatefulWidget {
   static const String id = 'Appoinment_Reminder_Screen';
@@ -160,8 +161,6 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   }
 
   List<Widget> getPastAppoinmentWidget() {
-    getPastAppoinment();
-
     Appoinment tempAppoinment;
     int pastAppoinmentTotal = pastAppoinment.length, pos;
     DateTime tempDateTime;
@@ -183,10 +182,11 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
       } else
         time = dateTime.hour.toString() + ':' + dateTime.minute.toString();
       pastAppoinmentWidgetList.add(InkWell(
+        onLongPress: (){
+          _showAlertDialog('Status', 'Past Appoinment deleted ');
+          _delete(context, tempAppoinment);
+        },
           highlightColor: Colors.white70,
-          onLongPress: () {
-            _delete(context, tempAppoinment);
-          },
           child: OtherAppoinment(
             name: tempAppoinment.name,
             type: tempAppoinment.address,
@@ -199,8 +199,6 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   }
 
   List<Widget> getUpcomingAppoinmentWidget() {
-    getUpcomingAppoinment();
-
     Appoinment tempAppoinment;
     int upcomingAppoinmentTotal = upcomingAppoinment.length, pos;
     DateTime tempDateTime;
@@ -225,7 +223,7 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
           onTap: () {
             navigateToDetail(tempAppoinment, 'Edit');
           },
-          onLongPress: () {
+          onLongPress: () {_showAlertDialog('Status', 'Upcoming Appoinment deleted ');
             _delete(context, tempAppoinment);
           },
           child: OtherAppoinment(
@@ -240,8 +238,6 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   }
 
   List<Widget> getTodayAppoinmentWidget() {
-    getTodayAppoinment();
-
     Appoinment tempAppoinment;
     int todayAppoinmentTotal = todayAppoinment.length, pos;
     DateTime tempDateTime;
@@ -266,7 +262,8 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
           onTap: () {
             navigateToDetail(tempAppoinment, 'Edit');
           },
-          onLongPress: () {
+          onLongPress: () async {
+            _showAlertDialog('Status', 'Appoinment deleted ');
             _delete(context, tempAppoinment);
           },
           child: TodayAppoinment(
@@ -287,6 +284,9 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
       appoinmentList = List<Appoinment>();
       updateListView();
     }
+    getPastAppoinment();
+    getUpcomingAppoinment();
+    getTodayAppoinment();
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -307,13 +307,14 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
           SizedBox(
             height: 20,
           ),
-//          Text(
-//            'No appoinment today',
-//            textAlign: TextAlign.center,
-//          ),
-          Column(
-            children: getTodayAppoinmentWidget(),
-          ),
+          appoinmentList.isEmpty
+              ? Text(
+                  'No appoinments today',
+                  textAlign: TextAlign.center,
+                )
+              : Column(
+                  children: getTodayAppoinmentWidget(),
+                ),
           SizedBox(
             height: 17,
           ),
@@ -324,9 +325,11 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
           SizedBox(
             height: 8,
           ),
-          Column(
-            children: getUpcomingAppoinmentWidget(),
-          ),
+          upcomingAppoinment.isNotEmpty
+              ? Column(
+                  children: getUpcomingAppoinmentWidget(),
+                )
+              : Center(child: Text('No Upcoming Appoinments')),
           SizedBox(
             height: 15,
           ),
@@ -337,9 +340,16 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
           SizedBox(
             height: 10,
           ),
-          Column(
-            children: getPastAppoinmentWidget(),
-          )
+          pastAppoinment.isNotEmpty
+              ? Column(
+                  children: getPastAppoinmentWidget(),
+                )
+              : Container(
+                  margin: EdgeInsets.only(bottom: 15),
+                  child: Center(
+                    child: Text('No past appoinments'),
+                  ),
+                )
         ],
       ),
       drawer: AppDrawer(),
@@ -388,16 +398,11 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   }
 
   void _delete(BuildContext context, Appoinment appoinment) async {
+    bool tr = false;
     int result = await databaseHelper.deleteAppoinment(appoinment.id);
     if (result != 0) {
-      _showSnackBar(context, 'Appoinment Deleted Successfully');
       updateListView();
     }
-  }
-
-  void _showSnackBar(BuildContext context, String message) {
-    final snackBar = SnackBar(content: Text(message));
-    Scaffold.of(context).showSnackBar(snackBar);
   }
 
   void navigateToDetail(Appoinment appoinment, String name) async {
@@ -424,6 +429,14 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
         });
       });
     });
+  }
+
+  void _showAlertDialog(String title, String message) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    showDialog(context: context, builder: (_) => alertDialog);
   }
 }
 
