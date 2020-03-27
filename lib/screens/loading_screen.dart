@@ -21,23 +21,24 @@ class _LoadingScreenState extends State<LoadingScreen> {
     image = Image.asset('lib/resources/images/loadingimage.jpg');
 
     getUser().then((user) {
-      if (user != null) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => HomeScreen(true)),
-            (Route<dynamic> route) => false);
-      } else
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => LoginScreen()),
-            (Route<dynamic> route) => false);
+      Future.delayed(duration, () {
+        if (user != null) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return HomeScreen(true);
+          }));
+        } else
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return LoginScreen();
+          }));
+      });
     });
-
     Future.delayed(duration, () {
-//      Navigator.push(context, MaterialPageRoute(builder: (context) {
-//        return HomeScreen(true);
-//      }));
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => HomeScreen(true)),
-          (Route<dynamic> route) => false);
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return HomeScreen(true);
+      }));
+//      Navigator.of(context).pushAndRemoveUntil(
+//          MaterialPageRoute(builder: (context) => HomeScreen(true)),
+//          (Route<dynamic> route) => false);
     });
 
     super.initState();

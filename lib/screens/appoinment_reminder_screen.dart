@@ -10,6 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
+import 'home_screen.dart';
+
 class AppoinmentReminder extends StatefulWidget {
   static const String id = 'Appoinment_Reminder_Screen';
   @override
@@ -179,13 +181,15 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
       if (dateTime.minute == 0) {
         time =
             dateTime.hour.toString() + ':' + dateTime.minute.toString() + '0';
-      } else
+      } else if (dateTime.minute < 10)
+        time = dateTime.hour.toString() + ':0' + dateTime.minute.toString();
+      else
         time = dateTime.hour.toString() + ':' + dateTime.minute.toString();
       pastAppoinmentWidgetList.add(InkWell(
-        onLongPress: (){
-          _showAlertDialog('Status', 'Past Appoinment deleted ');
-          _delete(context, tempAppoinment);
-        },
+          onLongPress: () {
+            _showAlertDialog('Status', 'Past Appoinment deleted ');
+            _delete(context, tempAppoinment);
+          },
           highlightColor: Colors.white70,
           child: OtherAppoinment(
             name: tempAppoinment.name,
@@ -217,13 +221,16 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
       if (dateTime.minute == 0) {
         time =
             dateTime.hour.toString() + ':' + dateTime.minute.toString() + '0';
-      } else
+      } else if (dateTime.minute < 10)
+        time = dateTime.hour.toString() + ':0' + dateTime.minute.toString();
+      else
         time = dateTime.hour.toString() + ':' + dateTime.minute.toString();
       upcomingAppoinmentWidgetList.add(InkWell(
           onTap: () {
             navigateToDetail(tempAppoinment, 'Edit');
           },
-          onLongPress: () {_showAlertDialog('Status', 'Upcoming Appoinment deleted ');
+          onLongPress: () {
+            _showAlertDialog('Status', 'Upcoming Appoinment deleted ');
             _delete(context, tempAppoinment);
           },
           child: OtherAppoinment(
@@ -256,7 +263,9 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
       if (dateTime.minute == 0) {
         time =
             dateTime.hour.toString() + ':' + dateTime.minute.toString() + '0';
-      } else
+      } else if (dateTime.minute < 10)
+        time = dateTime.hour.toString() + ':0' + dateTime.minute.toString();
+      else
         time = dateTime.hour.toString() + ':' + dateTime.minute.toString();
       todayAppoinmentWidgetList.add(InkWell(
           onTap: () {
@@ -284,73 +293,85 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
       appoinmentList = List<Appoinment>();
       updateListView();
     }
-    getPastAppoinment();
-    getUpcomingAppoinment();
     getTodayAppoinment();
+
+    getUpcomingAppoinment();
+    getPastAppoinment();
+
     return Scaffold(
-      body: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: 35,
-          ),
-          Text(
-            month + '  ' + year,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 25, color: Colors.green),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: textWidgets),
-          SizedBox(
-            height: 20,
-          ),
-          appoinmentList.isEmpty
-              ? Text(
-                  'No appoinments today',
-                  textAlign: TextAlign.center,
-                )
-              : Column(
-                  children: getTodayAppoinmentWidget(),
-                ),
-          SizedBox(
-            height: 17,
-          ),
-          HeadingText(
-            title: 'Upcoming',
-            color: Colors.teal,
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          upcomingAppoinment.isNotEmpty
-              ? Column(
-                  children: getUpcomingAppoinmentWidget(),
-                )
-              : Center(child: Text('No Upcoming Appoinments')),
-          SizedBox(
-            height: 15,
-          ),
-          HeadingText(
-            title: 'Past Appoinments',
-            color: Colors.deepOrangeAccent,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          pastAppoinment.isNotEmpty
-              ? Column(
-                  children: getPastAppoinmentWidget(),
-                )
-              : Container(
-                  margin: EdgeInsets.only(bottom: 15),
-                  child: Center(
-                    child: Text('No past appoinments'),
+      body: WillPopScope(
+        onWillPop: () {
+          return Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return HomeScreen(true);
+          }));
+        },
+        child: ListView(
+          children: <Widget>[
+            SizedBox(
+              height: 35,
+            ),
+            Text(
+              month + '  ' + year,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 25, color: Colors.green),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: textWidgets),
+            SizedBox(
+              height: 20,
+            ),
+            appoinmentList.isEmpty
+                ? Text(
+                    'No appoinments today',
+                    textAlign: TextAlign.center,
+                  )
+                : Column(
+                    children: getTodayAppoinmentWidget(),
                   ),
-                )
-        ],
+            SizedBox(
+              height: 17,
+            ),
+            HeadingText(
+              title: 'Upcoming',
+              color: Colors.teal,
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            upcomingAppoinment.isNotEmpty
+                ? Column(
+                    children: getUpcomingAppoinmentWidget(),
+                  )
+                : Center(child: Text('No Upcoming Appoinments')),
+            SizedBox(
+              height: 15,
+            ),
+            HeadingText(
+              title: 'Past Appoinments',
+              color: Colors.deepOrangeAccent,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            pastAppoinment.isNotEmpty
+                ? Column(
+                    children: getPastAppoinmentWidget(),
+                  )
+                : Container(
+                    margin: EdgeInsets.only(bottom: 35),
+                    child: Center(
+                      child: Text('No past appoinments'),
+                    ),
+                  ),
+            SizedBox(
+              height: 20,
+            )
+          ],
+        ),
       ),
       drawer: AppDrawer(),
       floatingActionButton: FloatingActionButton(
@@ -503,6 +524,7 @@ class OtherAppoinment extends StatelessWidget {
                     type,
                     style: TextStyle(color: Colors.brown, fontSize: 16),
                   ),
+                  SizedBox(height: 5)
                 ],
               )),
           Expanded(

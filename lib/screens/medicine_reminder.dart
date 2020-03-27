@@ -1,6 +1,7 @@
 import 'package:elderly_app/models/reminder.dart';
 import 'package:elderly_app/others/database_helper.dart';
 import 'package:elderly_app/widgets/app_default.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'home_screen.dart';
@@ -21,6 +22,51 @@ class _MedicineReminderState extends State<MedicineReminder> {
   List<Reminder> reminderList;
   int count = 0;
 
+  DateTime dateTime = DateTime.now();
+  String today = '';
+  Map<int, String> weekDays = {};
+  int weekDayNumber;
+  getWeekDays() {
+    weekDays = {
+      1: 'Mon',
+      2: 'Tue',
+      3: 'Wed',
+      4: 'Thu',
+      5: 'Fri',
+      6: 'Sat',
+      7: 'Sun'
+    };
+    weekDayNumber = dateTime.weekday;
+    today = weekDays[weekDayNumber];
+  }
+
+  List<Widget> weekDayWidgets = [];
+  List<Widget> getWeekDayWidgets() {
+    Widget widget;
+    weekDayWidgets = [];
+
+    for (int i = 1; i <= 7; i++) {
+      if (i == weekDayNumber) {
+        widget = Text(
+          weekDays[i].toUpperCase(),
+          style: TextStyle(
+              fontSize: 21, fontWeight: FontWeight.bold, color: Colors.black87),
+        );
+      } else {
+        widget = Text(
+          weekDays[i].toUpperCase(),
+          style: TextStyle(
+            fontSize: 20,
+          ),
+        );
+      }
+      weekDayWidgets.add(
+          Padding(padding: EdgeInsets.only(left: 2, right: 2), child: widget));
+    }
+
+    return weekDayWidgets;
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -29,11 +75,13 @@ class _MedicineReminderState extends State<MedicineReminder> {
   @override
   void initState() {
     updateListView();
+    getWeekDays();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    getWeekDays();
     double screenWidth = getDeviceWidth(context);
     double screenHeight = getDeviceHeight(context);
     if (reminderList == null) {
@@ -94,7 +142,52 @@ class _MedicineReminderState extends State<MedicineReminder> {
                     MaterialPageRoute(builder: (context) => HomeScreen(true)),
                     (Route<dynamic> route) => false);
               },
-              child: getReminderListView())
+              child: ListView(
+                children: <Widget>[
+                  Container(
+                      decoration: BoxDecoration(color: Color(0xff0C9731)),
+                      child: Column(children: <Widget>[
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          'Medicine Reminder',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white, fontSize: 29),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Divider(
+                          color: Colors.white,
+                          thickness: 2.5,
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          'Your Pills',
+                          style: TextStyle(fontSize: 24, color: Colors.white),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 10),
+                          padding: EdgeInsets.only(top: 10, bottom: 10),
+                          decoration: BoxDecoration(color: Colors.white),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: getWeekDayWidgets(),
+                          ),
+                        ),
+                      ])),
+                  Container(
+                    decoration:
+                        BoxDecoration(color: Color(0xffACB5C5).withAlpha(90)),
+                    padding: EdgeInsets.only(top: 15, bottom: 15),
+                    child: Row(),
+                  ),
+                ],
+              ),
+            )
           : Column(
               children: <Widget>[
                 GestureDetector(
