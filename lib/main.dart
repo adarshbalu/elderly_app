@@ -9,6 +9,7 @@ import 'package:elderly_app/screens/image_label.dart';
 import 'package:elderly_app/screens/loading_screen.dart';
 import 'package:elderly_app/screens/splash_home.dart';
 import 'package:elderly_app/screens/view_documents_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
 import 'package:elderly_app/screens/contact_relatives_screen.dart';
@@ -26,6 +27,7 @@ import 'screens/appoinment_decision_screen.dart';
 
 void main() {
   setupLocator();
+  Image image = Image.asset('lib/resources/images/loadingimage.jpg');
   runApp(ElderlyApp());
 }
 
@@ -42,7 +44,8 @@ class ElderlyApp extends StatelessWidget {
         HeartRateScreen.id: (context) => HeartRateScreen(),
         ProfileScreen.id: (context) => ProfileScreen(),
         MedicineReminder.id: (context) => MedicineReminder(),
-        LoadingScreen.id: (context) => LoadingScreen(),
+        LoadingScreen.id: (context) =>
+            LoadingScreen(Image.asset('lib/resources/images/loadingimage.jpg')),
         ContactScreen.id: (context) => ContactScreen(),
         LoginScreen.id: (context) => LoginScreen(),
         ProfileEdit.id: (context) => ProfileEdit(),
