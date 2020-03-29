@@ -19,7 +19,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
   Reminder _reminder = Reminder('', '', '', '', '', 2);
 
   DatabaseHelper databaseHelper = DatabaseHelper();
-  List<Reminder> reminderList;
+  List<Reminder> reminderList = [];
   int count = 0;
 
   DateTime dateTime = DateTime.now();
@@ -68,11 +68,6 @@ class _MedicineReminderState extends State<MedicineReminder> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   void initState() {
     updateListView();
     getWeekDays();
@@ -81,29 +76,16 @@ class _MedicineReminderState extends State<MedicineReminder> {
 
   @override
   Widget build(BuildContext context) {
-    getWeekDays();
     double screenWidth = getDeviceWidth(context);
     double screenHeight = getDeviceHeight(context);
     if (reminderList == null) {
       reminderList = List<Reminder>();
       updateListView();
     }
-
+    updateListView();
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       drawer: AppDrawer(),
-      floatingActionButton: count != 0
-          ? FloatingActionButton(
-              onPressed: () {
-                print(_reminder.name);
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return ReminderDetail(_reminder, 'Add Reminder');
-                  //return ReminderDetail();
-                }));
-              },
-              backgroundColor: Color(0xffE3952D),
-              child: Icon(Icons.add),
-            )
-          : SizedBox(),
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -142,52 +124,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
                     MaterialPageRoute(builder: (context) => HomeScreen(true)),
                     (Route<dynamic> route) => false);
               },
-              child: ListView(
-                children: <Widget>[
-                  Container(
-                      decoration: BoxDecoration(color: Color(0xff0C9731)),
-                      child: Column(children: <Widget>[
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          'Medicine Reminder',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white, fontSize: 29),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Divider(
-                          color: Colors.white,
-                          thickness: 2.5,
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          'Your Pills',
-                          style: TextStyle(fontSize: 24, color: Colors.white),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10),
-                          padding: EdgeInsets.only(top: 10, bottom: 10),
-                          decoration: BoxDecoration(color: Colors.white),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: getWeekDayWidgets(),
-                          ),
-                        ),
-                      ])),
-                  Container(
-                    decoration:
-                        BoxDecoration(color: Color(0xffACB5C5).withAlpha(90)),
-                    padding: EdgeInsets.only(top: 15, bottom: 15),
-                    child: Row(),
-                  ),
-                ],
-              ),
-            )
+              child: getReminderListView())
           : Column(
               children: <Widget>[
                 GestureDetector(
@@ -242,116 +179,154 @@ class _MedicineReminderState extends State<MedicineReminder> {
     );
   }
 
-  ListView getReminderListView() {
+//
+  Widget getReminderListView() {
+    double width = getDeviceWidth(context);
     bool first = true;
-    return ListView.builder(
-      padding: EdgeInsets.all(8),
-      itemCount: count,
-      itemBuilder: (BuildContext context, int position) {
-        if (first) {
-          first = false;
-          return Column(
-            children: <Widget>[
+    return Column(
+      children: <Widget>[
+        Container(
+            decoration: BoxDecoration(color: Color(0xff0C9731)),
+            child: Column(children: <Widget>[
               SizedBox(
-                height: 15,
+                height: 20,
               ),
               Text(
-                'Reminders',
-                style: TextStyle(fontSize: 25, color: Colors.amber),
+                'Medicine Reminder',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 29),
               ),
               SizedBox(
-                height: 10,
+                height: 25,
               ),
-              Card(
-                margin: EdgeInsets.fromLTRB(8.0, 25, 8, 5),
-                color: Colors.white70,
-                elevation: 2.0,
-                child: ListTile(
-                  leading: Icon(
-                    Icons.alarm_on,
-                    color: Colors.green,
-                  ),
-                  title: Text(
-                    this.reminderList[position].name.toUpperCase() ?? ' ',
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5),
-                  ),
-                  subtitle: Row(
-                    children: <Widget>[
-                      Expanded(
-                          child: Text(this.reminderList[position].type ?? ' ')),
-                      Expanded(
-                        child: Text(
-                            this.reminderList[position].times.toString() +
-                                    ' per Day' ??
-                                ''),
-                      )
-                    ],
-                  ),
-                  trailing: GestureDetector(
-                    child: Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                    onTap: () {
-                      _delete(context, reminderList[position]);
+              Container(
+                margin: EdgeInsets.only(top: 0),
+                padding: EdgeInsets.only(top: 15, bottom: 6),
+                decoration: BoxDecoration(color: Colors.white),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: getWeekDayWidgets(),
+                ),
+              ),
+            ])),
+        SizedBox(
+          height: 0,
+        ),
+        Flexible(
+          child: Stack(
+            children: <Widget>[
+              Container(
+                margin:
+                    EdgeInsets.only(top: 35, left: 10, right: 10, bottom: 0),
+                padding: EdgeInsets.only(top: 7, bottom: 15),
+                decoration: BoxDecoration(
+                    color: Colors.blue[100],
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(50),
+                        bottomLeft: Radius.circular(50),
+                        bottomRight: Radius.circular(50),
+                        topRight: Radius.circular(50))),
+                child: NotificationListener<OverscrollIndicatorNotification>(
+                  // ignore: missing_return
+                  onNotification: (OverscrollIndicatorNotification overScroll) {
+                    overScroll.disallowGlow();
+                    return true;
+                  },
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(8),
+                    itemCount: count,
+                    itemBuilder: (BuildContext context, int position) {
+                      return Container(
+                        margin: EdgeInsets.fromLTRB(38.0, 26, 38, 0),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20)),
+                            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                            child: InkWell(
+                              onTap: () {
+                                navigateToDetail(this.reminderList[position],
+                                    'Edit Reminder');
+                              },
+                              child: Column(children: <Widget>[
+                                Center(
+                                  child: Text(
+                                    this
+                                            .reminderList[position]
+                                            .name
+                                            .toUpperCase() ??
+                                        ' ',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.5),
+                                  ),
+                                ),
+                                Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      this
+                                                  .reminderList[position]
+                                                  .times
+                                                  .toString() +
+                                              ' times' ??
+                                          '',
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                            )),
+                      );
                     },
                   ),
+                ),
+              ),
+              Positioned(
+                top: 0,
+                right: width / 3,
+                left: width / 3,
+                child: CircleAvatar(
+                  radius: 35.8,
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.filter_none,
+                  ),
+                ),
+              ),
+              Positioned(
+                right: width / 3,
+                left: width / 3,
+                top: 0,
+                child: GestureDetector(
                   onTap: () {
-                    debugPrint("ListTile Tapped");
-                    navigateToDetail(
-                        this.reminderList[position], 'Edit Reminder');
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return ReminderDetail(_reminder, 'Add Reminder');
+                      //return ReminderDetail();
+                    }));
                   },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.green,
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                    radius: 35,
+                  ),
                 ),
-              )
+              ),
             ],
-          );
-        } else
-          return Card(
-            margin: EdgeInsets.fromLTRB(8.0, 25, 8, 5),
-            color: Colors.white70,
-            elevation: 2.0,
-            child: ListTile(
-              leading: Icon(
-                Icons.alarm_on,
-                color: Colors.green,
-              ),
-              title: Text(
-                this.reminderList[position].name.toUpperCase() ?? ' ',
-                style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5),
-              ),
-              subtitle: Row(
-                children: <Widget>[
-                  Expanded(
-                      child: Text(this.reminderList[position].type ?? ' ')),
-                  Expanded(
-                    child: Text(this.reminderList[position].times.toString() +
-                            ' per Day' ??
-                        ''),
-                  )
-                ],
-              ),
-              trailing: GestureDetector(
-                child: Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
-                onTap: () {
-                  _delete(context, reminderList[position]);
-                },
-              ),
-              onTap: () {
-                debugPrint("ListTile Tapped");
-                navigateToDetail(this.reminderList[position], 'Edit Reminder');
-              },
-            ),
-          );
-      },
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        )
+      ],
     );
   }
 

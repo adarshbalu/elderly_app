@@ -211,14 +211,6 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
     List<Hospital> hospitalList = [];
 
     await getLocation();
-//    setState(() {
-//      location
-//          .onLocationChanged()
-//          .listen((LocationManager.LocationData currentLocation) {
-//        longitude = currentLocation.longitude;
-//        latitude = currentLocation.latitude;
-//      });
-//    });
     print('Latitude : ' + latitude.toString());
     print('Longitude : ' + longitude.toString());
     http.Response response = await http.get(
