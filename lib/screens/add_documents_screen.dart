@@ -65,7 +65,6 @@ class _AddDocumentsState extends State<AddDocuments> {
   @override
   void dispose() {
     docNameController.dispose();
-
     super.dispose();
   }
 
@@ -106,6 +105,9 @@ class _AddDocumentsState extends State<AddDocuments> {
       ),
       body: ListView(
         children: <Widget>[
+          SizedBox(
+            height: 20,
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
@@ -116,7 +118,7 @@ class _AddDocumentsState extends State<AddDocuments> {
             ),
           ),
           SizedBox(
-            height: 50,
+            height: 25,
           ),
           Row(
             children: <Widget>[
@@ -149,18 +151,10 @@ class _AddDocumentsState extends State<AddDocuments> {
                             borderSide: BorderSide(
                                 color: Color(0xffaf5676),
                                 style: BorderStyle.solid))),
-                    onSubmitted: (value) {
-                      setState(() {
-                        docName = value;
-                      });
-                      print('sumbited' + docName);
-                    },
                     onChanged: (value) {
                       setState(() {
                         docName = value;
                       });
-
-                      print('val' + value);
                     },
                   ),
                 ),

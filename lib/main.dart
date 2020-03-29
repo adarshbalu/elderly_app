@@ -7,6 +7,7 @@ import 'package:elderly_app/screens/heart_rate_screen.dart';
 import 'package:elderly_app/screens/home_screen.dart';
 import 'package:elderly_app/screens/image_label.dart';
 import 'package:elderly_app/screens/loading_screen.dart';
+import 'package:elderly_app/screens/splash_home.dart';
 import 'package:elderly_app/screens/view_documents_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/screens/profile_screen.dart';
@@ -58,6 +59,7 @@ class ElderlyApp extends StatelessWidget {
         ImageLabel.id: (context) => ImageLabel(),
         AppoinmentDecision.id: (context) => AppoinmentDecision(),
         MedicineScreen.id: (context) => MedicineScreen(),
+        SplashHome.id: (context) => SplashHome(),
       },
       theme: ThemeData(
         fontFamily: 'OpenSans',

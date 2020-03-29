@@ -5,6 +5,7 @@ import 'login_screen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoadingScreen extends StatefulWidget {
   static const String id = 'Loading_Screen';
@@ -42,6 +43,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     });
 
     super.initState();
+  }
+
+  showSplash() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
   }
 
   final _auth = FirebaseAuth.instance;
