@@ -227,7 +227,6 @@ class _MedicineReminderState extends State<MedicineReminder> {
                         bottomRight: Radius.circular(50),
                         topRight: Radius.circular(50))),
                 child: NotificationListener<OverscrollIndicatorNotification>(
-                  // ignore: missing_return
                   onNotification: (OverscrollIndicatorNotification overScroll) {
                     overScroll.disallowGlow();
                     return true;

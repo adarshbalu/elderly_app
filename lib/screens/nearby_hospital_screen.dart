@@ -102,7 +102,7 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SpinKitWanderingCubes(
+                  SpinKitChasingDots(
                     color: Colors.green,
                     size: 100.0,
                   ),
@@ -153,9 +153,12 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                               child: Icon(Icons.local_hospital,
                                   size: 40, color: Colors.red),
                             ),
-                            subtitle: Text(snapshot.data[index].hospitalDistance
-                                    .toString() +
-                                ' KM'),
+                            subtitle: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text(snapshot.data[index].hospitalDistance
+                                      .toString() +
+                                  ' KM'),
+                            ),
                             title: snapshot.data[index].hospitalName != null
                                 ? Text(
                                     snapshot.data[index].hospitalName,
@@ -164,7 +167,6 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                                   )
                                 : Text(''),
                             onTap: () {
-//
                               launch(
                                   'https://www.google.com/maps/dir/$latitude,$longitude/$hosLat,$hosLon');
                             },
@@ -214,7 +216,7 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
     print('Latitude : ' + latitude.toString());
     print('Longitude : ' + longitude.toString());
     http.Response response = await http.get(
-        'https://api.tomtom.com/search/2/nearbySearch/.JSON?key=$kTomsApiKey&lat=$latitude&lon=$longitude&radius=2500&limit=15&categorySet=7321');
+        'https://api.tomtom.com/search/2/nearbySearch/.JSON?key=$kTomsApiKey&lat=$latitude&lon=$longitude&radius=2000&limit=10&categorySet=7321');
     var data = response.body;
     var status = response.statusCode;
     print('Hospital Search Status : ' + status.toString());
