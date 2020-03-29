@@ -17,11 +17,9 @@ class MedicineReminder extends StatefulWidget {
 
 class _MedicineReminderState extends State<MedicineReminder> {
   Reminder _reminder = Reminder('', '', '', '', '', 2);
-
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Reminder> reminderList = [];
   int count = 0;
-
   DateTime dateTime = DateTime.now();
   String today = '';
   Map<int, String> weekDays = {};
@@ -44,7 +42,6 @@ class _MedicineReminderState extends State<MedicineReminder> {
   List<Widget> getWeekDayWidgets() {
     Widget widget;
     weekDayWidgets = [];
-
     for (int i = 1; i <= 7; i++) {
       if (i == weekDayNumber) {
         widget = Text(
@@ -63,7 +60,6 @@ class _MedicineReminderState extends State<MedicineReminder> {
       weekDayWidgets.add(
           Padding(padding: EdgeInsets.only(left: 2, right: 2), child: widget));
     }
-
     return weekDayWidgets;
   }
 
@@ -239,15 +235,19 @@ class _MedicineReminderState extends State<MedicineReminder> {
                         margin: EdgeInsets.fromLTRB(38.0, 26, 38, 0),
                         decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(20)),
+                            borderRadius: BorderRadius.circular(30)),
                         child: Container(
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20)),
+                                borderRadius: BorderRadius.circular(30)),
                             padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                             child: InkWell(
                               onTap: () {
                                 navigateToDetail(this.reminderList[position],
                                     'Edit Reminder');
+                              },
+                              onLongPress: () {
+                                _delete(context, this.reminderList[position]);
+                                _showSnackBar(context, 'Reminder Deleted');
                               },
                               child: Column(children: <Widget>[
                                 Center(
@@ -332,7 +332,6 @@ class _MedicineReminderState extends State<MedicineReminder> {
   void _delete(BuildContext context, Reminder reminder) async {
     int result = await databaseHelper.deleteReminder(reminder.id);
     if (result != 0) {
-      _showSnackBar(context, 'Reminder Deleted Successfully');
       updateListView();
     }
   }

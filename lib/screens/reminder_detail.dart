@@ -423,7 +423,7 @@ class _ReminderDetailState extends State<ReminderDetail> {
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(20)),
                     child: Text(
-                      '$pageTitle Reminder',
+                      '$pageTitle',
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                   ),
