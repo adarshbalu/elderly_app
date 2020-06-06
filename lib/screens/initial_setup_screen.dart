@@ -1,4 +1,3 @@
-import 'package:elderly_app/screens/splash_home.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
@@ -156,7 +155,6 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                     onChanged: (value) {
                       setState(() {
                         genderValue = 'Male';
-                        gender = value;
                       });
                     },
                     activeColor: Color(0xffE3952D),
@@ -171,7 +169,6 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                     onChanged: (value) {
                       setState(() {
                         genderValue = 'Female';
-                        gender = value;
                       });
                     },
                     activeColor: Color(0xffE3952D),
@@ -278,7 +275,7 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                 });
 
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return SplashHome();
+                  return HomeScreen(true);
                 }));
               },
               child: Container(

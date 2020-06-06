@@ -1,5 +1,4 @@
 import 'package:elderly_app/screens/home_screen.dart';
-import 'package:elderly_app/screens/splash_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
@@ -10,8 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoadingScreen extends StatefulWidget {
   static const String id = 'Loading_Screen';
-  Image image;
-  LoadingScreen(this.image);
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
 }
@@ -19,19 +16,21 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   Duration duration = Duration(seconds: 3);
 
+  Image image;
   @override
   void initState() {
+    image = Image.asset('lib/resources/images/loadingimage.jpg');
+
     getUser().then((user) {
       Future.delayed(duration, () {
         if (user != null) {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return HomeScreen(true);
           }));
-        } else {
+        } else
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return LoginScreen();
           }));
-        }
       });
     });
     Future.delayed(duration, () {
@@ -46,10 +45,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     super.initState();
   }
 
-  bool firstTime;
-  getPrefs() async {
+  showSplash() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    firstTime = prefs.getBool('first_time');
   }
 
   final _auth = FirebaseAuth.instance;
@@ -60,8 +57,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
   bool showSpinner = false;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(image.image, context);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    getPrefs();
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
       body: WillPopScope(
@@ -73,8 +75,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             Expanded(
               flex: 4,
               child: Hero(
-                child: //Image.asset('lib/resources/images/loadingimage.jpg'),
-                    widget.image,
+                child: Image.asset('lib/resources/images/loadingimage.jpg'),
                 tag: 'logo',
               ),
             ),
