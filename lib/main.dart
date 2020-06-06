@@ -1,28 +1,29 @@
 import 'package:elderly_app/models/appoinment.dart';
 import 'package:elderly_app/models/reminder.dart';
-import 'package:elderly_app/screens/add_documents_screen.dart';
-import 'package:elderly_app/screens/appoinment_detail_screen.dart';
-import 'package:elderly_app/screens/appoinment_reminder_screen.dart';
-import 'package:elderly_app/screens/heart_rate_screen.dart';
-import 'package:elderly_app/screens/home_screen.dart';
-import 'package:elderly_app/screens/image_label.dart';
-import 'package:elderly_app/screens/loading_screen.dart';
-import 'package:elderly_app/screens/splash_home.dart';
-import 'package:elderly_app/screens/view_documents_screen.dart';
+import 'package:elderly_app/others/auth.dart';
+import 'package:elderly_app/resources/service_locator.dart';
+import 'package:elderly_app/screens/appoinment_reminder/appoinment_decision_screen.dart';
+import 'package:elderly_app/screens/appoinment_reminder/appoinment_detail_screen.dart';
+import 'package:elderly_app/screens/appoinment_reminder/appoinment_reminder_screen.dart';
+import 'package:elderly_app/screens/document/add_documents_screen.dart';
+import 'package:elderly_app/screens/document/view_documents_screen.dart';
+import 'package:elderly_app/screens/home/home_screen.dart';
+import 'package:elderly_app/screens/hospital/nearby_hospital_screen.dart';
+import 'package:elderly_app/screens/loading/loading_screen.dart';
+import 'package:elderly_app/screens/loading/splash_home.dart';
+import 'package:elderly_app/screens/login/initial_setup_screen.dart';
+import 'package:elderly_app/screens/login/login_screen.dart';
+import 'package:elderly_app/screens/medicine_reminder/medicine_decision_screen.dart';
+import 'package:elderly_app/screens/medicine_reminder/medicine_reminder.dart';
+import 'package:elderly_app/screens/medicine_reminder/reminder_detail.dart';
+import 'package:elderly_app/screens/notes/note_home_screen.dart';
+import 'package:elderly_app/screens/pages/heart_rate_screen.dart';
+import 'package:elderly_app/screens/pages/image_label.dart';
+import 'package:elderly_app/screens/profile/profile_edit_screen.dart';
+import 'package:elderly_app/screens/profile/profile_screen.dart';
+import 'package:elderly_app/screens/relatives/contact_relatives_screen.dart';
+import 'package:elderly_app/screens/relatives/edit_relatives.dart';
 import 'package:flutter/material.dart';
-import 'package:elderly_app/screens/profile_screen.dart';
-import 'package:elderly_app/screens/contact_relatives_screen.dart';
-import 'package:elderly_app/screens/medicine_reminder.dart';
-import 'package:elderly_app/screens/login_screen.dart';
-import 'package:elderly_app/screens/profile_edit_screen.dart';
-import 'package:elderly_app/screens/note_home_screen.dart';
-import 'screens/reminder_detail.dart';
-import 'screens/nearby_hospital_screen.dart';
-import 'screens/initial_setup_screen.dart';
-import 'screens/edit_relatives.dart';
-import 'resources/service_locator.dart';
-import 'screens/medicine_decision_screen.dart';
-import 'screens/appoinment_decision_screen.dart';
 
 void main() {
   setupLocator();
@@ -42,9 +43,13 @@ class ElderlyApp extends StatelessWidget {
         HeartRateScreen.id: (context) => HeartRateScreen(),
         ProfileScreen.id: (context) => ProfileScreen(),
         MedicineReminder.id: (context) => MedicineReminder(),
-        LoadingScreen.id: (context) => LoadingScreen(),
+        LoadingScreen.id: (context) => LoadingScreen(
+              auth: Auth(),
+            ),
         ContactScreen.id: (context) => ContactScreen(),
-        LoginScreen.id: (context) => LoginScreen(),
+        LoginScreen.id: (context) => LoginScreen(
+              auth: Auth(),
+            ),
         ProfileEdit.id: (context) => ProfileEdit(),
         NoteList.id: (context) => NoteList(),
         ReminderDetail.id: (context) => ReminderDetail(reminder, ''),
@@ -66,10 +71,14 @@ class ElderlyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         primaryColor: Colors.white,
         textTheme: TextTheme(
-            display1: TextStyle(
-          color: Colors.black,
-          fontSize: 20.0,
-        )),
+            headline4: TextStyle(
+              color: Colors.black,
+              fontSize: 20.0,
+            ),
+            headline1: TextStyle(
+              color: Colors.red,
+              fontSize: 25,
+            )),
       ),
     );
   }

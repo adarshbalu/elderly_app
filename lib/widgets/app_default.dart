@@ -1,18 +1,17 @@
-import 'package:elderly_app/screens/appoinment_decision_screen.dart';
-import 'package:elderly_app/screens/edit_relatives.dart';
-import 'package:elderly_app/screens/home_screen.dart';
-import 'package:elderly_app/screens/image_label.dart';
-import 'package:elderly_app/screens/medicine_decision_screen.dart';
-import 'package:elderly_app/screens/note_home_screen.dart';
-import 'package:elderly_app/screens/splash_home.dart';
-import 'package:elderly_app/screens/view_documents_screen.dart';
+import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/appoinment_reminder/appoinment_decision_screen.dart';
+import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/relatives/edit_relatives.dart';
+import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/home/home_screen.dart';
+import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/pages/image_label.dart';
+import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/medicine_reminder/medicine_decision_screen.dart';
+import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/notes/note_home_screen.dart';
+import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/loading/splash_home.dart';
+import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/document/view_documents_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/others/constants.dart';
-import 'package:elderly_app/screens/loading_screen.dart';
+import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/loading/loading_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
-import '../screens/splash_home.dart';
 
 final auth = FirebaseAuth.instance;
 final user = FirebaseUser;

@@ -1,11 +1,11 @@
 import 'package:elderly_app/models/reminder.dart';
 import 'package:elderly_app/others/database_helper.dart';
+import 'package:elderly_app/screens/home/home_screen.dart';
+import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'home_screen.dart';
-import 'profile_screen.dart';
 import 'package:elderly_app/others/functions.dart';
 import 'reminder_detail.dart';
 

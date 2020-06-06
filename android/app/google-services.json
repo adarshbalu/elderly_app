@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "733391842518-drjhbgomon3q3vetgl9lib97373h1ok2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.csminiproject.elderly_app",
+            "certificate_hash": "2a95ab8fa8be163c638ceaaf2509aed5ac2699a5"
+          }
+        },
+        {
           "client_id": "733391842518-il83g0kjo44ls2hebm3gajcsc6reh1ep.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -1,11 +1,9 @@
 import 'dart:io';
-
-import 'package:elderly_app/screens/profile_screen.dart';
+import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
 class ViewDocuments extends StatefulWidget {
   static const String id = 'View_Documents_Screen';

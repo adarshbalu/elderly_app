@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'profile_screen.dart';
 import 'package:location/location.dart' as LocationManager;
 import 'package:http/http.dart' as http;
 import 'dart:convert';

@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'package:elderly_app/screens/home_screen.dart';
-import 'package:elderly_app/screens/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,8 +1,7 @@
-import 'package:elderly_app/screens/profile_screen.dart';
+import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mlkit/mlkit.dart';
 

@@ -1,15 +1,15 @@
-import 'package:elderly_app/screens/edit_relatives.dart';
+import 'package:elderly_app/resources/call_and_messages.dart';
+import 'package:elderly_app/screens/profile/profile_screen.dart';
+import 'package:elderly_app/screens/relatives/edit_relatives.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sms/flutter_sms.dart' as sms;
+//import 'package:flutter_sms/flutter_sms.dart' as sms;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'profile_screen.dart';
 import 'package:get_it/get_it.dart';
-import '../resources/call_and_messages.dart';
 import 'dart:convert';
-import 'package:sms/contact.dart';
+//import 'package:sms/contact.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -113,17 +113,17 @@ class _ContactScreenState extends State<ContactScreen> {
   _sendSMS(String message, List<String> recipents) async {
     await getLocationDetails();
 
-    String _result = await sms
-        .sendSMS(message: message, recipients: recipents)
-        .catchError((onError) {
-      print(onError);
-    });
+//    String _result = await sms
+//        .sendSMS(message: message, recipients: recipents)
+//        .catchError((onError) {
+//      print(onError);
+//    });
 
-    print(_result);
+//    print(_result);
   }
 
   List<String> recipents = [];
-  UserProfileProvider provider = new UserProfileProvider();
+//  UserProfileProvider provider = new UserProfileProvider();
 
   @override
   void initState() {

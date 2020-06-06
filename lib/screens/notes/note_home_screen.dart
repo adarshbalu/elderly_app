@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'package:elderly_app/models/note.dart';
+import 'package:elderly_app/screens/notes/note_edit_screen.dart';
 import 'package:flutter/material.dart';
-import '../models/note.dart';
 import 'package:elderly_app/others/database_helper.dart';
-import 'note_edit_screen.dart';
+
 import 'package:sqflite/sqflite.dart';
 
 class NoteList extends StatefulWidget {

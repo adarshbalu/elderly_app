@@ -1,16 +1,12 @@
 import 'package:elderly_app/models/appoinment.dart';
 import 'package:elderly_app/others/database_helper.dart';
-import 'package:elderly_app/screens/appoinment_detail_screen.dart';
-import 'package:elderly_app/screens/profile_screen.dart';
+import 'package:elderly_app/screens/appoinment_reminder/appoinment_detail_screen.dart';
+import 'package:elderly_app/screens/home/home_screen.dart';
+import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
-
-import 'home_screen.dart';
 
 class AppoinmentReminder extends StatefulWidget {
   static const String id = 'Appoinment_Reminder_Screen';

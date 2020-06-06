@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:elderly_app/screens/home_screen.dart';
-import 'package:elderly_app/screens/initial_setup_screen.dart';
-import 'package:elderly_app/screens/profile_screen.dart';
-import 'package:elderly_app/screens/view_documents_screen.dart';
+import 'package:elderly_app/screens/document/view_documents_screen.dart';
+import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';

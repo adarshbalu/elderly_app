@@ -1,6 +1,5 @@
-import 'package:elderly_app/screens/profile_screen.dart';
+import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MedicineScreen extends StatefulWidget {
   static const String id = 'Medicine_decision_screen';

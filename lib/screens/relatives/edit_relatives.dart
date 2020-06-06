@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:elderly_app/screens/contact_relatives_screen.dart';
+import 'package:elderly_app/screens/relatives/contact_relatives_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/app_default.dart';
-import 'profile_screen.dart';
+import '../profile/profile_screen.dart';
 import 'package:http/http.dart' as http;
 
 class EditRelativesScreen extends StatefulWidget {

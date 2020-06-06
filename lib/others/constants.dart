@@ -11,3 +11,6 @@ final kDrawerListStyle = TextStyle(
 );
 
 final String kApi = 'AIzaSyBRSjFpkj9vWq4ETzy-mG5fCmhleGPdmnY';
+
+const String kGoogleImage = 'assets/images/google.png';
+const String kFacebookImage = 'assets/images/facebook.png';

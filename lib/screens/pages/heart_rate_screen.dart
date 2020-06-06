@@ -1,6 +1,7 @@
+import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:flutter_android/android_hardware.dart';
 import 'package:flutter/material.dart';
-import 'profile_screen.dart';
+
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter_android/android_hardware.dart'
     show Sensor, SensorEvent, SensorManager;

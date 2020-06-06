@@ -1,10 +1,9 @@
-import 'package:elderly_app/others/constants.dart';
+import 'package:elderly_app/screens/profile/profile_edit_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:elderly_app/others/functions.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'profile_edit_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:elderly_app/others/database_helper.dart';
-import 'package:elderly_app/screens/medicine_reminder.dart';
+import 'package:elderly_app/screens/medicine_reminder/medicine_reminder.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
-import 'profile_screen.dart';
+import '../profile/profile_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 import 'package:image_picker/image_picker.dart';
