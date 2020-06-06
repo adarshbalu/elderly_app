@@ -14,3 +14,5 @@ final String kApi = 'AIzaSyBRSjFpkj9vWq4ETzy-mG5fCmhleGPdmnY';
 
 const String kGoogleImage = 'assets/images/google.png';
 const String kFacebookImage = 'assets/images/facebook.png';
+
+const String kOpenCageApiKey = 'f29cf18b10224e27b8931981380b747a';

@@ -1,3 +1,5 @@
+import 'package:elderly_app/models/relative.dart';
+
 class UserProfile {
   String allergies,
       userName,
@@ -12,9 +14,9 @@ class UserProfile {
       phoneNumber,
       picture,
       uid;
-
+  List<Relative> relatives;
   UserProfile(this.uid);
-  setData(var data) {
+  setData(Map<String, dynamic> data) {
     this.uid = data['uid'];
     this.phoneNumber = data['phoneNumber'];
     this.age = data['age'];
@@ -29,5 +31,14 @@ class UserProfile {
     this.userName = data['userName'];
     this.allergies = data['allergies'];
     return this;
+  }
+
+  getAllRelatives(var data) {
+    this.relatives = List<Relative>();
+    for (var relative in data) {
+      Relative _relative = Relative();
+      _relative.getData(relative);
+      this.relatives.add(_relative);
+    }
   }
 }

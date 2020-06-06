@@ -84,11 +84,8 @@ class Auth implements AuthBase {
                 .document(authResult.user.uid.toString())
                 .collection('relatives')
                 .document('')
-                .setData({
-              'name': '',
-              'phoneNumber': '',
-              'email': '',
-            });
+                .setData(
+                    {'name': '', 'phoneNumber': '', 'email': '', 'uid': ''});
           } catch (e) {
             print(e.toString());
           }
