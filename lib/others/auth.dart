@@ -66,7 +66,7 @@ class Auth implements AuthBase {
                 .setData({
               'userName': authResult.user.displayName,
               'email': authResult.user.email,
-              'phoneNumber': authResult.user.phoneNumber ?? '',
+              'phoneNumber': authResult.user.phoneNumber ?? ' ',
               'uid': authResult.user.uid,
               'picture':
                   'https://image.shutterstock.com/image-vector/profile-anonymous-face-icon-gray-260nw-789318310.jpg',

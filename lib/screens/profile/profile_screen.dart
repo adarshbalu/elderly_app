@@ -1,11 +1,15 @@
-import 'package:elderly_app/screens/profile/profile_edit_screen.dart';
+import 'dart:io';
+
+import 'package:elderly_app/models/user.dart';
+import 'package:elderly_app/widgets/ProfileTextBox.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/widgets/app_default.dart';
-import 'package:elderly_app/others/functions.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'Profile_Screen';
@@ -14,278 +18,225 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String username = 'NameofUser';
-  final fireStoreDatabase = Firestore.instance;
-  final _auth = FirebaseAuth.instance;
-  String gender,
-      userId,
-      bloodGroup,
-      allergies,
-      email,
-      bloodPressure,
-      bloodSugar;
-  int age;
-  double height, weight;
+  String userId, imageUrl = '';
   FirebaseUser loggedInUser;
-  bool load = false;
+  File imageFile;
   @override
   void initState() {
     getCurrentUser();
-    getUserDetails();
     super.initState();
   }
 
-  Future getCurrentUser() async {
-    try {
-      final user = await _auth.currentUser();
-      loggedInUser = user;
-      userId = loggedInUser.uid;
-      print(userId);
-      await getUserDetails();
-//      if (loggedInUser.displayName != null) {
-//        username = loggedInUser.displayName.toString();
-//      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future getUserDetails() async {
-    await fireStoreDatabase
-        .collection('profile')
-        .document(userId)
-        .get()
-        .then((DocumentSnapshot snapshot) {
-      print(snapshot.data);
-      if (mounted)
-        setState(() {
-          age = snapshot.data['age'];
-          username = snapshot.data['userName'];
-          weight = snapshot.data['weight'];
-          height = snapshot.data['height'];
-          bloodGroup = snapshot.data['bloodGroup'];
-          gender = snapshot.data['gender'];
-          email = snapshot.data['email'];
-          allergies = snapshot.data['allergies'];
-          bloodSugar = snapshot.data['bloodSugar'];
-          bloodPressure = snapshot.data['bloodPressure'];
-          load = true;
-        });
+  getCurrentUser() async {
+    await FirebaseAuth.instance.currentUser().then((user) {
+      setState(() {
+        userId = user.uid;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    getCurrentUser();
-    getUserDetails();
-    double screenWidth = getDeviceWidth(context);
-    double screenHeight = getDeviceHeight(context);
-
-    double kTextSize = 19.0, kValueSize = 18.0;
-    if (screenHeight > 641) {
-      kTextSize = 23.0;
-      kValueSize = 20.0;
-    }
-
     return Scaffold(
-      drawer: AppDrawer(),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.edit,
-        ),
-        onPressed: () {
-          print('Edit Button');
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) {
-              return ProfileEdit(
-                userId: userId,
-              );
-            }),
-          );
-        },
-        backgroundColor: Color(0xff3c513d),
-      ),
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Elderly '),
-            Text(
-              'Care',
-              style: TextStyle(color: Colors.green),
+        drawer: AppDrawer(),
+        appBar: AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Elderly '),
+              Text(
+                'Care',
+                style: TextStyle(color: Colors.green),
+              ),
+            ],
+          ),
+          centerTitle: true,
+          elevation: 1,
+          actions: <Widget>[
+            GestureDetector(
+              onTap: () {
+                print('Profile Button Tapped');
+              },
+              child: CircleAvatar(
+                radius: 20,
+                backgroundColor: Colors.blue.shade50,
+                child: Icon(
+                  Icons.perm_identity,
+                  size: 30,
+                  color: Color(0xff5e444d),
+                ),
+              ),
             ),
           ],
         ),
-        centerTitle: true,
-        elevation: 1,
-        actions: <Widget>[
-          GestureDetector(
-            onTap: () {
-              print('Profile Button Tapped');
-            },
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.blue.shade50,
-              child: Icon(
-                Icons.perm_identity,
-                size: 30,
-                color: Color(0xff5e444d),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: load
-          ? ListView(
-              children: <Widget>[
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
-                    child: CircleAvatar(
-                      radius: 50.0,
-                      backgroundColor: Color(0xff3c513d),
-                      child: Icon(
-                        Icons.account_circle,
-                        size: 90.0,
-                        color: Colors.white,
+        body: StreamBuilder(
+            stream: Firestore.instance
+                .collection('profile')
+                .document(userId)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                UserProfile userProfile = UserProfile(userId);
+                userProfile.setData(snapshot.data);
+                return ListView(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Center(
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                              width: 170,
+                              height: 170,
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(width: 5, color: Colors.white),
+                                  borderRadius: BorderRadius.circular(2000),
+                                  shape: BoxShape.rectangle,
+                                  image: DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image:
+                                          NetworkImage(userProfile.picture)))),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: () async {
+                                await getImage();
+                              },
+                              child: CircleAvatar(
+                                radius: 30,
+                                backgroundColor: Colors.blue,
+                                child: Icon(
+                                  Icons.add_photo_alternate,
+                                  size: 40,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ),
-                Center(
-                  child: Text(
-                    username,
-                    style:
-                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.w100),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                            color: Colors.green, style: BorderStyle.solid),
-                      ),
+                    SizedBox(
+                      height: 15,
                     ),
-                    margin: EdgeInsets.only(top: 10.0, bottom: 20),
-                    child: Text(
-                      'Profile Details',
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xffE3952D),
-                      ),
+                    ProfileTextBox(
+                      name: 'userName',
+                      value: userProfile.userName,
+                      title: 'name',
                     ),
+                    ProfileTextBox(
+                      name: 'age',
+                      value: userProfile.age,
+                      title: 'age',
+                    ),
+                    ProfileTextBox(
+                      name: 'gender',
+                      value: userProfile.gender,
+                      title: 'gender',
+                    ),
+                    ProfileTextBox(
+                      name: 'height',
+                      value: userProfile.height,
+                      title: 'height',
+                    ),
+                    ProfileTextBox(
+                      name: 'weight',
+                      value: userProfile.weight,
+                      title: 'weight',
+                    ),
+                    ProfileTextBox(
+                      name: 'bloodGroup',
+                      value: userProfile.bloodGroup,
+                      title: 'blood group',
+                    ),
+                    ProfileTextBox(
+                      name: 'bloodPressure',
+                      value: userProfile.bloodPressure,
+                      title: 'blood pressure',
+                    ),
+                    ProfileTextBox(
+                      name: 'bloodSugar',
+                      value: userProfile.bloodSugar,
+                      title: 'blood sugar',
+                    ),
+                    ProfileTextBox(
+                      name: 'allergies',
+                      value: userProfile.allergies,
+                      title: 'allergies',
+                    ),
+                    ProfileTextBox(
+                      name: 'email',
+                      value: userProfile.email,
+                      title: 'email address',
+                    ),
+                    ProfileTextBox(
+                      name: 'phoneNumber',
+                      value: userProfile.phoneNumber,
+                      title: 'phone number',
+                    ),
+                    SizedBox(
+                      height: 25.0,
+                    )
+                  ],
+                );
+              } else {
+                return Container(
+                  child: SpinKitWanderingCubes(
+                    color: Colors.green,
+                    size: 100.0,
                   ),
-                ),
-                ProfileDetails(
-                  detailName: 'AGE',
-                  detailValue: age.toString(),
-                  textSize: kTextSize,
-                  valueSize: kValueSize,
-                ),
-                ProfileDetails(
-                  textSize: kTextSize,
-                  valueSize: kValueSize,
-                  detailName: 'Gender',
-                  detailValue: gender,
-                ),
-                ProfileDetails(
-                  detailName: 'HEIGHT',
-                  detailValue: height.toString(),
-                  textSize: kTextSize,
-                  valueSize: kValueSize,
-                ),
-                ProfileDetails(
-                  detailName: 'WEIGHT',
-                  valueSize: kValueSize,
-                  textSize: kTextSize,
-                  detailValue: weight.toString(),
-                ),
-                ProfileDetails(
-                  valueSize: kValueSize,
-                  textSize: kTextSize,
-                  detailName: 'BLOOD GROUP',
-                  detailValue: bloodGroup,
-                ),
-                ProfileDetails(
-                  textSize: kTextSize,
-                  valueSize: kValueSize,
-                  detailName: 'BLOOD PRESSURE',
-                  detailValue: bloodPressure,
-                ),
-                ProfileDetails(
-                  textSize: kTextSize,
-                  valueSize: kValueSize,
-                  detailName: 'BLOOD SUGAR',
-                  detailValue: bloodSugar,
-                ),
-                ProfileDetails(
-                  textSize: kTextSize,
-                  valueSize: kValueSize,
-                  detailName: 'Allergies',
-                  detailValue: allergies,
-                ),
-                ProfileDetails(
-                  textSize: kTextSize,
-                  valueSize: kValueSize,
-                  detailName: 'E-mail Address',
-                  detailValue: email,
-                ),
-                SizedBox(
-                  height: 25.0,
-                )
-              ],
-            )
-          : Container(
-              child: SpinKitWanderingCubes(
-                color: Colors.green,
-                size: 100.0,
-              ),
-            ),
-    );
+                );
+              }
+            }));
   }
-}
 
-class ProfileDetails extends StatelessWidget {
-  String detailName, detailValue;
-  double textSize, valueSize;
-  ProfileDetails(
-      {this.detailName, this.detailValue, this.textSize, this.valueSize});
+  updateData(String name, String value) async {
+    await Firestore.instance
+        .collection('profile')
+        .document(userId)
+        .updateData({name: value});
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.blue[50],
-        borderRadius: BorderRadius.circular(30),
-      ),
-      padding: EdgeInsets.all(21.0),
-      margin: EdgeInsets.only(right: 1, left: 10, top: 18),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: Text(
-              '$detailName : ',
-              style: TextStyle(fontSize: textSize, fontWeight: FontWeight.w500),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              '$detailValue',
-              style: TextStyle(
-                  fontSize: valueSize,
-                  fontWeight: FontWeight.w500,
-                  fontStyle: FontStyle.italic),
-            ),
-          )
-        ],
-      ),
-    );
+  Future getImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      imageFile = File(pickedFile.path);
+    });
+    if (imageFile != null) {
+      setState(() {
+//        isLoading = true;
+      });
+      await uploadFile(userId);
+    }
+  }
+
+  Future uploadFile(String name) async {
+    String fileName = name;
+    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = reference.putFile(imageFile);
+    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+    storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
+      imageUrl = downloadUrl;
+
+      setState(() {
+//        isLoading = false;
+      });
+      updateData('picture', imageUrl);
+    }, onError: (err) {
+      setState(() {
+//        isLoading = false;
+      });
+      showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog(
+              child: Text('Not an Image.'),
+            );
+          });
+    });
   }
 }
