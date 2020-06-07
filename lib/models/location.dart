@@ -2,12 +2,26 @@ import 'package:geolocator/geolocator.dart';
 
 class UserLocation {
   double latitude, longitude;
-  UserLocation();
-  getLocation() async {
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    this.latitude = position.latitude;
-    this.longitude = position.longitude;
-    return this;
+  UserLocation({this.latitude, this.longitude});
+  Future<UserLocation> getLocation() async {
+    UserLocation userLocation = UserLocation();
+    try {
+      Geolocator _geolocator = Geolocator()..forceAndroidLocationManager = true;
+
+      Position pos = await _geolocator.getLastKnownPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      if (pos == null) {
+        Position position = await _geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
+        userLocation.longitude = this.longitude = position.longitude;
+        userLocation.latitude = this.latitude = position.latitude;
+      } else {
+        userLocation.longitude = this.longitude = pos.longitude;
+        userLocation.latitude = this.latitude = pos.latitude;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return userLocation;
   }
 }

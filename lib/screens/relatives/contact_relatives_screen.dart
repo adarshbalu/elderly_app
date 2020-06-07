@@ -1,16 +1,12 @@
 import 'package:elderly_app/models/elder_location.dart';
 import 'package:elderly_app/models/location.dart';
 import 'package:elderly_app/models/user.dart';
-import 'package:elderly_app/others/constants.dart';
-import 'package:elderly_app/resources/call_and_messages.dart';
 import 'package:elderly_app/screens/profile/profile_screen.dart';
-import 'package:elderly_app/screens/relatives/edit_relatives.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter_sms/flutter_sms.dart' as sms;
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get_it/get_it.dart';
-//import 'package:sms/contact.dart';
+
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,14 +18,11 @@ class ContactScreen extends StatefulWidget {
 }
 
 class _ContactScreenState extends State<ContactScreen> {
-  GetIt locator = GetIt.instance;
-  UserLocation location = UserLocation();
-  ElderLocation elderLocation = ElderLocation();
-  String messageText = '';
-  String username = 'user';
-  FirebaseUser loggedInUser;
+  UserLocation location;
+  ElderLocation elderLocation;
+  String messageText = '', username = 'user', userId;
+  bool relativesFound = false;
 
-  String userId;
   getCurrentUser() async {
     await FirebaseAuth.instance.currentUser().then((user) {
       setState(() {
@@ -39,46 +32,36 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   getLocationDetails() async {
-    await location.getLocation();
-    String url =
-        'https://api.opencagedata.com/geocode/v1/json?q=${location.latitude}+${location.longitude}&key=$kOpenCageApiKey';
-    await elderLocation.getLocationData(url);
-    setState(() {
-      messageText =
-          'Hey , This is $username find me at ${elderLocation.address} .\n Link to my location : ${elderLocation.url}';
-    });
-  }
-
-  setupLocator() {
-    locator.registerSingleton(CallsAndMessagesService());
+    await elderLocation.getLocationData(location);
+    messageText =
+        'Hey , This is $username find me at ${elderLocation.address} .\n Link to my location : ${elderLocation.url}';
+    return elderLocation;
   }
 
   _sendSMS(String message, List<String> recipients) async {
-    await getLocationDetails();
+    String _result = await sendSMS(message: message, recipients: recipients)
+        .catchError((onError) {
+      print(onError);
+    });
 
-//    String _result = await sms
-//        .sendSMS(message: message, recipients: recipents)
-//        .catchError((onError) {
-//      print(onError);
-//    });
-
-//    print(_result);
+    print(_result);
   }
 
   List<String> recipients = [];
-//  UserProfileProvider provider = new UserProfileProvider();
 
   @override
   void initState() {
-    location.getLocation();
-    getLocationDetails();
-    getCurrentUser();
     super.initState();
+    getCurrentUser();
+    elderLocation = ElderLocation();
+    location = UserLocation(longitude: 0, latitude: 0);
+    location.getLocation();
+
+    getLocationDetails();
   }
 
   @override
   Widget build(BuildContext context) {
-    final CallsAndMessagesService _service = locator<CallsAndMessagesService>();
     return Scaffold(
         drawer: AppDrawer(),
         appBar: AppBar(
@@ -112,44 +95,96 @@ class _ContactScreenState extends State<ContactScreen> {
             ),
           ],
         ),
-        body: StreamBuilder(
-            stream: Firestore.instance
-                .collection('profile')
-                .document(userId)
-                .collection('relatives')
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                List<Widget> relativesWidget = List();
-                var data = snapshot.data.documents;
-                UserProfile userProfile = UserProfile(userId);
-                userProfile.getAllRelatives(data);
-                for (var relative in userProfile.relatives) {
-                  recipients.add(relative.phoneNumber);
-                  relativesWidget.add(RelativeDetail(
-                    name: relative.name,
-                    email: relative.email,
-                    number: relative.phoneNumber,
-                  ));
-                }
-                return ListView(
-                  children: <Widget>[
-                    Center(
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                        child: Text(
-                          'Relatives Details',
-                          style: TextStyle(
-                            fontSize: 32,
-                            color: Color(0xffE3952D),
+        body: ListView(
+          children: <Widget>[
+            StreamBuilder(
+                stream: Firestore.instance
+                    .collection('profile')
+                    .document(userId)
+                    .collection('relatives')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<Widget> relativesWidget = List();
+                    var data = snapshot.data.documents;
+                    if (data != null) {
+                      relativesFound = true;
+                      UserProfile userProfile = UserProfile(userId);
+                      userProfile.getAllRelatives(data);
+                      for (var relative in userProfile.relatives) {
+                        recipients.add(relative.phoneNumber);
+                        relativesWidget.add(RelativeDetail(
+                          name: relative.name,
+                          email: relative.email,
+                          number: relative.phoneNumber,
+                        ));
+                      }
+                      relativesWidget.add(SizedBox(
+                        height: 10,
+                      ));
+                    } else {
+                      relativesFound = false;
+                      relativesWidget.add(Center(
+                        child: Container(
+                          decoration: BoxDecoration(),
+                          margin: EdgeInsets.all(20),
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(top: 12, bottom: 12),
+                                child: Text('No relatives added.'),
+                              ),
+                              RaisedButton(
+                                  onPressed: () {},
+                                  color: Colors.green,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 40),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Text(
+                                    'Add Relatives',
+                                    style: TextStyle(color: Colors.white),
+                                  ))
+                            ],
                           ),
                         ),
+                      ));
+                    }
+
+                    return Column(
+                      children: <Widget>[
+                        Center(
+                          child: Container(
+                            margin: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                            child: Text(
+                              'Relatives Details',
+                              style: TextStyle(
+                                fontSize: 32,
+                                color: Color(0xffE3952D),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Column(
+                          children: relativesWidget,
+                        ),
+                      ],
+                    );
+                  } else
+                    return Container(
+                      child: SpinKitWanderingCubes(
+                        color: Colors.green,
+                        size: 100.0,
                       ),
-                    ),
-                    Column(
-                      children: relativesWidget,
-                    ),
-                    Center(
+                    );
+                }),
+            FutureBuilder(
+                future: getLocationDetails(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && relativesFound) {
+                    ElderLocation _elderLocation = snapshot.data;
+                    if (_elderLocation == null) return SizedBox();
+                    return Center(
                       child: GestureDetector(
                         onTap: () async {
                           showDialog(
@@ -163,10 +198,8 @@ class _ContactScreenState extends State<ContactScreen> {
                                     FlatButton(
                                       child: Text("Yes"),
                                       onPressed: () async {
-                                        await getLocationDetails();
-
                                         Navigator.pop(context);
-//                                        _sendSMS(messageText, recipients);
+                                        _sendSMS(messageText, recipients);
                                         print(messageText);
                                       },
                                     ),
@@ -201,47 +234,15 @@ class _ContactScreenState extends State<ContactScreen> {
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Center(
-                      child: GestureDetector(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 15.0, horizontal: 55.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.deepPurple,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.purple,
-                                blurRadius: 3.0,
-                                offset: Offset(0, 4.0),
-                              ),
-                            ],
-                          ),
-                          child: Text(
-                            'Edit Relatives',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20.0),
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.pushNamed(context, EditRelativesScreen.id);
-                        },
-                      ),
-                    )
-                  ],
-                );
-              } else
-                return Container(
-                  child: SpinKitWanderingCubes(
-                    color: Colors.green,
-                    size: 100.0,
-                  ),
-                );
-            }));
+                    );
+                  } else
+                    return LinearProgressIndicator();
+                }),
+            SizedBox(
+              height: 20,
+            ),
+          ],
+        ));
   }
 }
 
@@ -279,8 +280,8 @@ class RelativeDetail extends StatelessWidget {
                 SizedBox(
                   width: 8,
                 ),
-                Text('Phone Number : '),
-                Text(number)
+                Text('Number : '),
+                Expanded(child: Text(number)),
               ],
             ),
             SizedBox(
@@ -295,8 +296,8 @@ class RelativeDetail extends StatelessWidget {
                 SizedBox(
                   width: 8,
                 ),
-                Text('Email Address : '),
-                Text(email)
+                Text('Email : '),
+                Expanded(child: Text(email))
               ],
             ),
           ],
