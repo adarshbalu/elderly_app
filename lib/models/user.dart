@@ -41,4 +41,15 @@ class UserProfile {
       this.relatives.add(_relative);
     }
   }
+
+  deleteRelative(String documentID) {
+    Relative _relative = Relative();
+    bool found = false;
+    for (var r in this.relatives) {
+      if (r.documentID == documentID) _relative = r;
+    }
+    if (found) {
+      this.relatives.remove(_relative);
+    }
+  }
 }

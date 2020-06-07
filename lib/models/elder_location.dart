@@ -1,7 +1,6 @@
 import 'package:elderly_app/models/location.dart';
 import 'package:elderly_app/others/constants.dart';
 import 'package:elderly_app/others/network.dart';
-import 'package:location/location.dart';
 
 class ElderLocation {
   String address, url;

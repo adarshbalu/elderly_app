@@ -1,7 +1,6 @@
 import 'dart:io';
-
 import 'package:elderly_app/models/user.dart';
-import 'package:elderly_app/widgets/ProfileTextBox.dart';
+import 'package:elderly_app/screens/profile/ProfileTextBox.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
