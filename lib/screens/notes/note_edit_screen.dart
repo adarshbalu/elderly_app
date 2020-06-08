@@ -42,97 +42,94 @@ class NoteDetailState extends State<NoteDetail> {
           moveToLastScreen();
           return true;
         },
-        child: Hero(
-          tag: note.id,
-          child: Scaffold(
-            appBar: ElderlyAppBar(),
-            drawer: AppDrawer(),
-            bottomNavigationBar: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(
-                      Icons.save,
-                      color: Colors.green,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _save();
-                      });
-                    },
+        child: Scaffold(
+          appBar: ElderlyAppBar(),
+          drawer: AppDrawer(),
+          bottomNavigationBar: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.delete_outline,
+                    color: Colors.red,
                   ),
-                  Text(note.date),
-                  IconButton(
-                    icon: Icon(
-                      Icons.delete_outline,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _delete();
-                      });
-                    },
-                  )
-                ],
-              ),
+                  onPressed: () {
+                    setState(() {
+                      _delete();
+                    });
+                  },
+                ),
+                Text(note.date),
+                IconButton(
+                  icon: Icon(
+                    Icons.save,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _save();
+                    });
+                  },
+                ),
+              ],
             ),
-            body: Padding(
-              padding: EdgeInsets.only(
-                  top: 10.0, left: 10.0, right: 10.0, bottom: 10),
-              child: Material(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                elevation: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: 8, right: 8, top: 15.0, bottom: 0),
-                        child: TextField(
-                          controller: titleController,
-                          style: textStyle.copyWith(fontSize: 21),
-                          onChanged: (value) {
-                            updateTitle();
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Title',
-                            labelStyle: textStyle.copyWith(fontSize: 21),
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                          ),
+          ),
+          body: Padding(
+            padding:
+                EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0, bottom: 10),
+            child: Material(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: 8, right: 8, top: 15.0, bottom: 0),
+                      child: TextField(
+                        controller: titleController,
+                        style: textStyle.copyWith(fontSize: 21),
+                        onChanged: (value) {
+                          updateTitle();
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Title',
+                          labelStyle: textStyle.copyWith(fontSize: 21),
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: 8, right: 8, top: 0, bottom: 15.0),
-                        child: TextField(
-                          controller: descriptionController,
-                          style: textStyle.copyWith(fontSize: 18),
-                          onChanged: (value) {
-                            updateDescription();
-                          },
-                          minLines: 5,
-                          maxLines: 10,
-                          decoration: InputDecoration(
-                            hintText: 'Note',
-                            labelStyle: textStyle.copyWith(fontSize: 18),
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                          ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: 8, right: 8, top: 0, bottom: 15.0),
+                      child: TextField(
+                        controller: descriptionController,
+                        style: textStyle.copyWith(fontSize: 18),
+                        onChanged: (value) {
+                          updateDescription();
+                        },
+                        minLines: 5,
+                        maxLines: 10,
+                        decoration: InputDecoration(
+                          hintText: 'Note',
+                          labelStyle: textStyle.copyWith(fontSize: 18),
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

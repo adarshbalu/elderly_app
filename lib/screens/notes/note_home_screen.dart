@@ -73,52 +73,49 @@ class NoteListState extends State<NoteList> {
 
       if (note.description.length > 50) descriptionTrim = true;
       if (note.title.length > 20) titleTrim = true;
-      children.add(Hero(
-        tag: note.id,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            onTap: () {
-              navigateToDetail(note, 'Edit Note');
+      children.add(Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GestureDetector(
+          onTap: () {
+            navigateToDetail(note, 'Edit Note');
+          },
+          child: Dismissible(
+            onDismissed: (direction) {
+              setState(() {
+                noteList.remove(note);
+                _delete(noteList[noteList.indexOf(note)]);
+                updateListView();
+              });
             },
-            child: Dismissible(
-              onDismissed: (direction) {
-                setState(() {
-                  noteList.remove(note);
-                  _delete(noteList[noteList.indexOf(note)]);
-                  updateListView();
-                });
-              },
-              key: Key(note.id.toString()),
-              child: Material(
-                elevation: 2,
-                borderRadius: BorderRadius.circular(10),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: titleTrim
-                          ? Text(
-                              note.title.substring(0, 20),
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            )
-                          : Text(
-                              note.title,
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Padding(
-                        padding: EdgeInsets.all(8),
-                        child: descriptionTrim
-                            ? Text(note.description.substring(0, 80))
-                            : Text(note.description))
-                  ],
-                ),
+            key: Key(note.id.toString()),
+            child: Material(
+              elevation: 2,
+              borderRadius: BorderRadius.circular(10),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: titleTrim
+                        ? Text(
+                            note.title.substring(0, 20),
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          )
+                        : Text(
+                            note.title,
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.all(8),
+                      child: descriptionTrim
+                          ? Text(note.description.substring(0, 80))
+                          : Text(note.description))
+                ],
               ),
             ),
           ),
