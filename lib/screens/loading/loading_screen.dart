@@ -21,7 +21,7 @@ class LoadingScreen extends StatelessWidget {
                 auth: auth,
               );
             }
-            return HomeScreen(true);
+            return HomeScreen();
           } else {
             return Scaffold(
               body: Column(

@@ -117,7 +117,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
           ? WillPopScope(
               onWillPop: () {
                 return Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => HomeScreen(true)),
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
                     (Route<dynamic> route) => false);
               },
               child: getReminderListView())

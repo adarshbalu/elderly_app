@@ -275,7 +275,7 @@ class _InitialSetupScreenState extends State<InitialSetupScreen> {
                 });
 
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return HomeScreen(true);
+                  return HomeScreen();
                 }));
               },
               child: Container(

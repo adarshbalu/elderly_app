@@ -311,7 +311,7 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
       body: WillPopScope(
         onWillPop: () {
           return Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return HomeScreen(true);
+            return HomeScreen();
           }));
         },
         child: ListView(

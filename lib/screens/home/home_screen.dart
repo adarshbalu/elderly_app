@@ -22,8 +22,6 @@ import 'package:flutter_android/android_hardware.dart'
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'Home_Screen';
-  bool isUserLoggedIn = true;
-  HomeScreen([this.isUserLoggedIn]);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -85,8 +83,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    if (!widget.isUserLoggedIn) getCurrentUser();
     super.initState();
+    getCurrentUser();
   }
 
   bool permissionGranted = false;
