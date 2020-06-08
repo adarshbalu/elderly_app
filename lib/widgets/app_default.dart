@@ -6,6 +6,8 @@ import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/medici
 import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/notes/note_home_screen.dart';
 import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/loading/splash_home.dart';
 import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/document/view_documents_screen.dart';
+import 'package:elderly_app/main.dart';
+import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/others/constants.dart';
@@ -288,4 +290,48 @@ class FormItem extends StatelessWidget {
       ),
     );
   }
+}
+
+class ElderlyAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final double height = 56;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Elderly '),
+              Text(
+                'Care',
+                style: TextStyle(color: Colors.green),
+              ),
+            ],
+          ),
+          centerTitle: true,
+          elevation: 1,
+          actions: <Widget>[
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, ProfileScreen.id);
+              },
+              child: CircleAvatar(
+                radius: 20,
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.perm_identity,
+                  size: 30,
+                  color: Color(0xff5e444d),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(height);
 }

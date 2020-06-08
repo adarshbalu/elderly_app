@@ -1,8 +1,11 @@
 import 'dart:async';
+
 import 'package:elderly_app/models/note.dart';
 import 'package:elderly_app/screens/notes/note_edit_screen.dart';
+import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:elderly_app/others/database_helper.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'package:sqflite/sqflite.dart';
 
@@ -18,7 +21,8 @@ class NoteListState extends State<NoteList> {
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Note> noteList;
   int count = 0;
-
+  List<StaggeredTile> staggeredTileExtent;
+  List<Widget> children;
   @override
   Widget build(BuildContext context) {
     if (noteList == null) {
@@ -27,13 +31,31 @@ class NoteListState extends State<NoteList> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Notes'),
+      appBar: ElderlyAppBar(),
+      drawer: AppDrawer(),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Notes',
+              style: TextStyle(fontSize: 30, color: Colors.indigo),
+            ),
+          ),
+          Flexible(
+            child: StaggeredGridView.count(
+              crossAxisCount: 2,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 1,
+              padding: EdgeInsets.all(8),
+              children: getNoteListView(),
+              staggeredTiles: staggeredTileExtent,
+            ),
+          ),
+        ],
       ),
-      body: getNoteListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          debugPrint('FAB clicked');
           navigateToDetail(Note('', '', 2), 'Add Note');
         },
         tooltip: 'Add Note',
@@ -42,43 +64,70 @@ class NoteListState extends State<NoteList> {
     );
   }
 
-  ListView getNoteListView() {
-    // TextStyle titleStyle = Theme.of(context).textTheme.subhead;
+  List<Widget> getNoteListView() {
+    staggeredTileExtent = [];
+    children = [];
 
-    return ListView.builder(
-      itemCount: count,
-      itemBuilder: (BuildContext context, int position) {
-        return Card(
-          color: Colors.white,
-          elevation: 2.0,
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor:
-                  getPriorityColor(this.noteList[position].priority),
-              child: getPriorityIcon(this.noteList[position].priority),
-            ),
-            title: Text(
-              this.noteList[position].title,
-              //style: titleStyle,
-            ),
-            subtitle: Text(this.noteList[position].date),
-            trailing: GestureDetector(
-              child: Icon(
-                Icons.delete,
-                color: Colors.grey,
-              ),
-              onTap: () {
-                _delete(context, noteList[position]);
-              },
-            ),
+    for (var note in noteList) {
+      bool descriptionTrim = false, titleTrim = false;
+
+      if (note.description.length > 50) descriptionTrim = true;
+      if (note.title.length > 20) titleTrim = true;
+      children.add(Hero(
+        tag: note.id,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
             onTap: () {
-              debugPrint("ListTile Tapped");
-              navigateToDetail(this.noteList[position], 'Edit Note');
+              navigateToDetail(note, 'Edit Note');
             },
+            child: Dismissible(
+              onDismissed: (direction) {
+                setState(() {
+                  noteList.remove(note);
+                  _delete(noteList[noteList.indexOf(note)]);
+                  updateListView();
+                });
+              },
+              key: Key(note.id.toString()),
+              child: Material(
+                elevation: 2,
+                borderRadius: BorderRadius.circular(10),
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: titleTrim
+                          ? Text(
+                              note.title.substring(0, 20),
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            )
+                          : Text(
+                              note.title,
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Padding(
+                        padding: EdgeInsets.all(8),
+                        child: descriptionTrim
+                            ? Text(note.description.substring(0, 80))
+                            : Text(note.description))
+                  ],
+                ),
+              ),
+            ),
           ),
-        );
-      },
-    );
+        ),
+      ));
+
+      staggeredTileExtent.add(StaggeredTile.extent(1, 220));
+    }
+    return children;
   }
 
   // Returns the priority color
@@ -111,17 +160,15 @@ class NoteListState extends State<NoteList> {
     }
   }
 
-  void _delete(BuildContext context, Note note) async {
+  void _delete(Note note) async {
     int result = await databaseHelper.deleteNote(note.id);
+    setState(() {
+      noteList.remove(note);
+    });
+
     if (result != 0) {
-      _showSnackBar(context, 'Note Deleted Successfully');
       updateListView();
     }
-  }
-
-  void _showSnackBar(BuildContext context, String message) {
-    final snackBar = SnackBar(content: Text(message));
-    Scaffold.of(context).showSnackBar(snackBar);
   }
 
   void navigateToDetail(Note note, String title) async {

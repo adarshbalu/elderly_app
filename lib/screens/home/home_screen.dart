@@ -3,8 +3,8 @@ import 'package:elderly_app/screens/document/add_documents_screen.dart';
 import 'package:elderly_app/screens/hospital/nearby_hospital_screen.dart';
 import 'package:elderly_app/screens/login/initial_setup_screen.dart';
 import 'package:elderly_app/screens/medicine_reminder/medicine_reminder.dart';
+import 'package:elderly_app/screens/notes/note_home_screen.dart';
 import 'package:elderly_app/screens/pages/heart_rate_screen.dart';
-import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/screens/relatives/contact_relatives_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -97,37 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       drawer: AppDrawer(),
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Elderly '),
-            Text(
-              'Care',
-              style: TextStyle(color: Colors.green),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        elevation: 1,
-        actions: <Widget>[
-          GestureDetector(
-            onTap: () {
-              print('Profile Button Tapped');
-              Navigator.pushNamed(context, ProfileScreen.id);
-            },
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.perm_identity,
-                size: 30,
-                color: Color(0xff5e444d),
-              ),
-            ),
-          ),
-        ],
-      ),
+      appBar: ElderlyAppBar(),
       body: WillPopScope(
           onWillPop: () async {
             return showDialog(
@@ -359,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: 8.0),
-                            child: Text('Check your Heartrate'),
+                            child: Text('Check your Heart rate'),
                           ),
                         ],
                       ),
@@ -412,7 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             onTap: () {
                               print('Notes Tapped');
-                              Navigator.pushNamed(context, HeartRateScreen.id);
+                              Navigator.pushNamed(context, NoteList.id);
                             },
                           ),
                           Padding(

@@ -76,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 UserProfile userProfile = UserProfile(userId);
-                userProfile.setData(snapshot.data);
+                userProfile.setData(snapshot.data.data);
                 return ListView(
                   children: <Widget>[
                     SizedBox(
