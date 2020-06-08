@@ -1,45 +1,28 @@
-class Image {
-  int _id;
-  String _name;
-  String _location;
+class ImageClass {
+  String name, url;
+  ImageClass({this.name, this.url});
+}
 
-  Image(this._name, [this._location]);
+class ImageModel {
+  List<ImageClass> images;
+  ImageModel();
+  List<ImageClass> getAllImages(Map<String, dynamic> data) {
+    images = List<ImageClass>();
 
-  Image.withId(this._id, this._name, [this._location]);
-
-  int get id => _id;
-
-  String get name => _name;
-
-  String get location => _location;
-
-  set name(String newName) {
-    if (newName.length <= 255) {
-      this._name = newName;
-    }
+    data.forEach((name, url) {
+      ImageClass image = ImageClass(name: name, url: url);
+      this.images.add(image);
+    });
+    return this.images;
   }
 
-  set location(String newLocation) {
-    if (newLocation.length <= 255) {
-      this._location = newLocation;
+  List<ImageClass> searchImages(String name) {
+    List<ImageClass> imagesFound = List<ImageClass>();
+    for (var image in this.images) {
+      if (image.name == name) {
+        imagesFound.add(image);
+      }
     }
-  }
-
-  // Convert a Image object into a Map object
-  Map<String, dynamic> toMap() {
-    var map = Map<String, dynamic>();
-    if (id != null) {
-      map['id'] = _id;
-    }
-    map['name'] = _name;
-    map['location'] = _location;
-    return map;
-  }
-
-  // Extract a Image object from a Map object
-  Image.fromMapObject(Map<String, dynamic> map) {
-    this._id = map['id'];
-    this._name = map['name'];
-    this._location = map['location'];
+    return imagesFound;
   }
 }

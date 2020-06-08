@@ -1,9 +1,10 @@
-import 'dart:io';
-import 'package:elderly_app/screens/profile/profile_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:elderly_app/models/image.dart';
+import 'package:elderly_app/screens/document/add_documents_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewDocuments extends StatefulWidget {
   static const String id = 'View_Documents_Screen';
@@ -11,198 +12,161 @@ class ViewDocuments extends StatefulWidget {
   _ViewDocumentsState createState() => _ViewDocumentsState();
 }
 
-TextEditingController fileNameController = TextEditingController();
-String text;
-
 class _ViewDocumentsState extends State<ViewDocuments> {
-  String fileName = '';
-  bool isFileNameCorrect = false, showImage = false;
-  SharedPreferences prefs;
-  initPref() async {
-    prefs = await SharedPreferences.getInstance();
+  TextEditingController nameController;
+
+  String userId;
+  @override
+  void initState() {
+    nameController = TextEditingController();
+    getCurrentUser();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    initPref();
     return Scaffold(
       drawer: AppDrawer(),
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Elderly '),
-            Text(
-              'Care',
-              style: TextStyle(color: Colors.green),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        elevation: 1,
-        actions: <Widget>[
-          GestureDetector(
-            onTap: () {
-              print('Profile Button Tapped');
-              Navigator.pushNamed(context, ProfileScreen.id);
-            },
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.perm_identity,
-                size: 30,
-                color: Color(0xff5e444d),
-              ),
-            ),
-          ),
-        ],
-      ),
+      appBar: ElderlyAppBar(),
       body: ListView(children: <Widget>[
-        SizedBox(
-          height: 20,
-        ),
-//        Padding(
-//          padding: const EdgeInsets.all(8.0),
-//          child: Center(
-//            child: Text(
-//              'View Documents  ',
-//              style: TextStyle(fontSize: 25),
-//            ),
-//          ),
-//        ),
-//        SizedBox(
-//          height: 20,
-//        ),
-//        Row(
-//          children: <Widget>[
-//            Expanded(
-//              child: Padding(
-//                padding: EdgeInsets.only(left: 8.0),
-//                child: Text('File Name : '),
-//              ),
-//            ),
-//            Expanded(
-//              flex: 5,
-//              child: Padding(
-//                padding: const EdgeInsets.all(20.0),
-//                child: TextField(
-//                  style: TextStyle(fontSize: 20),
-//                  decoration: InputDecoration(
-//                      suffixIcon: isFileNameCorrect
-//                          ? Icon(
-//                              Icons.check,
-//                              color: Colors.green,
-//                            )
-//                          : Icon(
-//                              Icons.error_outline,
-//                              color: Colors.red,
-//                            ),
-//                      hintText: 'Enter File name',
-//                      helperText: isFileNameCorrect ? '' : 'Wrong Name',
-//                      helperStyle: TextStyle(color: Colors.red),
-//                      focusedBorder: OutlineInputBorder(
-//                          borderRadius: BorderRadius.circular(30),
-//                          borderSide: BorderSide(
-//                              color: Colors.indigo, style: BorderStyle.solid)),
-//                      enabledBorder: OutlineInputBorder(
-//                          borderRadius: BorderRadius.circular(30),
-//                          borderSide: BorderSide(
-//                              color: Colors.blue, style: BorderStyle.solid)),
-//                      border: OutlineInputBorder(
-//                          borderRadius: BorderRadius.circular(30),
-//                          borderSide: BorderSide(
-//                              color: Color(0xffaf5676),
-//                              style: BorderStyle.solid))),
-//                  onChanged: (value) {
-//                    for (var file in prefs.getKeys()) {
-//                      if (file == value) {
-//                        setState(() {
-//                          fileName = value;
-//                        });
-//                      }
-//                    }
-//                    print('submitted' + fileName);
-//                    setState(() {
-//                      if (fileName == value) {
-//                        isFileNameCorrect = true;
-//                        showImage = true;
-//                      } else {
-//                        fileName = ' ';
-//                        isFileNameCorrect = false;
-//                      }
-//                    });
-//                  },
-//                ),
-//              ),
-//            ),
-//          ],
-//        ),
-//        !showImage
-//            ? SizedBox(
-//                height: 20,
-//              )
-//            : Container(
-//                margin: EdgeInsets.all(20),
-//                child: Text(
-//                  'Name : ' + fileName,
-//                  style: TextStyle(fontSize: 30),
-//                  textAlign: TextAlign.center,
-//                ),
-//              ),
-//        !showImage
-//            ? SizedBox(
-//                height: 20,
-//              )
-//            : Container(
-//                child: SizedBox(),
-//              ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'All Documents available : ',
-            style: TextStyle(fontSize: 25),
-          ),
-        ),
-        Builder(),
-        SizedBox(
-          height: 100,
-        )
+        StreamBuilder(
+            stream: Firestore.instance
+                .collection('documents')
+                .document(userId)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                ImageModel images = ImageModel();
+                List<Widget> imageWidgets = List<Widget>();
+                List<ImageClass> imageList = List<ImageClass>();
+                imageList = images.getAllImages(snapshot.data.data);
+                imageWidgets = addImages(imageWidgets, imageList);
+                return Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(40),
+                      decoration: BoxDecoration(
+                          color: Color(0xff42495D),
+                          borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular((40)),
+                              bottomLeft: Radius.circular((40)))),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                            suffixIcon: Icon(
+                              Icons.search,
+                              color: Colors.black,
+                            ),
+                            hintText: 'Search for files'),
+                        controller: nameController,
+                        onChanged: (v) {
+                          if (v.isNotEmpty) {
+                            imageList = images.searchImages(v);
+                            imageWidgets = addImages(imageWidgets, imageList);
+                          }
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Files Found',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 30),
+                      ),
+                    ),
+                    Column(
+                      children: imageWidgets,
+                    )
+                  ],
+                );
+              } else {
+                return Column(
+                  children: <Widget>[Text('Service not available')],
+                );
+              }
+            })
       ]),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, AddDocuments.id);
+        },
+        elevation: 2,
+        backgroundColor: Colors.cyan,
+        child: Icon(Icons.add),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.grey.shade200,
+        elevation: 2,
+        notchMargin: 2,
+        child: Container(
+          height: 56,
+          child: Center(
+              child: Padding(
+            padding: EdgeInsets.only(top: 20.0),
+            child: Text('Upload Files'),
+          )),
+        ),
+        shape: CircularNotchedRectangle(),
+      ),
     );
   }
-}
-// FileImage(File(prefs.getString('test_image'))
 
-//CircleAvatar(
-//backgroundImage: FileImage(File(prefs.getString(fileName))),
-//radius: 50,
-//backgroundColor: Colors.white),
+  List<Widget> addImages(
+      List<Widget> imageWidgets, List<ImageClass> imageList) {
+    for (var image in imageList) {
+      imageWidgets.add(Container(
+        margin: EdgeInsets.only(bottom: 35),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          image: DecorationImage(
+              fit: BoxFit.cover,
+              image: NetworkImage(
+                image.url,
+              )),
+        ),
+        child: SizedBox(
+          width: 250,
+          height: 250,
+          child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withAlpha(99),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  width: 250,
+                  height: 35,
+                  child: Center(
+                    child: Text(
+                      image.name,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ))),
+        ),
+      ));
+    }
 
-class Builder extends StatelessWidget {
-  Future<List<Widget>> getAllPrefs(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs
-        .getKeys()
-        .map<Widget>(
-          (key) => Image.file(
-            prefs.get(key),
-            height: 300,
-            width: 300,
-          ),
-        )
-        .toList(growable: false);
+    return imageWidgets;
+  }
+
+  getCurrentUser() async {
+    await FirebaseAuth.instance.currentUser().then((user) {
+      setState(() {
+        userId = user.uid;
+      });
+    });
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<Widget>>(
-        future: getAllPrefs(context),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return Container();
-          return Column(
-            children: snapshot.data,
-          );
-        });
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
   }
 }

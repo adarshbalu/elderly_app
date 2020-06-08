@@ -5,7 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import '../models/note.dart';
 import '../models/reminder.dart';
 import '../models/appoinment.dart';
-import '../models/image.dart';
 
 class DatabaseHelper {
   static DatabaseHelper _databaseHelper; // Singleton DatabaseHelper
@@ -33,11 +32,6 @@ class DatabaseHelper {
   String appoinmentColPlace = 'place';
   String appoinmentColAddress = 'address';
   String appoinmentColDateTime = 'date_time';
-
-  String imageTable = 'image_table';
-  String imageColId = 'id';
-  String imageColName = 'name';
-  String imageColLocation = 'location';
 
   DatabaseHelper._createInstance(); // Named constructor to create instance of DatabaseHelper
 
@@ -78,10 +72,6 @@ class DatabaseHelper {
     await db.execute(
         'CREATE TABLE $noteTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colTitle TEXT, '
         '$colDescription TEXT, $colPriority INTEGER, $colDate TEXT)');
-
-    await db.execute(
-        'CREATE TABLE $imageTable($imageColId INTEGER PRIMARY KEY AUTOINCREMENT, $imageColName TEXT, '
-        '$imageColLocation TEXT)');
   }
 
   // Fetch Operation: Get all note objects from database
@@ -111,15 +101,6 @@ class DatabaseHelper {
     return result;
   }
 
-  // Fetch Operation: Get all appoinment objects from database
-  Future<List<Map<String, dynamic>>> getImageMapList() async {
-    Database db = await this.database;
-
-    var result = await db.rawQuery('SELECT * FROM $imageTable ');
-    //   var result = await db.query(appoinmentTable, orderBy: '$appoinmentColId ASC');
-    return result;
-  }
-
   // Insert Operation: Insert a Note object to database
   Future<int> insertNote(Note note) async {
     Database db = await this.database;
@@ -138,13 +119,6 @@ class DatabaseHelper {
   Future<int> insertAppoinment(Appoinment appoinment) async {
     Database db = await this.database;
     var result = await db.insert(appoinmentTable, appoinment.toMap());
-    return result;
-  }
-
-  // Insert Operation: Insert a image object to database
-  Future<int> insertImage(Image image) async {
-    Database db = await this.database;
-    var result = await db.insert(imageTable, image.toMap());
     return result;
   }
 
@@ -172,14 +146,6 @@ class DatabaseHelper {
     return result;
   }
 
-  // Update Operation: Update a image object and save it to database
-  Future<int> updateImage(Image image) async {
-    var db = await this.database;
-    var result = await db.update(imageTable, image.toMap(),
-        where: '$imageColId = ?', whereArgs: [image.id]);
-    return result;
-  }
-
   // Delete Operation: Delete a Note object from database
   Future<int> deleteNote(int id) async {
     var db = await this.database;
@@ -201,14 +167,6 @@ class DatabaseHelper {
     var db = await this.database;
     int result = await db
         .rawDelete('DELETE FROM $appoinmentTable WHERE $appoinmentColId = $id');
-    return result;
-  }
-
-  // Delete Operation: Delete a image object from database
-  Future<int> deleteImage(int id) async {
-    var db = await this.database;
-    int result =
-        await db.rawDelete('DELETE FROM $imageTable WHERE $imageColId = $id');
     return result;
   }
 
@@ -235,15 +193,6 @@ class DatabaseHelper {
     Database db = await this.database;
     List<Map<String, dynamic>> x =
         await db.rawQuery('SELECT COUNT (*) from $appoinmentTable');
-    int result = Sqflite.firstIntValue(x);
-    return result;
-  }
-
-  // Get number of images objects in database
-  Future<int> getImageCount() async {
-    Database db = await this.database;
-    List<Map<String, dynamic>> x =
-        await db.rawQuery('SELECT COUNT (*) from $imageTable');
     int result = Sqflite.firstIntValue(x);
     return result;
   }
@@ -293,20 +242,5 @@ class DatabaseHelper {
     }
 
     return appoinmentList;
-  }
-
-  // Get the 'Map List' [ List<Map> ] and convert it to 'Image List' [ List<Image> ]
-  Future<List<Image>> getImageList() async {
-    var imageMapList = await getImageMapList(); // Get 'Map List' from database
-    int count =
-        imageMapList.length; // Count the number of map entries in db table
-
-    List<Image> imageList = List<Image>();
-    // For loop to create a 'Image List' from a 'Map List'
-    for (int i = 0; i < count; i++) {
-      imageList.add(Image.fromMapObject(imageMapList[i]));
-    }
-
-    return imageList;
   }
 }

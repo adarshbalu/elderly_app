@@ -1,5 +1,5 @@
 import 'package:elderly_app/screens/appoinment_reminder/appoinment_reminder_screen.dart';
-import 'package:elderly_app/screens/document/add_documents_screen.dart';
+import 'package:elderly_app/screens/document/view_documents_screen.dart';
 import 'package:elderly_app/screens/hospital/nearby_hospital_screen.dart';
 import 'package:elderly_app/screens/login/initial_setup_screen.dart';
 import 'package:elderly_app/screens/medicine_reminder/medicine_reminder.dart';
@@ -350,7 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () {
                               print('Documents Tapped');
 
-                              Navigator.pushNamed(context, AddDocuments.id);
+                              Navigator.pushNamed(context, ViewDocuments.id);
                             },
                           ),
                           Padding(

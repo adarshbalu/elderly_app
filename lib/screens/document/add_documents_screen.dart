@@ -1,14 +1,12 @@
 import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elderly_app/screens/document/view_documents_screen.dart';
-import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as Path;
-import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
 class AddDocuments extends StatefulWidget {
   static const String id = 'Add_Documents_Screen';
@@ -17,242 +15,224 @@ class AddDocuments extends StatefulWidget {
 }
 
 class _AddDocumentsState extends State<AddDocuments> {
-  File image;
-  var fileName;
-  File loadedImage;
-
-  Directory directory;
-  var path;
-  TextEditingController docNameController = TextEditingController();
-  String docName;
-  bool imageLoaded = false;
-
-  Future pickImage() async {
-    directory = await getApplicationDocumentsDirectory();
-    path = directory.path;
-    print(path);
-    loadedImage = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (loadedImage == null)
-      return;
-    else
-      setState(() {
-        imageLoaded = true;
-      });
-    print(loadedImage.path);
-  }
-
-  Future saveImage() async {
-    String name = docName.toLowerCase();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(name, image.path);
-  }
-
-  Future copyImage() async {
-    String extension = Path.basename(loadedImage.path);
-    var s = extension.indexOf('.', 0);
-    String ext = extension.substring(s, extension.length);
-    image = await loadedImage.copy('$path/${docName + ext}');
-  }
-
-  void saveName(String value) {
-    setState(() {
-      docName = value;
-    });
-  }
-
+  TextEditingController nameController;
+  bool imageLoaded;
+  File _image;
+  final picker = ImagePicker();
+  String userId;
   @override
-  void dispose() {
-    docNameController.dispose();
-    super.dispose();
+  void initState() {
+    nameController = TextEditingController();
+    getCurrentUser();
+    super.initState();
+    imageLoaded = false;
+  }
+
+  Future getImage(String method) async {
+    var pickedFile;
+    if (method == 'camera')
+      pickedFile = await picker.getImage(source: ImageSource.camera);
+    else
+      pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = File(pickedFile.path);
+      imageLoaded = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: AppDrawer(),
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+      appBar: ElderlyAppBar(),
+      body: ListView(children: <Widget>[
+        Stack(
+          overflow: Overflow.visible,
+          alignment: Alignment.bottomCenter,
           children: <Widget>[
-            Text('Elderly '),
-            Text(
-              'Care',
-              style: TextStyle(color: Colors.green),
+            Container(
+              height: MediaQuery.of(context).size.height / 2.5,
+              decoration: BoxDecoration(
+                color: Color(0xff42495D),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 10,
+                  ),
+                  FaIcon(
+                    FontAwesomeIcons.cloudUploadAlt,
+                    color: Colors.white,
+                    size: 90,
+                  ),
+                  Text(
+                    'Upload Documents',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      'Add your documents here and have them everywhere you go.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: -35,
+              child: RaisedButton.icon(
+                onPressed: () async {
+                  await getImage('camera');
+                },
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 35),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                icon: Icon(Icons.camera_alt, color: Colors.white),
+                label: Text(
+                  'Use Camera',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                color: Colors.amber.shade700,
+              ),
             ),
           ],
         ),
-        centerTitle: true,
-        elevation: 1,
-        actions: <Widget>[
-          GestureDetector(
-            onTap: () {
-              print('Profile Button Tapped');
-              Navigator.pushNamed(context, ProfileScreen.id);
-            },
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.perm_identity,
-                size: 30,
-                color: Color(0xff5e444d),
-              ),
-            ),
+        SizedBox(
+          height: 35,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'OR',
+            textAlign: TextAlign.center,
           ),
-        ],
-      ),
-      body: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Text(
-                'Add Documents  ',
-                style: TextStyle(fontSize: 25),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 25,
-          ),
-          Row(
+        ),
+        GestureDetector(
+          onTap: () async {
+            await getImage('gallery');
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 8.0),
-                  child: Text('File Name : '),
-                ),
+              Icon(
+                Icons.photo_library,
+                size: 40,
+                color: Colors.indigo,
               ),
-              Expanded(
-                flex: 5,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: TextField(
-                    style: TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                        hintText: 'Enter File name',
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Colors.indigo,
-                                style: BorderStyle.solid)),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Color(0xffaf5676),
-                                style: BorderStyle.solid)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Color(0xffaf5676),
-                                style: BorderStyle.solid))),
-                    onChanged: (value) {
-                      setState(() {
-                        docName = value;
-                      });
+              SizedBox(
+                width: 8,
+              ),
+              Text(
+                'Select from Gallery',
+                style: TextStyle(
+                    color: Colors.indigo,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 19),
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        imageLoaded
+            ? Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: TextField(
+                      style: TextStyle(fontSize: 18),
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(5),
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder(),
+                          helperText: 'Document Name',
+                          hintText: ' Add Name to search easily'),
+                      controller: nameController,
+                    ),
+                  ),
+                  RaisedButton(
+                    child: Text(
+                      'Upload Image',
+                      style:
+                          TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                    ),
+                    textColor: Colors.white,
+                    color: Colors.green,
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    onPressed: () async {
+                      if (nameController.text.isEmpty)
+                        nameController.value =
+                            TextEditingValue(text: 'Document');
+                      await uploadFile(nameController.text);
                     },
+                  ),
+                ],
+              )
+            : Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: Text(
+                    'Add Image to start upload.',
+                    style: TextStyle(fontSize: 22),
                   ),
                 ),
               ),
-            ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Center(
-            child: InkWell(
-              onTap: () async {
-                if (docName != null) {
-                  await pickImage();
-                } else {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return RichAlertDialog(
-                          alertTitle: richTitle("File Name Field Empty"),
-                          alertSubtitle:
-                              richSubtitle('Please provide a file name'),
-                          alertType: RichAlertType.INFO,
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text("OK"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        );
-                      });
-                }
-              },
-              child: Icon(
-                Icons.image,
-                size: 140,
-                color: imageLoaded ? Colors.green : Colors.amberAccent,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Center(
-            child: InkWell(
-              onTap: () async {
-                await copyImage();
-                print(image.path);
-                print(path);
-                await saveImage();
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return RichAlertDialog(
-                        alertTitle: richTitle("Image Saved"),
-                        alertSubtitle: richSubtitle('Please remember the name'),
-                        alertType: RichAlertType.SUCCESS,
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text("OK"),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.pushNamed(context, ViewDocuments.id);
-                              docNameController.clear();
-                            },
-                          ),
-                        ],
-                      );
-                    });
-              },
-              child: Container(
-                margin: EdgeInsets.fromLTRB(50, 20, 50, 30),
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 65.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Colors.blueAccent,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.blue,
-                      blurRadius: 3.0,
-                      offset: Offset(0, 4.0),
-                    ),
-                  ],
-                ),
-                child: Text(
-                  'Save Image',
-                  style: TextStyle(color: Colors.white, fontSize: 20.0),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child:
-                Text('Remember the File name.Don\'t add spaces between words'),
-          )
-        ],
-      ),
+      ]),
     );
+  }
+
+  Future uploadFile(String name) async {
+    String fileName = name, imageUrl;
+    StorageReference reference =
+        FirebaseStorage.instance.ref().child(userId + '/' + fileName);
+    StorageUploadTask uploadTask = reference.putFile(_image);
+    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+    storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) async {
+      imageUrl = downloadUrl;
+      await updateData(fileName, imageUrl);
+      Navigator.pushNamed(context, ViewDocuments.id);
+    }, onError: (err) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog(
+              child: Text('Upload Failed'),
+            );
+          });
+    });
+  }
+
+  getCurrentUser() async {
+    await FirebaseAuth.instance.currentUser().then((user) {
+      setState(() {
+        userId = user.uid;
+      });
+    });
+  }
+
+  updateData(String name, String value) async {
+    await Firestore.instance
+        .collection('documents')
+        .document(userId)
+        .setData({name: value});
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
   }
 }
