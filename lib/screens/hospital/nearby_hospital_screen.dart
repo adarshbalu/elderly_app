@@ -1,29 +1,12 @@
-import 'dart:async';
-
+import 'package:elderly_app/models/hospital.dart';
 import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:location/location.dart' as LocationManager;
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:geolocator/geolocator.dart';
 
-const kTomsApiKey = 'vA9uQILIGUAG86z9xCTSkETjqg7ZCiGa';
-double latitude, longitude;
 LocationManager.Location location = LocationManager.Location();
-Geolocator _geolocator = Geolocator();
-bool first = true;
-getLocation() async {
-  var a = await _geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high);
-  latitude = a.latitude;
-  longitude = a.longitude;
-  //var pos = await location.getLocation();
-  //latitude = pos.latitude;
-  //longitude = pos.longitude;
-}
 
 class NearbyHospitalScreen extends StatefulWidget {
   static const String id = 'Nearby_Hospital_screen';
@@ -35,16 +18,12 @@ class NearbyHospitalScreen extends StatefulWidget {
 
 class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
   bool showSpinner = true;
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
+  HospitalData hospitalData;
   @override
   initState() {
-    getLocation();
     super.initState();
+    hospitalData = HospitalData();
+    hospitalData.getNearbyHospital();
   }
 
   double lat, tempLon;
@@ -57,8 +36,7 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.refresh),
         onPressed: () async {
-          await getLocation();
-          await getNearbyHospitals();
+          await hospitalData.getNearbyHospital();
         },
       ),
       appBar: AppBar(
@@ -77,7 +55,6 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
         actions: <Widget>[
           GestureDetector(
             onTap: () {
-              print('Profile Button Tapped');
               Navigator.pushNamed(context, ProfileScreen.id);
             },
             child: CircleAvatar(
@@ -93,9 +70,8 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
         ],
       ),
       body: FutureBuilder(
-        future: getNearbyHospitals(),
+        future: hospitalData.getNearbyHospital(),
         builder: (context, snapshot) {
-          print(snapshot.data);
           if (!snapshot.hasData) {
             return Center(
               child: Column(
@@ -118,162 +94,74 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
               ),
             );
           } else {
-            return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  getLocation();
-                  var hosLon =
-                      snapshot.data[index].hospitalLocationLongitude.toString();
-                  var hosLat =
-                      snapshot.data[index].hospitalLocationLatitude.toString();
-                  if (first) {
-                    first = false;
-                    return Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          'Nearby Hospitals',
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: Color(0xffE3952D),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Card(
-                          margin: EdgeInsets.all(15),
-                          color: Colors.white,
-                          elevation: 2.5,
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                              child: Icon(Icons.local_hospital,
-                                  size: 40, color: Colors.red),
-                            ),
-                            subtitle: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text(snapshot.data[index].hospitalDistance
-                                      .toString() +
-                                  ' KM'),
-                            ),
-                            title: snapshot.data[index].hospitalName != null
-                                ? Text(
-                                    snapshot.data[index].hospitalName,
-                                    style: TextStyle(
-                                        fontSize: 18, color: Colors.blueGrey),
-                                  )
-                                : Text(''),
-                            onTap: () {
-                              launch(
-                                  'https://www.google.com/maps/dir/$latitude,$longitude/$hosLat,$hosLon');
-                            },
-                          ),
-                        )
-                      ],
-                    );
-                  } else
-                    return Card(
-                      margin: EdgeInsets.all(15),
-                      color: Colors.white,
-                      elevation: 2.5,
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Icon(Icons.local_hospital,
-                              size: 40, color: Colors.red),
-                        ),
-                        subtitle: Text(
-                            snapshot.data[index].hospitalDistance.toString() +
-                                ' KM'),
-                        title: snapshot.data[index].hospitalName != null
-                            ? Text(
-                                snapshot.data[index].hospitalName,
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.blueGrey),
-                              )
-                            : Text(''),
-                        onTap: () {
-//
-                          launch(
-                              'https://www.google.com/maps/dir/$latitude,$longitude/$hosLat,$hosLon');
-                        },
-                      ),
-                    );
-                });
+            return Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Nearby Hospitals',
+                    style: TextStyle(
+                        color: Colors.orange,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Flexible(
+                  child: ListView.builder(
+                      itemCount: hospitalData.hospitalList.length,
+                      itemBuilder: (context, index) {
+                        var hosLon = hospitalData
+                            .hospitalList[index].hospitalLocationLongitude
+                            .toString();
+                        var hosLat = hospitalData
+                            .hospitalList[index].hospitalLocationLatitude
+                            .toString();
+
+                        return Column(
+                          children: <Widget>[
+                            Card(
+                              margin: EdgeInsets.all(15),
+                              color: Colors.white,
+                              elevation: 2.5,
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  child: Icon(Icons.local_hospital,
+                                      size: 40, color: Colors.red),
+                                ),
+                                subtitle: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Text(hospitalData
+                                          .hospitalList[index].hospitalDistance
+                                          .toString() +
+                                      ' KM'),
+                                ),
+                                title: hospitalData
+                                            .hospitalList[index].hospitalName !=
+                                        null
+                                    ? Text(
+                                        hospitalData
+                                            .hospitalList[index].hospitalName,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.blueGrey),
+                                      )
+                                    : Text(''),
+                                onTap: () {
+                                  launch(
+                                      'https://www.google.com/maps/dir/${hospitalData.userLocation.latitude},${hospitalData.userLocation.longitude}/$hosLat,$hosLon');
+                                },
+                              ),
+                            )
+                          ],
+                        );
+                      }),
+                ),
+              ],
+            );
           }
         },
       ),
     );
   }
-
-  Future<List<Hospital>> getNearbyHospitals() async {
-    List<Hospital> hospitalList = [];
-
-    await getLocation();
-    print('Latitude : ' + latitude.toString());
-    print('Longitude : ' + longitude.toString());
-    http.Response response = await http.get(
-        'https://api.tomtom.com/search/2/nearbySearch/.JSON?key=$kTomsApiKey&lat=$latitude&lon=$longitude&radius=2000&limit=10&categorySet=7321');
-    var data = response.body;
-    var status = response.statusCode;
-    print('Hospital Search Status : ' + status.toString());
-    if (status == 200) {
-      var jsonData = jsonDecode(data)['results'];
-      for (var h in jsonData) {
-        String locationUrl, placeName;
-        double locationLat = h['position']['lat'];
-        print('Hospital Latitude : ' + locationLat.toString());
-        double locationLon = h['position']['lon'];
-        print('Hospital Longitude : ' + locationLon.toString());
-
-        http.Response urlResponse = await http.get(
-            'https://api.opencagedata.com/geocode/v1/json?q=$locationLat+$locationLon&key=f29cf18b10224e27b8931981380b747a');
-        String urlData = urlResponse.body;
-        var urlJson = jsonDecode(urlData)['results'][0];
-        var urlStatus = urlResponse.statusCode;
-        print(urlStatus);
-        if (urlStatus == 200) {
-          print(h['poi']['name']);
-          locationUrl = urlJson['annotations']['OSM']['url'];
-          placeName = urlJson['components']['town'];
-          print(locationUrl);
-          http.Response distanceResponse = await http.get(
-              'https://api.tomtom.com/routing/1/calculateRoute/$latitude,$longitude:$locationLat,$locationLon/json?key=G5IOmgbhnBgevPJeglEK2zGJyYv6TG1Z');
-          var distanceStatus = distanceResponse.statusCode;
-          if (distanceStatus == 200) {
-            var distanceData = distanceResponse.body;
-
-            double hospitalDistance = jsonDecode(distanceData)['routes'][0]
-                    ['summary']['lengthInMeters'] /
-                1000;
-            print(hospitalDistance);
-
-            Hospital hospital = Hospital(h['poi']['name'], h['position']['lat'],
-                h['position']['lon'], locationUrl, placeName, hospitalDistance);
-            try {
-              hospitalList.add(hospital);
-            } catch (e) {
-              print(e);
-            }
-          }
-        }
-      }
-      print(hospitalList.length);
-      return hospitalList;
-    } else {
-      return [];
-    }
-  }
-}
-
-class Hospital {
-  String hospitalName, hospitalLocationUrl, hospitalPlace;
-  double hospitalLocationLatitude, hospitalLocationLongitude, hospitalDistance;
-
-  Hospital(this.hospitalName, this.hospitalLocationLatitude,
-      this.hospitalLocationLongitude,
-      [this.hospitalLocationUrl, this.hospitalPlace, this.hospitalDistance]);
 }
