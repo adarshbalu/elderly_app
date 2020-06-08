@@ -79,13 +79,6 @@ class Auth implements AuthBase {
               'age': '45',
               'gender': 'Not Set',
             });
-            await Firestore.instance
-                .collection('profile')
-                .document(authResult.user.uid.toString())
-                .collection('relatives')
-                .document('')
-                .setData(
-                    {'name': '', 'phoneNumber': '', 'email': '', 'uid': ''});
           } catch (e) {
             print(e.toString());
           }
