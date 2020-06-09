@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elderly_app/models/image.dart';
 import 'package:elderly_app/screens/document/add_documents_screen.dart';
+import 'package:elderly_app/screens/document/document_detail_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -147,36 +148,46 @@ class _ViewDocumentsState extends State<ViewDocuments> {
   List<Widget> addImages(
       List<Widget> imageWidgets, List<ImageClass> imageList) {
     for (var image in imageList) {
-      imageWidgets.add(Container(
-        margin: EdgeInsets.only(bottom: 35),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          image: DecorationImage(
-              fit: BoxFit.cover,
-              image: NetworkImage(
-                image.url,
-              )),
-        ),
-        child: SizedBox(
-          width: 250,
-          height: 250,
-          child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black.withAlpha(99),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  width: 250,
-                  height: 35,
-                  child: Center(
-                    child: Text(
-                      image.name,
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                  ))),
+      imageWidgets.add(InkWell(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return DocumentDetail(image);
+          }));
+        },
+        child: Hero(
+          tag: image.name,
+          child: Container(
+            margin: EdgeInsets.only(bottom: 35),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                    image.url,
+                  )),
+            ),
+            child: SizedBox(
+              width: 250,
+              height: 250,
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withAlpha(99),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      width: 250,
+                      height: 35,
+                      child: Center(
+                        child: Text(
+                          image.name,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ))),
+            ),
+          ),
         ),
       ));
     }

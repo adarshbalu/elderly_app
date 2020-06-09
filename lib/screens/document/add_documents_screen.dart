@@ -226,24 +226,38 @@ class _AddDocumentsState extends State<AddDocuments> {
     setState(() {
       imageUploading = true;
     });
-    String fileName = name, imageUrl;
-    StorageReference reference =
-        FirebaseStorage.instance.ref().child(userId + '/' + fileName);
-    StorageUploadTask uploadTask = reference.putFile(_image);
-    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
-    storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) async {
-      imageUrl = downloadUrl;
-      await updateData(fileName, imageUrl);
-      Navigator.pushNamed(context, ViewDocuments.id);
-    }, onError: (err) {
+    await getAllImageData();
+    if (!allImages.containsKey(name)) {
+      String fileName = name, imageUrl;
+      StorageReference reference =
+          FirebaseStorage.instance.ref().child(userId + '/' + fileName);
+      StorageUploadTask uploadTask = reference.putFile(_image);
+      StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+      storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) async {
+        imageUrl = downloadUrl;
+        await updateData(fileName, imageUrl);
+        Navigator.pop(context);
+      }, onError: (err) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(
+                child: Text('Upload Failed'),
+              );
+            });
+      });
+    } else {
+      setState(() {
+        imageUploading = false;
+      });
       showDialog(
           context: context,
           builder: (context) {
             return Dialog(
-              child: Text('Upload Failed'),
+              child: Text('Document with same name exists.'),
             );
           });
-    });
+    }
   }
 
   getCurrentUser() async {
@@ -255,7 +269,6 @@ class _AddDocumentsState extends State<AddDocuments> {
   }
 
   updateData(String name, String value) async {
-    await getAllImageData();
     allImages[name] = value;
     await Firestore.instance
         .collection('documents')
