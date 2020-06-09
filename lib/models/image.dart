@@ -19,7 +19,8 @@ class ImageModel {
   List<ImageClass> searchImages(String name) {
     List<ImageClass> imagesFound = List<ImageClass>();
     for (var image in this.images) {
-      if (image.name == name) {
+      if (image.name.toLowerCase().substring(0, name.length) ==
+          name.toLowerCase()) {
         imagesFound.add(image);
       }
     }

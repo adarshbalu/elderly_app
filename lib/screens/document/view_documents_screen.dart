@@ -39,8 +39,15 @@ class _ViewDocumentsState extends State<ViewDocuments> {
                 ImageModel images = ImageModel();
                 List<Widget> imageWidgets = List<Widget>();
                 List<ImageClass> imageList = List<ImageClass>();
-                imageList = images.getAllImages(snapshot.data.data);
-                imageWidgets = addImages(imageWidgets, imageList);
+                List<ImageClass> searchImageList = List<ImageClass>();
+                imageList =
+                    searchImageList = images.getAllImages(snapshot.data.data);
+                if (nameController.text.isEmpty || nameController.text == '')
+                  imageWidgets = addImages(imageWidgets, imageList);
+                else {
+                  searchImageList = images.searchImages(nameController.text);
+                  imageWidgets = addImages(imageWidgets, searchImageList);
+                }
                 return Column(
                   children: <Widget>[
                     Container(
@@ -51,6 +58,15 @@ class _ViewDocumentsState extends State<ViewDocuments> {
                               bottomRight: Radius.circular((40)),
                               bottomLeft: Radius.circular((40)))),
                       child: TextField(
+                        onSubmitted: (v) {
+                          if (v.isNotEmpty || v == '') {
+                            setState(() {
+                              searchImageList = images.searchImages(v);
+                              imageWidgets =
+                                  addImages(imageWidgets, searchImageList);
+                            });
+                          }
+                        },
                         decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.white,
@@ -63,21 +79,33 @@ class _ViewDocumentsState extends State<ViewDocuments> {
                             hintText: 'Search for files'),
                         controller: nameController,
                         onChanged: (v) {
-                          if (v.isNotEmpty) {
-                            imageList = images.searchImages(v);
-                            imageWidgets = addImages(imageWidgets, imageList);
+                          if (v.isNotEmpty || v == '') {
+                            setState(() {
+                              searchImageList = images.searchImages(v);
+                              imageWidgets =
+                                  addImages(imageWidgets, searchImageList);
+                            });
                           }
                         },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Files Found',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 30),
-                      ),
-                    ),
+                    searchImageList.length > 0
+                        ? Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              'Documents ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 30),
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Files not Found',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 30),
+                            ),
+                          ),
                     Column(
                       children: imageWidgets,
                     )
