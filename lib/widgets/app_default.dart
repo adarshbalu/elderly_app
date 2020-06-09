@@ -1,17 +1,8 @@
-import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/appoinment_reminder/appoinment_decision_screen.dart';
-import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/relatives/edit_relatives.dart';
-import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/home/home_screen.dart';
-import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/pages/image_label.dart';
-import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/medicine_reminder/medicine_decision_screen.dart';
-import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/notes/note_home_screen.dart';
-import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/loading/splash_home.dart';
-import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/document/view_documents_screen.dart';
-import 'package:elderly_app/main.dart';
+import 'package:elderly_app/screens/home/home_screen.dart';
+import 'package:elderly_app/screens/loading/loading_screen.dart';
 import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:elderly_app/others/constants.dart';
-import 'file:///C:/Users/HP/AndroidStudioProjects/elderly_app/lib/screens/loading/loading_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
@@ -24,200 +15,161 @@ Future<FirebaseUser> getUser() async {
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Container(
+      width: MediaQuery.of(context).size.width / 1.2,
       child: Drawer(
-        elevation: 4,
+        elevation: 1,
         child: Column(
           children: <Widget>[
             Expanded(
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
                     return HomeScreen();
                   }));
                 },
-                child: ListView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.all(20.0),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                              child:
-                                  Image.asset('lib/resources/images/logo.png')),
-                          SizedBox(
-                            width: 20.0,
-                          ),
-                          Text(
-                            'Elderly ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontSize: 32.0,
+                    Column(
+                      children: <Widget>[
+                        DrawerHeader(
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  bottom: Divider.createBorderSide(context,
+                                      color: Colors.transparent, width: 0))),
+                          child: Container(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Expanded(
+                                    flex: 2,
+                                    child: Image.asset(
+                                        'lib/resources/images/logo.png')),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  'Elderly ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w100,
+                                    fontSize: 32.0,
+                                  ),
+                                ),
+                                Text(
+                                  'Care',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w100,
+                                    fontSize: 32.0,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Text(
-                            'Care',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontSize: 32.0,
-                              color: Colors.green,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10.0,
-                          )
-                        ],
-                      ),
+                        ),
+                        ListButtons(
+                          onTap: () {},
+                          icon: Icons.person_outline,
+                          text: 'Profile',
+                        ),
+                        ListButtons(
+                          onTap: () async {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return RichAlertDialog(
+                                    alertTitle:
+                                        richTitle("Log-out from the App"),
+                                    alertSubtitle:
+                                        richSubtitle('Are you Sure '),
+                                    alertType: RichAlertType.WARNING,
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text("Yes"),
+                                        onPressed: () async {
+                                          await auth.signOut();
+                                          Navigator.pushNamed(
+                                              context, LoadingScreen.id);
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text("No"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                          icon: Icons.exit_to_app,
+                          text: 'Sign Out',
+                        ),
+                        ListButtons(
+                          onTap: () {},
+                          icon: Icons.settings,
+                          text: 'Settings',
+                        ),
+//                        ListButtons(
+//                          onTap: () {
+//                            showDialog(
+//                                context: context,
+//                                builder: (BuildContext context) {
+//                                  return RichAlertDialog(
+//                                    alertTitle: richTitle("Exit the App"),
+//                                    alertSubtitle:
+//                                        richSubtitle('Are you Sure '),
+//                                    alertType: RichAlertType.WARNING,
+//                                    actions: <Widget>[
+//                                      FlatButton(
+//                                        child: Text("Yes"),
+//                                        onPressed: () {
+//                                          SystemNavigator.pop();
+//                                        },
+//                                      ),
+//                                      FlatButton(
+//                                        child: Text("No"),
+//                                        onPressed: () {
+//                                          Navigator.pop(context);
+//                                        },
+//                                      ),
+//                                    ],
+//                                  );
+//                                });
+//                          },
+//                          icon: Icons.cancel,
+//                          text: 'Exit App',
+//                        ),
+                      ],
                     ),
-                    Divider(),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, ImageLabel.id);
-                      },
-                      splashColor: Color(0xff3c513d),
-                      child: ListButtons(
-                        icon: Icons.photo_camera,
-                        text: 'Image Detection',
-                      ),
-                    ),
-                    InkWell(
-                      splashColor: Color(0xff3c513d),
-                      onTap: () {
-                        Navigator.pushNamed(context, ViewDocuments.id);
-                      },
-                      child: ListButtons(
-                        icon: Icons.description,
-                        text: 'View Documents',
-                      ),
-                    ),
-                    InkWell(
-                      splashColor: Color(0xff3c513d),
-                      onTap: () {
-                        Navigator.pushNamed(context, EditRelativesScreen.id);
-                      },
-                      child: ListButtons(
-                        icon: Icons.person,
-                        text: 'Edit Relatives',
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, SplashHome.id);
-                      },
-                      splashColor: Color(0xff3c513d),
-                      child: ListButtons(
-                        icon: Icons.create,
-                        text: 'Add Notes',
-                      ),
-                    ),
-                    InkWell(
-                      splashColor: Color(0xff3c513d),
-                      onTap: () {
-                        print('Drawer item Tapped');
-                        Navigator.pushNamed(context, NoteList.id);
-                      },
-                      child: ListButtons(
-                        icon: Icons.list,
-                        text: 'View Notes',
-                      ),
-                    ),
-                    InkWell(
-                      splashColor: Color(0xff3c513d),
-                      onTap: () {
-                        Navigator.pushNamed(context, AppoinmentDecision.id);
-                      },
-                      child: ListButtons(
-                        icon: Icons.local_hospital,
-                        text: 'Appoinment Decision',
-                      ),
-                    ),
-                    InkWell(
-                      splashColor: Color(0xff3c513d),
-                      onTap: () {
-                        Navigator.pushNamed(context, MedicineScreen.id);
-                      },
-                      child: ListButtons(
-                        icon: Icons.alarm_on,
-                        text: 'Medicine Decision',
-                      ),
-                    ),
-                    InkWell(
-                      splashColor: Color(0xff3c513d),
-                      onTap: () async {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return RichAlertDialog(
-                                alertTitle: richTitle("Log-out from the App"),
-                                alertSubtitle: richSubtitle('Are you Sure '),
-                                alertType: RichAlertType.WARNING,
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: Text("Yes"),
-                                    onPressed: () async {
-                                      await auth.signOut();
-                                      Navigator.pushNamed(
-                                          context, LoadingScreen.id);
-                                    },
-                                  ),
-                                  FlatButton(
-                                    child: Text("No"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            });
-                      },
-                      child: ListButtons(
-                        icon: Icons.report,
-                        text: 'Log Out',
-                      ),
-                    ),
-                    InkWell(
-                      splashColor: Color(0xff3c513d),
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return RichAlertDialog(
-                                alertTitle: richTitle("Exit the App"),
-                                alertSubtitle: richSubtitle('Are you Sure '),
-                                alertType: RichAlertType.WARNING,
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: Text("Yes"),
-                                    onPressed: () {
-                                      SystemNavigator.pop();
-                                    },
-                                  ),
-                                  FlatButton(
-                                    child: Text("No"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            });
-                      },
-                      child: ListButtons(
-                        icon: Icons.close,
-                        text: 'Exit App',
-                      ),
-                    ),
+                    Column(
+                      children: <Widget>[
+                        Divider(
+                          indent: 30,
+                          endIndent: 30,
+                          thickness: 1.5,
+                          color: Colors.grey.shade200,
+                        ),
+                        ListButtons(
+                          onTap: () {},
+                          icon: Icons.share,
+                          text: 'Tell a Friend',
+                        ),
+                        ListButtons(
+                          onTap: () {},
+                          icon: Icons.help_outline,
+                          text: 'Help and Feedback',
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
-            ),
-            Row(
-              children: <Widget>[
-                Container(
-                  child: Text('Application in Development'),
-                  margin: EdgeInsets.only(bottom: 5, left: 20, right: 20),
-                ),
-              ],
             ),
           ],
         ),
@@ -227,20 +179,36 @@ class AppDrawer extends StatelessWidget {
 }
 
 class ListButtons extends StatelessWidget {
-  String text;
-  var icon;
-  ListButtons({this.text, this.icon});
+  final String text;
+  final icon;
+  final onTap;
+  ListButtons({this.text, this.icon, this.onTap});
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        text,
-        style: kDrawerListStyle,
-      ),
-      leading: Icon(
-        icon,
-        color: Color(0xff3c513d),
-        size: 37.0,
+    return Padding(
+      padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 9),
+      child: InkWell(
+        splashColor: Color(0xffBA6ABC3),
+        onTap: onTap,
+        focusColor: Colors.green,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              text,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20),
+            ),
+            leading: Icon(
+              icon,
+              size: 25,
+              color: Colors.grey.shade600,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -249,9 +217,9 @@ class ListButtons extends StatelessWidget {
 class FormItem extends StatelessWidget {
   final String hintText;
   final String helperText;
-  Function onChanged;
+  final Function onChanged;
   final bool isNumber;
-  IconData icon;
+  final IconData icon;
   final controller;
 
   FormItem(
