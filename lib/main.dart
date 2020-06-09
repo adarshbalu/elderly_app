@@ -24,9 +24,11 @@ import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/screens/relatives/contact_relatives_screen.dart';
 import 'package:elderly_app/screens/relatives/edit_relatives.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 
 void main() {
   setupLocator();
+  FlutterDownloader.initialize(debug: false);
   runApp(ElderlyApp());
 }
 

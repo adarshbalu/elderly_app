@@ -53,6 +53,8 @@ dependencies:
   mlkit: any
   google_sign_in: ^4.5.1
   firebase_storage: ^3.1.6
+  flutter_downloader: ^1.4.4
+
 
 
 
