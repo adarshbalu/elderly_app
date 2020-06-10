@@ -1,5 +1,4 @@
 import 'package:elderly_app/models/hospital.dart';
-import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -33,42 +32,7 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: AppDrawer(),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.refresh),
-        onPressed: () async {
-          await hospitalData.getNearbyHospital();
-        },
-      ),
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Elderly '),
-            Text(
-              'Care',
-              style: TextStyle(color: Colors.green),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        elevation: 1,
-        actions: <Widget>[
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, ProfileScreen.id);
-            },
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.perm_identity,
-                size: 30,
-                color: Color(0xff5e444d),
-              ),
-            ),
-          ),
-        ],
-      ),
+      appBar: ElderlyAppBar(),
       body: FutureBuilder(
         future: hospitalData.getNearbyHospital(),
         builder: (context, snapshot) {
@@ -108,13 +72,13 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                 ),
                 Flexible(
                   child: ListView.builder(
-                      itemCount: hospitalData.hospitalList.length,
+                      itemCount: snapshot.data.hospitalList.length,
                       itemBuilder: (context, index) {
-                        var hosLon = hospitalData
-                            .hospitalList[index].hospitalLocationLongitude
+                        var hosLon = snapshot
+                            .data.hospitalList[index].hospitalLocationLongitude
                             .toString();
-                        var hosLat = hospitalData
-                            .hospitalList[index].hospitalLocationLatitude
+                        var hosLat = snapshot
+                            .data.hospitalList[index].hospitalLocationLatitude
                             .toString();
 
                         return Column(
@@ -131,17 +95,17 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                                 ),
                                 subtitle: Padding(
                                   padding: EdgeInsets.all(10),
-                                  child: Text(hospitalData
-                                          .hospitalList[index].hospitalDistance
+                                  child: Text(snapshot.data.hospitalList[index]
+                                          .hospitalDistance
                                           .toString() +
                                       ' KM'),
                                 ),
-                                title: hospitalData
-                                            .hospitalList[index].hospitalName !=
+                                title: snapshot.data.hospitalList[index]
+                                            .hospitalName !=
                                         null
                                     ? Text(
-                                        hospitalData
-                                            .hospitalList[index].hospitalName,
+                                        snapshot.data.hospitalList[index]
+                                            .hospitalName,
                                         style: TextStyle(
                                             fontSize: 18,
                                             color: Colors.blueGrey),
@@ -149,7 +113,7 @@ class NearbyHospitalScreenState extends State<NearbyHospitalScreen> {
                                     : Text(''),
                                 onTap: () {
                                   launch(
-                                      'https://www.google.com/maps/dir/${hospitalData.userLocation.latitude},${hospitalData.userLocation.longitude}/$hosLat,$hosLon');
+                                      'https://www.google.com/maps/dir/${snapshot.data.userLocation.latitude},${snapshot.data.userLocation.longitude}/$hosLat,$hosLon');
                                 },
                               ),
                             )

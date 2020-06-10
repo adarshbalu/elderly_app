@@ -20,7 +20,7 @@ class HospitalData {
       data = value;
     });
     var hospitals = data['results'];
-
+    this.hospitalList = [];
     for (var h in hospitals) {
       String locationUrl = '', placeName = '';
       double locationLat = h['position']['lat'];
@@ -48,7 +48,7 @@ class HospitalData {
 
       Hospital hospital = Hospital(h['poi']['name'], h['position']['lat'],
           h['position']['lon'], locationUrl, placeName, hospitalDistance);
-      if (!hospitalList.contains(hospital)) {
+      if (!this.hospitalList.contains(hospital)) {
         try {
           this.hospitalList.add(hospital);
         } catch (e) {
@@ -56,7 +56,11 @@ class HospitalData {
         }
       }
     }
-    hospitalList = hospitalList.toSet().toList();
+    for (var h in this.hospitalList) {
+      if (h != this.hospitalList.last) if (h ==
+          this.hospitalList[this.hospitalList.indexOf(h) + 1])
+        this.hospitalList.remove(h);
+    }
     return this;
   }
 }
