@@ -13,14 +13,14 @@ Our app provides a reminder for the elderly for their daily medications, shows n
 
 ## Features
 
-#### Medicine Reminder
-#### Alert Emergency contacts
-#### Locate nearby hospitals
-#### SOS button
-#### Doctor appointments
-#### Notes
-#### Tracker 
-#### Document storage
+#### -Medicine Reminder
+#### -Alert Emergency contacts
+#### -Locate nearby hospitals
+#### -SOS button
+#### -Doctor appointments
+#### -Notes
+#### -Tracker 
+#### -Document storage
 
 ## Screenshots
 <!--
