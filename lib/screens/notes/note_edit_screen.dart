@@ -3,6 +3,7 @@ import 'package:elderly_app/others/database_helper.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
 class NoteDetail extends StatefulWidget {
   static const String id = 'Note_Edit_Screen';
@@ -185,7 +186,7 @@ class NoteDetailState extends State<NoteDetail> {
     }
 
     if (result != 0) {
-      _showAlertDialog('Status', 'Note Saved Successfully');
+      showDialogBox('Note Saved ', note.title);
     } else {
       _showAlertDialog('Status', 'Problem Saving Note');
     }
@@ -201,7 +202,7 @@ class NoteDetailState extends State<NoteDetail> {
 
     int result = await helper.deleteNote(note.id);
     if (result != 0) {
-      _showAlertDialog('Status', 'Note Deleted Successfully');
+      showDialogBox('Deleted Successfully', note.title);
     } else {
       _showAlertDialog('Status', 'Error Occurred while Deleting Note');
     }
@@ -213,5 +214,25 @@ class NoteDetailState extends State<NoteDetail> {
       content: Text(message),
     );
     showDialog(context: context, builder: (_) => alertDialog);
+  }
+
+  showDialogBox(String message, String noteName) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return RichAlertDialog(
+            alertTitle: richTitle(noteName),
+            alertSubtitle: richSubtitle(message),
+            alertType: RichAlertType.SUCCESS,
+            actions: <Widget>[
+              RaisedButton.icon(
+                  color: Colors.green,
+                  textColor: Colors.white,
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(Icons.chevron_right),
+                  label: Text('Continue'))
+            ],
+          );
+        });
   }
 }
