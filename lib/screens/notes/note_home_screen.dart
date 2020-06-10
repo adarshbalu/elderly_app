@@ -56,7 +56,7 @@ class NoteListState extends State<NoteList> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          navigateToDetail(Note('', '', 2), 'Add Note');
+          navigateToDetail(Note('', '', '', 2), 'Add Note');
         },
         tooltip: 'Add Note',
         child: Icon(Icons.add),
@@ -171,35 +171,34 @@ class NoteListState extends State<NoteList> {
     return children;
   }
 
-  // Returns the priority color
-  Color getPriorityColor(int priority) {
-    switch (priority) {
-      case 1:
-        return Colors.red;
-        break;
-      case 2:
-        return Colors.yellow;
-        break;
-
-      default:
-        return Colors.yellow;
-    }
-  }
-
-  // Returns the priority icon
-  Icon getPriorityIcon(int priority) {
-    switch (priority) {
-      case 1:
-        return Icon(Icons.play_arrow);
-        break;
-      case 2:
-        return Icon(Icons.keyboard_arrow_right);
-        break;
-
-      default:
-        return Icon(Icons.keyboard_arrow_right);
-    }
-  }
+//  Color getPriorityColor(int priority) {
+//    switch (priority) {
+//      case 1:
+//        return Colors.red;
+//        break;
+//      case 2:
+//        return Colors.yellow;
+//        break;
+//
+//      default:
+//        return Colors.yellow;
+//    }
+//  }
+//
+//
+//  Icon getPriorityIcon(int priority) {
+//    switch (priority) {
+//      case 1:
+//        return Icon(Icons.play_arrow);
+//        break;
+//      case 2:
+//        return Icon(Icons.keyboard_arrow_right);
+//        break;
+//
+//      default:
+//        return Icon(Icons.keyboard_arrow_right);
+//    }
+//  }
 
   void _delete(Note note) async {
     int result = await databaseHelper.deleteNote(note.id);

@@ -25,10 +25,11 @@ class NoteDetailState extends State<NoteDetail> {
 
   String appBarTitle;
   Note note;
-
+  bool isReminder = false;
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-
+  Color color = Colors.blue;
+  Icon icon = Icon(Icons.add_alert);
   NoteDetailState(this.note, this.appBarTitle);
 
   @override
@@ -37,10 +38,10 @@ class NoteDetailState extends State<NoteDetail> {
 
     titleController.text = note.title;
     descriptionController.text = note.description;
-
+    _checkForReminder();
     return WillPopScope(
         onWillPop: () async {
-          moveToLastScreen();
+          _save();
           return true;
         },
         child: Scaffold(
@@ -64,13 +65,12 @@ class NoteDetailState extends State<NoteDetail> {
                 ),
                 Text(note.date),
                 IconButton(
-                  icon: Icon(
-                    Icons.save,
-                    color: Colors.green,
-                  ),
+                  icon: icon,
+                  color: color,
                   onPressed: () {
                     setState(() {
-                      _save();
+                      note.date = DateFormat.yMMMd()
+                          .format(DateTime.now().add(Duration(days: 1)));
                     });
                   },
                 ),
@@ -174,14 +174,17 @@ class NoteDetailState extends State<NoteDetail> {
     note.description = descriptionController.text;
   }
 
+//  void _addReminder() {}
+
   void _save() async {
     moveToLastScreen();
 
-    note.date = DateFormat.yMMMd().format(DateTime.now());
     int result;
     if (note.id != null) {
       result = await helper.updateNote(note);
     } else {
+      note.date = DateFormat.yMMMd().format(DateTime.now());
+      note.dateCreated = note.date;
       result = await helper.insertNote(note);
     }
 
@@ -234,5 +237,27 @@ class NoteDetailState extends State<NoteDetail> {
             ],
           );
         });
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  _checkForReminder() {
+    setState(() {
+      if (note.date == note.dateCreated) {
+        icon = Icon(Icons.notifications_off);
+        color = Colors.blue;
+        isReminder = false;
+      } else {
+        color = Colors.green;
+        icon = Icon(Icons.notification_important);
+        isReminder = true;
+      }
+    });
+    return isReminder;
   }
 }

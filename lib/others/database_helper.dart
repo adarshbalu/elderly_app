@@ -16,6 +16,7 @@ class DatabaseHelper {
   String colDescription = 'description';
   String colPriority = 'priority';
   String colDate = 'date';
+  String colDateCreated = 'dateCreated';
 
   String reminderTable = 'reminder_table';
   String remColId = 'id';
@@ -71,7 +72,7 @@ class DatabaseHelper {
 
     await db.execute(
         'CREATE TABLE $noteTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colTitle TEXT, '
-        '$colDescription TEXT, $colPriority INTEGER, $colDate TEXT)');
+        '$colDescription TEXT,$colDateCreated TEXT , $colPriority INTEGER, $colDate TEXT)');
   }
 
   // Fetch Operation: Get all note objects from database
