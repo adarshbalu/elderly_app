@@ -3,13 +3,14 @@
 <img src="microorganism.png" align="left"
      width="200" hspace="10" vspace="10">
 -->
-  
-Elderly_Care is free and Open Source, Cross Platform Application developed using [Flutter](https://github.com/flutter/flutter).
-### Easiest way to manage your health, medicines, emergencies all in one place.
+
+Easiest way to manage your health, medicines, emergencies all in one place.
 
 ## About
 
 Our app provides a reminder for the elderly for their daily medications, shows nearby hospitals,  an option to alert emergency contacts, sos button for fetching the number of nearby hospital in case of emergency, option to add important notes based on their priority, option to add doctor appointment reminder and alert emergency contacts regarding the same, helps in tracking the person's important health vitals, to organise documents in one place.
+
+Elderly_Care is free and Open Source, Cross Platform Application developed using [Flutter](https://github.com/flutter/flutter).
 
 
 ## Screenshots
@@ -57,15 +58,17 @@ width="200"
 ## Permissions
 
 On Android versions prior to Android 6.0, Elderly Care requires the following permissions:
-- Full Network Access.
+- Full Network Access
+  
+  It uses the network data for the firebase.
 - Storage space
+  Storage space for storing all the datas such as documents, notes and reminders.
+  
 - Message and Call
+  Message and Call permission for alerting relatives and to contact hospitals.
+  
 - Access Current Location
-
-It uses the network data for the firebase.
-Storage space for storing all the datas such as documents, notes and reminders.
-Message and Call permission for alerting relatives and to contact hospitals.
-Current location access required for informing the point of contact.
+  Current location access required for informing the point of contact.
 
 ## Contributing
 
