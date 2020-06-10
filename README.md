@@ -5,7 +5,7 @@
 -->
   
 Elderly_Care is free and Open Source, Cross Platform Application developed using [Flutter](https://github.com/flutter/flutter).
-## Easiest way to manage your health, medicines, emergencies all in one place.
+### Easiest way to manage your health, medicines, emergencies all in one place.
 ***
 ## About
 
@@ -13,14 +13,14 @@ Our app provides a reminder for the elderly for their daily medications, shows n
 
 ## Features
 
-### Medicine Reminder
-### Alert Emergency contacts
-### Locate nearby hospitals
-### SOS button
-### Doctor appointments
-### Notes
-### Tracker 
-### Document storage
+#### Medicine Reminder
+#### Alert Emergency contacts
+#### Locate nearby hospitals
+#### SOS button
+#### Doctor appointments
+#### Notes
+#### Tracker 
+#### Document storage
 
 ## Screenshots
 <!--
@@ -91,7 +91,7 @@ Elderly_Care app is a free and open source project. Any contributions are welcom
  
 
 ## Credits  
-Thanks to  Wanicon (https://flaticon.com/authors/wanicon) for the app icon.
+<!--Thanks to  Wanicon (https://flaticon.com/authors/wanicon) for the app icon.-->
 
 ## License
 
