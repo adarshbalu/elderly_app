@@ -9,11 +9,16 @@ class HospitalData {
   getNearbyHospital() async {
     this.hospitalList = List<Hospital>();
     userLocation = UserLocation();
-    this.userLocation = await userLocation.getLocation();
+    await userLocation.getLocation().then((value) {
+      this.userLocation = value;
+    });
     String url =
         'https://api.tomtom.com/search/2/nearbySearch/.JSON?key=$kTomsApiKey&lat=${userLocation.latitude}&lon=${userLocation.longitude}&radius=2000&limit=10&categorySet=7321';
     NetworkHelper networkHelper = NetworkHelper(url);
-    var data = await networkHelper.getData();
+    var data;
+    await networkHelper.getData().then((value) {
+      data = value;
+    });
     var hospitals = data['results'];
 
     for (var h in hospitals) {
@@ -23,14 +28,20 @@ class HospitalData {
       String uri =
           'https://api.opencagedata.com/geocode/v1/json?q=$locationLat+$locationLon&key=f29cf18b10224e27b8931981380b747a';
       NetworkHelper _networkHelper = NetworkHelper(uri);
-      var _data = await _networkHelper.getData();
+      var _data;
+      await _networkHelper.getData().then((value) {
+        _data = value;
+      });
       var hosData = _data['results'][0];
       placeName = hosData['components']['road'];
       locationUrl = hosData['annotations']['OSM']['url'];
       uri =
           'https://api.tomtom.com/routing/1/calculateRoute/${userLocation.latitude},${userLocation.longitude}:$locationLat,$locationLon/json?key=G5IOmgbhnBgevPJeglEK2zGJyYv6TG1Z';
       NetworkHelper _network = NetworkHelper(uri);
-      var distanceData = await _network.getData();
+      var distanceData;
+      await _network.getData().then((value) {
+        distanceData = value;
+      });
 
       double hospitalDistance =
           distanceData['routes'][0]['summary']['lengthInMeters'] / 1000;

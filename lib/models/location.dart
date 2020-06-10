@@ -8,11 +8,19 @@ class UserLocation {
     try {
       Geolocator _geolocator = Geolocator()..forceAndroidLocationManager = true;
 
-      Position pos = await _geolocator.getLastKnownPosition(
-          desiredAccuracy: LocationAccuracy.high);
+      Position pos;
+      await _geolocator
+          .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high)
+          .then((value) {
+        pos = value;
+      });
       if (pos == null) {
-        Position position = await _geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
+        Position position;
+        await _geolocator
+            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+            .then((value) {
+          position = value;
+        });
         userLocation.longitude = this.longitude = position.longitude;
         userLocation.latitude = this.latitude = position.latitude;
       } else {
