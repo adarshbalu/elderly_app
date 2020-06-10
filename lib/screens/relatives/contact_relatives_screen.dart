@@ -1,7 +1,5 @@
 import 'package:elderly_app/models/elder_location.dart';
-import 'package:elderly_app/models/location.dart';
 import 'package:elderly_app/models/user.dart';
-import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/screens/relatives/edit_relatives.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +16,6 @@ class ContactScreen extends StatefulWidget {
 }
 
 class _ContactScreenState extends State<ContactScreen> {
-  UserLocation location;
   ElderLocation elderLocation;
   String messageText = '', username = 'user', userId;
   bool relativesFound = false;
@@ -32,7 +29,7 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   getLocationDetails() async {
-    await elderLocation.getLocationData(location);
+    await elderLocation.getLocationData();
     messageText =
         'Hey , This is $username find me at ${elderLocation.address} .\n Link to my location : ${elderLocation.url}';
     return elderLocation;
@@ -55,8 +52,6 @@ class _ContactScreenState extends State<ContactScreen> {
     getCurrentUser();
     userProfile = UserProfile(userId);
     elderLocation = ElderLocation();
-    location = UserLocation(longitude: 0, latitude: 0);
-    location.getLocation();
 
     getLocationDetails();
   }
@@ -65,37 +60,7 @@ class _ContactScreenState extends State<ContactScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: AppDrawer(),
-        appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('Elderly '),
-              Text(
-                'Care',
-                style: TextStyle(color: Colors.green),
-              ),
-            ],
-          ),
-          centerTitle: true,
-          elevation: 1,
-          actions: <Widget>[
-            GestureDetector(
-              onTap: () {
-                print('Profile Button Tapped');
-                Navigator.pushNamed(context, ProfileScreen.id);
-              },
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.perm_identity,
-                  size: 30,
-                  color: Color(0xff5e444d),
-                ),
-              ),
-            ),
-          ],
-        ),
+        appBar: ElderlyAppBar(),
         body: ListView(
           children: <Widget>[
             StreamBuilder(
@@ -300,10 +265,12 @@ class _ContactScreenState extends State<ContactScreen> {
                       ],
                     );
                   } else
-                    return Container(
-                      child: SpinKitWanderingCubes(
-                        color: Colors.green,
-                        size: 100.0,
+                    return Center(
+                      child: Container(
+                        child: SpinKitWanderingCubes(
+                          color: Colors.green,
+                          size: 100.0,
+                        ),
                       ),
                     );
                 }),

@@ -4,8 +4,11 @@ import 'package:elderly_app/others/network.dart';
 
 class ElderLocation {
   String address, url;
+  UserLocation location;
   ElderLocation();
-  getLocationData(UserLocation location) async {
+  getLocationData() async {
+    location = UserLocation(longitude: 0, latitude: 0);
+    location = await location.getLocation();
     String uri =
         'https://api.opencagedata.com/geocode/v1/json?q=${location.latitude}+${location.longitude}&key=$kOpenCageApiKey';
     NetworkHelper networkHelper = NetworkHelper(uri);
