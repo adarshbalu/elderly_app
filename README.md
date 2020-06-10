@@ -10,7 +10,7 @@ Easiest way to manage your health, medicines, emergencies all in one place.
 
 Our app provides a reminder for the elderly for their daily medications, shows nearby hospitals,  an option to alert emergency contacts, sos button for fetching the number of nearby hospital in case of emergency, option to add important notes based on their priority, option to add doctor appointment reminder and alert emergency contacts regarding the same, helps in tracking the person's important health vitals, to organise documents in one place.
 
-## Screenshots
+
 <!--
 <img src="1.jpg" align="left"
 width="200"
@@ -51,6 +51,7 @@ width="200"
 
 - Document Storage
   - Helps in organising all personal documents you are challenged manage - from all personal IDs and journals to medical contacts and    insurance informations. Secure upload and storage.
+## Screenshots
 
 ## Permissions
 
