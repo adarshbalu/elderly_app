@@ -10,9 +10,6 @@ Easiest way to manage your health, medicines, emergencies all in one place.
 
 Our app provides a reminder for the elderly for their daily medications, shows nearby hospitals,  an option to alert emergency contacts, sos button for fetching the number of nearby hospital in case of emergency, option to add important notes based on their priority, option to add doctor appointment reminder and alert emergency contacts regarding the same, helps in tracking the person's important health vitals, to organise documents in one place.
 
-Elderly_Care is free and Open Source, Cross Platform Application developed using [Flutter](https://github.com/flutter/flutter).
-
-
 ## Screenshots
 <!--
 <img src="1.jpg" align="left"
@@ -30,7 +27,7 @@ width="200"
 - Medicine Reminder
   - Reminder for the elderly to stay on schedule for their daily medicines.
   - The reminder hits an alarm and requests for confirmation if the person hastaken the specific medicine at the times prescribed. 
-  - Ifnot responded to,or responded negatively,the app sends a notification to the point of contact.
+  - If not responded to,or responded negatively,the app sends a notification to the point of contact.
 
 - Alert Emergency contacts
   - Feature that shares your current location to all emergency contacts in case you want them to reach you as soon as possible. Helps       accessing you in emergency, or to coordinate care.
@@ -58,17 +55,14 @@ width="200"
 ## Permissions
 
 On Android versions prior to Android 6.0, Elderly Care requires the following permissions:
-- Full Network Access
+
+- Full Network Access: It uses the network data for the firebase.
+
+- Storage space:For storing all the datas such as documents, notes and reminders.
   
-  It uses the network data for the firebase.
-- Storage space
-  Storage space for storing all the datas such as documents, notes and reminders.
-  
-- Message and Call
-  Message and Call permission for alerting relatives and to contact hospitals.
-  
-- Access Current Location
-  Current location access required for informing the point of contact.
+- Message and Call: Permission required for alerting relatives and to contact hospitals.
+
+- Access Current Location: Current location access required for informing the point of contact.
 
 ## Contributing
 
