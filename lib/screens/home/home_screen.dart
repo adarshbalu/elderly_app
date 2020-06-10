@@ -57,12 +57,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future checkLocationPermission() async {
     permission = await PermissionManager.PermissionHandler()
-        .checkPermissionStatus(
-            PermissionManager.PermissionGroup.location); //checking permissiom
+        .checkPermissionStatus(PermissionManager.PermissionGroup.location);
     PermissionManager.ServiceStatus serviceStatus =
-        await PermissionManager.PermissionHandler().checkServiceStatus(
-            PermissionManager
-                .PermissionGroup.location); //checking service status
+        await PermissionManager.PermissionHandler()
+            .checkServiceStatus(PermissionManager.PermissionGroup.location);
 
     if (permission == PermissionManager.PermissionStatus.granted) {
       setState(() {
@@ -150,7 +148,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderColor: Color(0xff7b1fa2).withOpacity(0.75),
                             ),
                             onTap: () {
-                              print('Appoinment Tapped');
                               Navigator.pushNamed(
                                   context, AppoinmentReminder.id);
                             },
@@ -176,8 +173,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderColor: Color(0xffE3952D).withOpacity(0.75),
                             ),
                             onTap: () {
-                              print('Medicine Tapped');
-
                               Navigator.pushNamed(context, MedicineReminder.id);
                             },
                           ),
@@ -209,7 +204,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderColor: Color(0xff3c513d).withOpacity(0.75),
                             ),
                             onTap: () async {
-                              print('Hospital Tapped');
                               await checkLocationPermission();
                               if (serviceEnabled && permissionGranted) {
                                 Navigator.pushNamed(
@@ -240,8 +234,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderColor: Color(0xffaf5676).withOpacity(0.75),
                             ),
                             onTap: () async {
-                              print('Relatives Tapped');
-
                               if (initialSetupComplete) {
                                 await checkLocationPermission();
                                 if (serviceEnabled && permissionGranted) {
@@ -300,7 +292,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderColor: Color(0xffD83B36).withOpacity(0.75),
                             ),
                             onTap: () {
-                              print('Heartbeat Tapped');
                               if (heartRateSensor) {
                                 Navigator.pushNamed(
                                     context, HeartRateScreen.id);
@@ -348,8 +339,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderColor: Color(0xff5d4037).withOpacity(0.75),
                             ),
                             onTap: () {
-                              print('Documents Tapped');
-
                               Navigator.pushNamed(context, ViewDocuments.id);
                             },
                           ),
@@ -381,7 +370,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderColor: Color(0xff00796b).withOpacity(0.75),
                             ),
                             onTap: () {
-                              print('Notes Tapped');
                               Navigator.pushNamed(context, NoteList.id);
                             },
                           ),
@@ -406,8 +394,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderColor: Color(0xff3d5afe).withOpacity(0.75),
                             ),
                             onTap: () {
-                              print('Fit Tapped');
-
                               Navigator.pushNamed(context, MedicineReminder.id);
                             },
                           ),
@@ -425,9 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Center(
                   child: GestureDetector(
-                    onTap: () {
-                      print('Button urgent');
-                    },
+                    onTap: () {},
                     child: Container(
                       padding: EdgeInsets.symmetric(
                           vertical: 15.0, horizontal: 55.0),
