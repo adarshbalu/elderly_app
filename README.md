@@ -26,6 +26,14 @@
 #### Feature that shares your current location to all emergency contacts in case you want them to reach you as soon as possible. Helps  accessing you in emergency, or to coordinate care.
 
 ***
+### Locate nearby Hospitals
+#### This feature help in locating all your nearby hospitals in your current location providing information on the distances and directions for you.
+
+***
+### SOS Button
+#### Helps you to fetch the contact number of the nearby hospital for informing your emergency at the latest.
+
+***
 ### Doctor Appointments
 #### Helps in keeping track of doctor appointments through reminders. It will also inform the point of contact giving the details of the appointment.
 
