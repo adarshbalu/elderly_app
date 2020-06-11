@@ -6,6 +6,7 @@ import 'package:elderly_app/screens/medicine_reminder/medicine_reminder.dart';
 import 'package:elderly_app/screens/notes/note_home_screen.dart';
 import 'package:elderly_app/screens/pages/heart_rate_screen.dart';
 import 'package:elderly_app/screens/relatives/contact_relatives_screen.dart';
+import 'package:elderly_app/screens/trackers/tracker_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -388,18 +389,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: CardButton(
                               height: screenHeight * (20 / 100),
                               width: screenWidth * (35 / 100),
-                              icon: FontAwesomeIcons.walking,
+                              icon: FontAwesomeIcons.notesMedical,
                               size: screenWidth * 0.2,
                               color: Color(0xff3d5afe),
                               borderColor: Color(0xff3d5afe).withOpacity(0.75),
                             ),
                             onTap: () {
-                              Navigator.pushNamed(context, MedicineReminder.id);
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (_) {
+                                return TrackerHome();
+                              }));
                             },
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: 8.0),
-                            child: Text('Fitness Track'),
+                            child: Text('Health Tracker'),
                           )
                         ],
                       ),
