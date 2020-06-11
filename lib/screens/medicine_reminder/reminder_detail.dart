@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:elderly_app/others/database_helper.dart';
 import 'package:elderly_app/screens/medicine_reminder/medicine_reminder.dart';
+import 'package:elderly_app/widgets/app_default.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:flutter/cupertino.dart';
@@ -113,37 +114,7 @@ class _ReminderDetailState extends State<ReminderDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Elderly '),
-            Text(
-              'Care',
-              style: TextStyle(color: Colors.green),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        elevation: 1,
-        actions: <Widget>[
-          GestureDetector(
-            onTap: () {
-              print('Profile Button Tapped');
-              Navigator.pushNamed(context, ProfileScreen.id);
-            },
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.perm_identity,
-                size: 30,
-                color: Color(0xff5e444d),
-              ),
-            ),
-          ),
-        ],
-      ),
+      appBar: ElderlyAppBar(),
       body: WillPopScope(
         onWillPop: () {
           return showDialog(

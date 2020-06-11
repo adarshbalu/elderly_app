@@ -53,9 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           elevation: 1,
           actions: <Widget>[
             GestureDetector(
-              onTap: () {
-                print('Profile Button Tapped');
-              },
+              onTap: () {},
               child: CircleAvatar(
                 radius: 20,
                 backgroundColor: Colors.blue.shade50,
