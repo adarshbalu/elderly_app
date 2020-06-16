@@ -9,6 +9,7 @@ class HospitalData {
   getNearbyHospital() async {
     this.hospitalList = List<Hospital>();
     userLocation = UserLocation();
+
     await userLocation.getLocation().then((value) {
       this.userLocation = value;
     });
@@ -28,38 +29,25 @@ class HospitalData {
       String uri =
           'https://api.opencagedata.com/geocode/v1/json?q=$locationLat+$locationLon&key=f29cf18b10224e27b8931981380b747a';
       NetworkHelper _networkHelper = NetworkHelper(uri);
-      var _data;
-      await _networkHelper.getData().then((value) {
-        _data = value;
-      });
+      var _data = await _networkHelper.getData();
       var hosData = _data['results'][0];
       placeName = hosData['components']['road'];
       locationUrl = hosData['annotations']['OSM']['url'];
       uri =
           'https://api.tomtom.com/routing/1/calculateRoute/${userLocation.latitude},${userLocation.longitude}:$locationLat,$locationLon/json?key=G5IOmgbhnBgevPJeglEK2zGJyYv6TG1Z';
       NetworkHelper _network = NetworkHelper(uri);
-      var distanceData;
-      await _network.getData().then((value) {
-        distanceData = value;
-      });
-
+      var distanceData = await _network.getData();
       double hospitalDistance =
           distanceData['routes'][0]['summary']['lengthInMeters'] / 1000;
 
       Hospital hospital = Hospital(h['poi']['name'], h['position']['lat'],
           h['position']['lon'], locationUrl, placeName, hospitalDistance);
-      if (!this.hospitalList.contains(hospital)) {
-        try {
-          this.hospitalList.add(hospital);
-        } catch (e) {
-          print(e);
-        }
+
+      try {
+        this.hospitalList.add(hospital);
+      } catch (e) {
+        print(e);
       }
-    }
-    for (var h in this.hospitalList) {
-      if (h != this.hospitalList.last) if (h ==
-          this.hospitalList[this.hospitalList.indexOf(h) + 1])
-        this.hospitalList.remove(h);
     }
     return this;
   }
