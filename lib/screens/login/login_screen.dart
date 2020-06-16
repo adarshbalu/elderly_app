@@ -5,6 +5,8 @@ import 'package:elderly_app/screens/home/home_screen.dart';
 import 'package:elderly_app/screens/login/email_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:elderly_app/screens/loading/onBoarding_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'Login_Screen';
@@ -29,6 +31,19 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  SharedPreferences prefs;
+  bool showOnBoarding = false;
+  initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    showOnBoarding = prefs.getBool('first') ?? true;
+  }
+
+  @override
+  void initState() {
+    initPrefs();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,10 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                child: Hero(
-                  child: Image.asset('lib/resources/images/loadingimage.jpg'),
-                  tag: 'logo',
-                ),
+                child: Image.asset('lib/resources/images/loadingimage.jpg'),
               ),
               Card(
                 elevation: 3,
@@ -245,7 +257,10 @@ class _LoginScreenState extends State<LoginScreen> {
         .signInWithEmailAndPassword(
             email: emailController.text, password: passwordController.text)
         .then((value) {
-      Navigator.pushReplacementNamed(context, HomeScreen.id);
+      if (!showOnBoarding)
+        Navigator.pushReplacementNamed(context, HomeScreen.id);
+      else
+        Navigator.pushReplacementNamed(context, OnBoardingScreen.id);
     });
   }
 }

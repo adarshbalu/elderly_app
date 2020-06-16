@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class User {
   User({@required this.uid});
@@ -58,7 +59,11 @@ class Auth implements AuthBase {
         for (var document in documents) {
           if (document.documentID == authResult.user.uid) userExits = true;
         }
+        SharedPreferences prefs;
+        prefs = await SharedPreferences.getInstance();
+
         if (!userExits) {
+          prefs.setBool('first', true);
           try {
             await Firestore.instance
                 .collection('profile')

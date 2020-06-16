@@ -125,10 +125,9 @@ class NoteListState extends State<NoteList> {
           },
           child: Dismissible(
             onDismissed: (direction) {
-              setState(() {
-                noteList.remove(note);
+              setState(() async {
                 _delete(noteList[noteList.indexOf(note)]);
-                updateListView();
+                noteList.remove(note);
               });
             },
             key: Key(note.id.toString()),

@@ -10,7 +10,7 @@ import 'package:elderly_app/screens/document/view_documents_screen.dart';
 import 'package:elderly_app/screens/home/home_screen.dart';
 import 'package:elderly_app/screens/hospital/nearby_hospital_screen.dart';
 import 'package:elderly_app/screens/loading/loading_screen.dart';
-import 'package:elderly_app/screens/loading/splash_home.dart';
+import 'package:elderly_app/screens/loading/onBoarding_screen.dart';
 import 'package:elderly_app/screens/login/initial_setup_screen.dart';
 import 'package:elderly_app/screens/login/login_screen.dart';
 import 'package:elderly_app/screens/medicine_reminder/medicine_decision_screen.dart';
@@ -32,11 +32,11 @@ void main() {
   runApp(ElderlyApp());
 }
 
-
 class ElderlyApp extends StatelessWidget {
   Reminder reminder;
   @override
   Widget build(BuildContext context) {
+    precacheImage(AssetImage('lib/resources/images/loadingimage.jpg'), context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Elderly Care',
@@ -67,7 +67,7 @@ class ElderlyApp extends StatelessWidget {
         ImageLabel.id: (context) => ImageLabel(),
         AppoinmentDecision.id: (context) => AppoinmentDecision(),
         MedicineScreen.id: (context) => MedicineScreen(),
-        SplashHome.id: (context) => SplashHome(),
+        OnBoardingScreen.id: (context) => OnBoardingScreen(),
       },
       theme: ThemeData(
         fontFamily: 'OpenSans',

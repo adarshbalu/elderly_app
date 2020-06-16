@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:elderly_app/screens/loading/onBoarding_screen.dart';
 import 'package:elderly_app/screens/home/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EmailRegister extends StatefulWidget {
   @override
@@ -15,10 +16,18 @@ class _EmailRegisterState extends State<EmailRegister> {
       userNameController,
       confirmPasswordController;
   FirebaseAuth _auth = FirebaseAuth.instance;
+  SharedPreferences prefs;
+  bool showOnBoarding = false;
+  initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    showOnBoarding = prefs.getBool('first') ?? true;
+  }
+
   bool showError = false;
   final _registerFormKey = GlobalKey<FormState>();
   @override
   void initState() {
+    initPrefs();
     passwordController = TextEditingController();
     emailController = TextEditingController();
     userNameController = TextEditingController();
@@ -51,10 +60,17 @@ class _EmailRegisterState extends State<EmailRegister> {
           'age': '45',
           'gender': 'Not Set',
         });
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) {
-          return HomeScreen();
-        }));
+        prefs.setBool('first', true);
+        if (!prefs.getBool('first'))
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) {
+            return HomeScreen();
+          }));
+        else
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) {
+            return OnBoardingScreen();
+          }));
       } catch (e) {
         print(e.toString());
       }
