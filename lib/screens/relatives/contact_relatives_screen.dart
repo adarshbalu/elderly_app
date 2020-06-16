@@ -44,11 +44,12 @@ class _ContactScreenState extends State<ContactScreen> {
     print(_result);
   }
 
-  List<String> recipients = [];
+  List<String> recipients;
 
   @override
   void initState() {
     super.initState();
+    recipients = List<String>();
     getCurrentUser();
     userProfile = UserProfile(userId);
     elderLocation = ElderLocation();
@@ -72,6 +73,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     List<Widget> relativesWidget = List();
+                    recipients = [];
                     var data = snapshot.data.documents;
                     if (data != null) {
                       userProfile.getAllRelatives(data);
