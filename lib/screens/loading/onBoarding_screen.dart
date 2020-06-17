@@ -13,9 +13,23 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void initState() {
     startTime();
     initPrefs();
+    controller = PageController();
     super.initState();
   }
 
+  PageController controller;
+  int currentPageValue;
+  final List<Widget> introWidgetsList = <Widget>[
+    Container(
+      child: Text('hhh'),
+    ),
+    Container(
+      child: Text('hhh'),
+    ),
+    Container(
+      child: Text('hhh'),
+    )
+  ];
   SharedPreferences prefs;
   bool showOnBoarding = false;
   initPrefs() async {
@@ -32,29 +46,66 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              decoration: BoxDecoration(color: Colors.red),
-              width: MediaQuery.of(context).size.width,
-              child: Center(child: Text('hello')),
+          child: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: <Widget>[
+          PageView.builder(
+            physics: ClampingScrollPhysics(),
+            itemCount: introWidgetsList.length,
+            onPageChanged: (int page) {
+              getChangedPageAndMoveBar(page);
+            },
+            controller: controller,
+            itemBuilder: (context, index) {
+              return introWidgetsList[index];
+            },
+          ),
+          Stack(
+            alignment: AlignmentDirectional.topStart,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(bottom: 35),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+//                    for (int i = 0; i < introWidgetsList.length; i++)
+//                      if (i == currentPageValue) ...[circleBar(true)] else
+//                        circleBar(false),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Visibility(
+            visible:
+                currentPageValue == introWidgetsList.length - 1 ? true : false,
+            child: FloatingActionButton(
+              onPressed: () {},
+              shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(26))),
+              child: Icon(Icons.arrow_forward),
             ),
-            Container(
-              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              decoration: BoxDecoration(color: Colors.blue),
-              width: MediaQuery.of(context).size.width,
-              child: Center(
-                  child: InkWell(
-                      onTap: () async {
-                        await prefs.setBool('first', false);
-                      },
-                      child: Text('world'))),
-            )
-          ],
-        ),
-      ),
+          )
+        ],
+      )),
     );
+  }
+
+  Widget circleBar(bool isActive) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 150),
+      margin: EdgeInsets.symmetric(horizontal: 8),
+      height: isActive ? 12 : 8,
+      width: isActive ? 12 : 8,
+      decoration: BoxDecoration(
+          color: isActive ? Colors.red : Colors.green,
+          borderRadius: BorderRadius.all(Radius.circular(12))),
+    );
+  }
+
+  void getChangedPageAndMoveBar(int page) {
+    currentPageValue = page;
+    setState(() {});
   }
 }

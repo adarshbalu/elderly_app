@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:elderly_app/widgets/home_screen_widgets.dart';
 import 'package:elderly_app/widgets/app_default.dart';
-
+import 'package:elderly_app/screens/loading/onBoarding_screen.dart';
 import 'package:elderly_app/others/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
@@ -443,6 +443,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           )),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => OnBoardingScreen()));
+        },
+      ),
     );
   }
 
