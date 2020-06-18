@@ -1,7 +1,7 @@
 import 'package:elderly_app/models/reminder.dart';
 import 'package:elderly_app/others/database_helper.dart';
 import 'package:elderly_app/screens/home/home_screen.dart';
-import 'package:elderly_app/screens/profile/profile_screen.dart';
+
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +47,9 @@ class _MedicineReminderState extends State<MedicineReminder> {
         widget = Text(
           weekDays[i].toUpperCase(),
           style: TextStyle(
-              fontSize: 21, fontWeight: FontWeight.bold, color: Colors.black87),
+              fontSize: 21,
+              fontWeight: FontWeight.bold,
+              color: Colors.blueAccent),
         );
       } else {
         widget = Text(
@@ -72,14 +74,13 @@ class _MedicineReminderState extends State<MedicineReminder> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = getDeviceWidth(context);
     double screenHeight = getDeviceHeight(context);
     if (reminderList == null) {
       reminderList = List<Reminder>();
       updateListView();
     }
     updateListView();
-    double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       drawer: AppDrawer(),
       appBar: ElderlyAppBar(),
@@ -145,36 +146,19 @@ class _MedicineReminderState extends State<MedicineReminder> {
     );
   }
 
-//
   Widget getReminderListView() {
     double width = getDeviceWidth(context);
-    bool first = true;
     return Column(
       children: <Widget>[
         Container(
-            decoration: BoxDecoration(color: Color(0xff0C9731)),
-            child: Column(children: <Widget>[
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Medicine Reminder',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 29),
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 0),
-                padding: EdgeInsets.only(top: 15, bottom: 6),
-                decoration: BoxDecoration(color: Colors.white),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: getWeekDayWidgets(),
-                ),
-              ),
-            ])),
+          margin: EdgeInsets.only(top: 8, bottom: 8),
+          padding: EdgeInsets.only(top: 15, bottom: 6),
+          decoration: BoxDecoration(color: Colors.white),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: getWeekDayWidgets(),
+          ),
+        ),
         SizedBox(
           height: 0,
         ),
@@ -184,7 +168,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
               Container(
                 margin:
                     EdgeInsets.only(top: 35, left: 10, right: 10, bottom: 0),
-                padding: EdgeInsets.only(top: 7, bottom: 15),
+                padding: EdgeInsets.only(top: 12, bottom: 15),
                 decoration: BoxDecoration(
                     color: Colors.blue[100],
                     borderRadius: BorderRadius.only(
@@ -201,76 +185,70 @@ class _MedicineReminderState extends State<MedicineReminder> {
                     padding: EdgeInsets.all(8),
                     itemCount: count,
                     itemBuilder: (BuildContext context, int position) {
-                      return Container(
-                        margin: EdgeInsets.fromLTRB(38.0, 26, 38, 0),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30)),
+                      return Dismissible(
+                        onDismissed: (direction) {
+                          setState(() {
+                            _delete(context, this.reminderList[position]);
+                            _showSnackBar(context, 'Reminder Deleted');
+                          });
+                        },
+                        key: Key(this.reminderList[position].id.toString()),
                         child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30)),
-                            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                            child: InkWell(
-                              onTap: () {
-                                navigateToDetail(this.reminderList[position],
-                                    'Edit Reminder');
-                              },
-                              onLongPress: () {
-                                _delete(context, this.reminderList[position]);
-                                _showSnackBar(context, 'Reminder Deleted');
-                              },
-                              child: Column(children: <Widget>[
-                                Center(
-                                  child: Text(
-                                    this
-                                            .reminderList[position]
-                                            .name
-                                            .toUpperCase() ??
-                                        ' ',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 1.5),
-                                  ),
-                                ),
-                                Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: 8.0),
+                          margin: EdgeInsets.fromLTRB(38.0, 26, 38, 0),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30)),
+                              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                              child: InkWell(
+                                onTap: () {
+                                  navigateToDetail(this.reminderList[position],
+                                      'Edit Reminder');
+                                },
+                                child: Column(children: <Widget>[
+                                  Center(
                                     child: Text(
                                       this
-                                                  .reminderList[position]
-                                                  .times
-                                                  .toString() +
-                                              ' times' ??
-                                          '',
-                                      style: TextStyle(color: Colors.blue),
+                                              .reminderList[position]
+                                              .name
+                                              .toUpperCase() ??
+                                          ' ',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1.5),
                                     ),
                                   ),
-                                ),
-                              ]),
-                            )),
+                                  Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        this
+                                                    .reminderList[position]
+                                                    .times
+                                                    .toString() +
+                                                ' times' ??
+                                            '',
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                    ),
+                                  ),
+                                ]),
+                              )),
+                        ),
                       );
                     },
                   ),
                 ),
               ),
               Positioned(
-                top: 0,
-                right: width / 3,
-                left: width / 3,
-                child: CircleAvatar(
-                  radius: 35.8,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.filter_none,
-                  ),
-                ),
-              ),
-              Positioned(
                 right: width / 3,
                 left: width / 3,
                 top: 0,
-                child: GestureDetector(
+                child: InkWell(
+                  splashColor: Colors.transparent,
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
@@ -278,14 +256,18 @@ class _MedicineReminderState extends State<MedicineReminder> {
                       //return ReminderDetail();
                     }));
                   },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.green,
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 50,
+                  child: Material(
+                    shape: CircleBorder(),
+                    elevation: 5,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.green,
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                      radius: 35,
                     ),
-                    radius: 35,
                   ),
                 ),
               ),
