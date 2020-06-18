@@ -37,6 +37,20 @@ class _ViewDocumentsState extends State<ViewDocuments> {
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                if (snapshot.data.data == null)
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('No Documents added'),
+                      ),
+                      Text('Add now.'),
+                    ],
+                  );
                 ImageModel images = ImageModel();
                 List<Widget> imageWidgets = List<Widget>();
                 List<ImageClass> imageList = List<ImageClass>();
@@ -114,7 +128,14 @@ class _ViewDocumentsState extends State<ViewDocuments> {
                 );
               } else {
                 return Column(
-                  children: <Widget>[Text('Service not available')],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Please wait.'),
+                    ),
+                    CircularProgressIndicator()
+                  ],
                 );
               }
             })
