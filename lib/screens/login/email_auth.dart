@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elderly_app/screens/loading/onBoarding_screen.dart';
-import 'package:elderly_app/screens/home/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,16 +60,10 @@ class _EmailRegisterState extends State<EmailRegister> {
           'gender': 'Not Set',
         });
         prefs.setBool('first', true);
-        if (!prefs.getBool('first'))
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) {
-            return HomeScreen();
-          }));
-        else
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) {
-            return OnBoardingScreen();
-          }));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return OnBoardingScreen();
+        }));
       } catch (e) {
         print(e.toString());
       }
@@ -82,13 +75,11 @@ class _EmailRegisterState extends State<EmailRegister> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: SafeArea(
-        child: Column(
+        child: ListView(
           children: <Widget>[
-            Expanded(
-              child: Hero(
-                child: Image.asset('lib/resources/images/loadingimage.jpg'),
-                tag: 'logo',
-              ),
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              child: Image.asset('lib/resources/images/loadingimage.jpg'),
             ),
             Form(
               key: _registerFormKey,

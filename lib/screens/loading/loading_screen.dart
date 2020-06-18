@@ -3,11 +3,10 @@ import 'package:elderly_app/screens/home/home_screen.dart';
 import 'package:elderly_app/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:elderly_app/screens/loading/onBoarding_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
   static const String id = 'Loading_Screen';
+
   LoadingScreen({@required this.auth});
   final AuthBase auth;
 
@@ -17,24 +16,11 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
   Image myImage;
-  SharedPreferences prefs;
-  bool showOnBoarding = false;
-  initPrefs() async {
-    prefs = await SharedPreferences.getInstance();
-    showOnBoarding = prefs.getBool('first') ?? true;
-  }
 
   @override
   void initState() {
-    initPrefs();
     super.initState();
     myImage = Image.asset('lib/resources/images/loadingimage.jpg');
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    precacheImage(myImage.image, context);
   }
 
   @override
@@ -49,9 +35,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 auth: widget.auth,
               );
             }
-            if (showOnBoarding) {
-              return OnBoardingScreen();
-            }
+
             return HomeScreen();
           } else {
             return Scaffold(
