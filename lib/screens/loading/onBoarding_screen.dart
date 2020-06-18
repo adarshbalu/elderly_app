@@ -33,27 +33,27 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       ImageCard(
         image: 'assets/images/medicines.png',
         title: 'Medicine Reminder',
-        caption: 'Reminds to take medicines on time',
+        caption: 'Take your medicines on time',
       ),
       ImageCard(
         image: 'assets/images/tracker.png',
         title: 'Health Tracker',
-        caption: 'Track health vitals and get suggestions',
+        caption: 'Track your important health vitals',
       ),
       ImageCard(
         image: 'assets/images/hospital.png',
         title: 'Locate Nearby Hospitals',
-        caption: 'Easily locate nearby Hospitals',
+        caption: 'Locates all nearby hospitals in 2 km radius',
       ),
       ImageCard(
         image: 'assets/images/appoinment.png',
         title: 'Appoinment Reminder',
-        caption: 'So that you don\'t miss out on important appointments',
+        caption: 'Helps keeping track of your doctor appointments',
       ),
       ImageCard(
         image: 'assets/images/urgent.png',
         title: 'Urgent Support',
-        caption: 'Easily contact relatives during emergencies',
+        caption: 'Easily share your location in case of emergency',
       ),
     ];
     return Scaffold(
