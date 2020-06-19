@@ -4,7 +4,6 @@ import 'package:elderly_app/screens/medicine_reminder/medicine_reminder.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import '../profile/profile_screen.dart';
