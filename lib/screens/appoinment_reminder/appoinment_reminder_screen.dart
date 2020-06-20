@@ -2,10 +2,10 @@ import 'package:elderly_app/models/appoinment.dart';
 import 'package:elderly_app/others/database_helper.dart';
 import 'package:elderly_app/screens/appoinment_reminder/appoinment_detail_screen.dart';
 import 'package:elderly_app/screens/home/home_screen.dart';
-import 'package:elderly_app/screens/profile/profile_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
 class AppoinmentReminder extends StatefulWidget {
@@ -47,6 +47,7 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
     month = months[monthDay];
   }
 
+  final f = DateFormat('yyyy-MM-dd hh:mm');
   @override
   void initState() {
     todayAppoinment = [];
@@ -176,6 +177,7 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
       tempAppoinment = pastAppoinment[i];
       pos = appoinmentList.indexOf(tempAppoinment);
       dateTime = DateTime.parse(tempAppoinment.dateAndTime);
+
       date = dateTime.day.toString() +
           '/' +
           dateTime.month.toString() +
@@ -257,9 +259,9 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
     DateTime tempDateTime;
     String date, time;
     List<Widget> todayAppoinmentWidgetList = [];
-
     for (int i = 0; i < todayAppoinmentTotal; i++) {
       tempAppoinment = todayAppoinment[i];
+
       pos = appoinmentList.indexOf(tempAppoinment);
       dateTime = DateTime.parse(tempAppoinment.dateAndTime);
       date = dateTime.day.toString() +
@@ -283,12 +285,35 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
               _showSnackBar(context, 'Appoinment Deleted');
               _delete(context, tempAppoinment);
             },
-            child: TodayAppoinment(
-              name: tempAppoinment.name,
-              kTextStyle: kTextStyle,
-              time: time,
-              type: tempAppoinment.address,
-              place: tempAppoinment.place,
+            child: Card(
+              margin: EdgeInsets.all(8),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.green,
+                    radius: 38,
+                    child: Icon(
+                      FontAwesomeIcons.userMd,
+                      size: 40,
+                      color: Colors.white,
+                    ),
+                  ),
+                  title: Text(
+                    tempAppoinment.name,
+                    style: kTextStyle.copyWith(
+                        letterSpacing: 1,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
+                  trailing: Text(time),
+                  subtitle: Text(
+                      tempAppoinment.place + ' at ' + tempAppoinment.address),
+                ),
+              ),
             )),
       ));
     }
@@ -336,7 +361,7 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
             todayAppoinment.length == 0
                 ? Center(
                     child: Text(
-                      'No appoinments today',
+                      'No Appointments today',
                     ),
                   )
                 : Column(
@@ -356,12 +381,12 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
                 ? Column(
                     children: getUpcomingAppoinmentWidget(context),
                   )
-                : Center(child: Text('No Upcoming Appoinments')),
+                : Center(child: Text('No Upcoming Appointments')),
             SizedBox(
               height: 15,
             ),
             HeadingText(
-              title: 'Past Appoinments',
+              title: 'Past Appointments',
               color: Colors.deepOrangeAccent,
             ),
             SizedBox(
@@ -374,7 +399,7 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
                 : Container(
                     margin: EdgeInsets.only(bottom: 35),
                     child: Center(
-                      child: Text('No past appoinments'),
+                      child: Text('No past Appointments'),
                     ),
                   ),
             SizedBox(
@@ -450,8 +475,8 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
 }
 
 class HeadingText extends StatelessWidget {
-  String title;
-  var color;
+  final String title;
+  final color;
   HeadingText({this.color, this.title});
 
   @override
@@ -468,7 +493,7 @@ class HeadingText extends StatelessWidget {
 }
 
 class OtherAppoinment extends StatelessWidget {
-  String time, date, type, name;
+  final String time, date, type, name;
   OtherAppoinment({this.name, this.date, this.type, this.time});
 
   @override
@@ -552,7 +577,7 @@ class TodayAppoinment extends StatelessWidget {
   });
 
   final TextStyle kTextStyle;
-  String time, place, name, type;
+  final String time, place, name, type;
 
   @override
   Widget build(BuildContext context) {
@@ -594,32 +619,10 @@ class TodayAppoinment extends StatelessWidget {
           ),
           Expanded(
             flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Text(
-                  place,
-                  style: kTextStyle,
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Text(
-                  'Dr.' + name,
-                  style: kTextStyle.copyWith(
-                      letterSpacing: 1,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 19),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Text(
-                  type,
-                  style: kTextStyle,
-                ),
-              ],
+            child: Text(
+              'Dr.' + name,
+              style: kTextStyle.copyWith(
+                  letterSpacing: 1, fontWeight: FontWeight.bold, fontSize: 19),
             ),
           )
         ],

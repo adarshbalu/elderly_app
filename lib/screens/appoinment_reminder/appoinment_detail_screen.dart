@@ -37,6 +37,7 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
   TextEditingController placeController = TextEditingController();
   TextEditingController addressController = TextEditingController(text: '');
   final dateFormat = DateFormat("EEEE, MMMM d, yyyy 'at' h:mma");
+  final f = DateFormat('yyyy-MM-dd hh:mm');
 
   @override
   void dispose() {
@@ -52,6 +53,8 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
     place = placeController.text = appoinment.place;
     address = addressController.text = appoinment.address;
     date = DateTime.parse(appoinment.dateAndTime);
+    tempDate = DateTime(date.year, date.month, date.day);
+    timeSelected = TimeOfDay(hour: date.hour, minute: date.minute);
     super.initState();
   }
 
@@ -185,7 +188,6 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
                           ),
                           onTap: () async {
                             await _selectDate();
-                            print(tempDate.toString());
                           },
                         ),
                       ],
@@ -214,7 +216,6 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
                               selectedTime: timeSelected,
                               onChanged: (value) => setState(() {
                                 timeSelected = value;
-                                print(timeSelected.toString());
                               }),
                             );
                           },
@@ -274,7 +275,7 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
 
   // Save data to database
   void _save() async {
-    appoinment.dateAndTime = date.toString();
+    appoinment.dateAndTime = f.format(date);
     appoinment.name = doctorName;
     appoinment.address = address;
     appoinment.place = place;
