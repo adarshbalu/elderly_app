@@ -25,6 +25,7 @@ import 'package:elderly_app/screens/relatives/contact_relatives_screen.dart';
 import 'package:elderly_app/screens/relatives/edit_relatives.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   setupLocator();
@@ -70,19 +71,11 @@ class ElderlyApp extends StatelessWidget {
         OnBoardingScreen.id: (context) => OnBoardingScreen(),
       },
       theme: ThemeData(
-        fontFamily: 'OpenSans',
-        scaffoldBackgroundColor: Colors.white,
-        primaryColor: Colors.white,
-        textTheme: TextTheme(
-            headline4: TextStyle(
-              color: Colors.black,
-              fontSize: 20.0,
-            ),
-            headline1: TextStyle(
-              color: Colors.red,
-              fontSize: 25,
-            )),
-      ),
+          fontFamily: GoogleFonts.lato().fontFamily,
+          scaffoldBackgroundColor: Colors.white,
+          primaryColor: Colors.white,
+          textTheme:
+              TextTheme().apply(fontFamily: GoogleFonts.lato().fontFamily)),
     );
   }
 }
