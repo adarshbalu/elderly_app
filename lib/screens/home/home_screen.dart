@@ -108,8 +108,10 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: RaisedButton(
         child: Icon(Icons.add),
         onPressed: () async {
-          await notificationService.showNotification(
-              id: 2, title: 'Medicine Reminder', body: 'Take meds');
+//          await notificationService.showNotification(
+//              id: 2, title: 'Medicine Reminder', body: 'Take meds');
+//          notificationService.deleteNotification(2);
+          notificationService.scheduleNotification();
         },
       ),
       drawer: AppDrawer(),

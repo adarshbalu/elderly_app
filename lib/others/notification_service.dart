@@ -34,6 +34,24 @@ class NotificationService {
         .show(id, title, body, platformChannelSpecifics, payload: 'item x');
   }
 
+  scheduleNotification() async {
+    var scheduledNotificationDateTime =
+        DateTime.now().add(Duration(seconds: 5));
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'your other channel id',
+        'your other channel name',
+        'your other channel description');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    NotificationDetails platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(
+        0,
+        'scheduled title',
+        'scheduled body',
+        scheduledNotificationDateTime,
+        platformChannelSpecifics);
+  }
+
   Future onNotificationSelect(String payload) async {
     debugPrint("PAYLOAD : " + payload);
 
