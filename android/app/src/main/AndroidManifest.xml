@@ -18,7 +18,7 @@
 
     <application
         android:name=".Application"
-        android:label="elderly_app"
+        android:label="ElderlyCare"
         android:icon="@mipmap/ic_launcher">
 
         <activity
@@ -81,9 +81,11 @@
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
-            </intent-filter>
-        </receiver>
 
+            </intent-filter>
+
+
+        </receiver>
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
 
 

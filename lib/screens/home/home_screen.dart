@@ -1,3 +1,4 @@
+import 'package:elderly_app/others/notification_service.dart';
 import 'package:elderly_app/screens/appoinment_reminder/appoinment_reminder_screen.dart';
 import 'package:elderly_app/screens/document/view_documents_screen.dart';
 import 'package:elderly_app/screens/hospital/nearby_hospital_screen.dart';
@@ -28,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  NotificationService notificationService;
   var sensor;
   bool initialSetupComplete = true;
   bool heartRateSensor = false;
@@ -54,6 +56,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final _auth = FirebaseAuth.instance;
   FirebaseUser loggedInUser;
+
+  checkNotificationPermission() async {
+    permission = await PermissionManager.PermissionHandler()
+        .checkPermissionStatus(PermissionManager.PermissionGroup.notification);
+    await PermissionManager.PermissionHandler()
+        .checkServiceStatus(PermissionManager.PermissionGroup.notification);
+  }
 
   Future checkLocationPermission() async {
     permission = await PermissionManager.PermissionHandler()
@@ -83,6 +92,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     getCurrentUser();
+    notificationService = NotificationService();
+    notificationService.initialize();
   }
 
   bool permissionGranted = false;
@@ -94,6 +105,13 @@ class _HomeScreenState extends State<HomeScreen> {
     double screenHeight = getDeviceHeight(context);
 
     return Scaffold(
+      bottomNavigationBar: RaisedButton(
+        child: Icon(Icons.add),
+        onPressed: () async {
+          await notificationService.showNotification(
+              id: 2, title: 'Medicine Reminder', body: 'Take meds');
+        },
+      ),
       drawer: AppDrawer(),
       appBar: ElderlyAppBar(),
       body: WillPopScope(
