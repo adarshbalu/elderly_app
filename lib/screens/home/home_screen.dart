@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //          await notificationService.showNotification(
 //              id: 2, title: 'Medicine Reminder', body: 'Take meds');
 //          notificationService.deleteNotification(2);
-          notificationService.scheduleNotification();
+          await notificationService.scheduleNotification();
         },
       ),
       drawer: AppDrawer(),

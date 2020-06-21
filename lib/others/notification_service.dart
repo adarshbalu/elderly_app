@@ -45,11 +45,65 @@ class NotificationService {
     NotificationDetails platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.schedule(
-        0,
+        6,
         'scheduled title',
         'scheduled body',
         scheduledNotificationDateTime,
         platformChannelSpecifics);
+  }
+
+  periodicNotification() async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'repeating channel id',
+        'repeating channel name',
+        'repeating description');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.periodicallyShow(0, 'repeating title',
+        'repeating body', RepeatInterval.EveryMinute, platformChannelSpecifics);
+  }
+
+  dailyNotification() async {
+    var time = Time(10, 0, 0);
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'repeatDailyAtTime channel id',
+        'repeatDailyAtTime channel name',
+        'repeatDailyAtTime description');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.showDailyAtTime(
+        0,
+        'show daily title',
+        'Daily notification shown at approximately ',
+        time,
+        platformChannelSpecifics);
+  }
+
+  weeklyNotification() async {
+    var time = Time(10, 0, 0);
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'show weekly channel id',
+        'show weekly channel name',
+        'show weekly description');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+        0,
+        'show weekly title',
+        'Weekly notification shown on Monday at approximately',
+        Day.Monday,
+        time,
+        platformChannelSpecifics);
+  }
+
+  notificationDetails() async {
+    var notificationAppLaunchDetails =
+        await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    print(notificationAppLaunchDetails.didNotificationLaunchApp);
+    print(notificationAppLaunchDetails.payload);
   }
 
   Future onNotificationSelect(String payload) async {
