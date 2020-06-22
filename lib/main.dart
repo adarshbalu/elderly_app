@@ -71,12 +71,15 @@ class ElderlyApp extends StatelessWidget {
         InitialSetupScreen.id: (context) => InitialSetupScreen(),
         EditRelativesScreen.id: (context) => EditRelativesScreen(''),
         AppoinmentReminder.id: (context) => AppoinmentReminder(),
-        AppoinmentDetail.id: (context) =>
-            AppoinmentDetail(Appoinment('', '', '', ''), ''),
+        AppoinmentDetail.id: (context) => AppoinmentDetail(
+              Appoinment('', '', '', '', 999999, false),
+              '',
+            ),
         ViewDocuments.id: (context) => ViewDocuments(),
         AddDocuments.id: (context) => AddDocuments(),
         ImageLabel.id: (context) => ImageLabel(),
-        AppoinmentDecision.id: (context) => AppoinmentDecision(),
+        AppoinmentDecision.id: (context) =>
+            AppoinmentDecision(Appoinment('', '', '', '', 999999, false)),
         MedicineScreen.id: (context) => MedicineScreen(),
         OnBoardingScreen.id: (context) => OnBoardingScreen(),
       },

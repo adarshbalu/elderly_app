@@ -41,9 +41,7 @@ class NotificationService {
       @required DateTime dateTime}) async {
     var scheduledNotificationDateTime = dateTime;
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'your other channel id',
-        'your other channel name',
-        'your other channel description');
+        'Elderly Care', 'Elderly Care', 'Elderly Care Notification');
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     NotificationDetails platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);

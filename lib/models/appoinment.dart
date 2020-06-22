@@ -4,16 +4,14 @@ class Appoinment {
   String _place;
   String _address;
   String _dateAndTime;
+  int _notificationID;
+  bool _done;
 
-  Appoinment(
-    this._name,
-    this._place,
-    this._dateAndTime,
-    this._address,
-  );
+  Appoinment(this._name, this._place, this._dateAndTime, this._address,
+      this._notificationID, this._done);
 
-  Appoinment.withId(
-      this._id, this._name, this._place, this._dateAndTime, this._address);
+  Appoinment.withId(this._id, this._name, this._place, this._dateAndTime,
+      this._address, this._notificationID, this._done);
 
   int get id => _id;
   String get address => _address;
@@ -23,6 +21,10 @@ class Appoinment {
   String get place => _place;
 
   String get dateAndTime => _dateAndTime;
+
+  bool get done => _done;
+
+  int get notificationId => _notificationID;
 
   set name(String newName) {
     if (newName.length <= 255) {
@@ -44,6 +46,14 @@ class Appoinment {
     this._address = newAddress;
   }
 
+  set notificationId(int nId) {
+    this._notificationID = nId;
+  }
+
+  set done(bool value) {
+    this._done = value;
+  }
+
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
     if (_id != null) {
@@ -53,7 +63,8 @@ class Appoinment {
     map['place'] = _place;
     map['address'] = _address;
     map['date_time'] = _dateAndTime;
-
+    map['notification_id'] = _notificationID;
+    map['done'] = done == true ? 1 : 0;
     return map;
   }
 
@@ -63,5 +74,7 @@ class Appoinment {
     this._address = map['address'];
     this._place = map['place'];
     this._name = map['name'];
+    this._notificationID = map['notification_id'];
+    this._done = map['done'] == 1;
   }
 }

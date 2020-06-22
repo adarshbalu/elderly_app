@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:elderly_app/models/appoinment.dart';
 import 'package:elderly_app/others/database_helper.dart';
+import 'package:elderly_app/others/notification_service.dart';
 import 'package:elderly_app/screens/appoinment_reminder/appoinment_reminder_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,13 +29,13 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
   DatabaseHelper helper = DatabaseHelper();
   Appoinment appoinment;
   String pageTitle;
-
+  var rng = Random();
   _AppoinmentDetailState(this.appoinment, this.pageTitle);
-
+  int notificationID;
   String doctorName = '', place = '', address = '';
-  DateTime date, tempDate = DateTime(0000, 00, 00, 00, 00);
+  DateTime date, dateCheck, tempDate = DateTime(0000, 00, 00, 00, 00);
   TimeOfDay timeSelected = TimeOfDay(minute: 0, hour: 0);
-
+  NotificationService notificationService;
   TextEditingController nameController = TextEditingController();
   TextEditingController placeController = TextEditingController();
   TextEditingController addressController = TextEditingController(text: '');
@@ -52,9 +55,12 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
     doctorName = nameController.text = appoinment.name;
     place = placeController.text = appoinment.place;
     address = addressController.text = appoinment.address;
-    date = DateTime.parse(appoinment.dateAndTime);
+    date = dateCheck = DateTime.parse(appoinment.dateAndTime);
     tempDate = DateTime(date.year, date.month, date.day);
     timeSelected = TimeOfDay(hour: date.hour, minute: date.minute);
+    notificationID = appoinment.notificationId;
+    notificationService = NotificationService();
+    notificationService.initialize();
     super.initState();
   }
 
@@ -75,7 +81,8 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
       body: WillPopScope(
         onWillPop: () async {
           if (appoinment !=
-              Appoinment(doctorName, place, date.toString(), address)) {
+              Appoinment(doctorName, place, date.toString(), address,
+                  notificationID, false)) {
             return showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -279,15 +286,31 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
     appoinment.name = doctorName;
     appoinment.address = address;
     appoinment.place = place;
+
     int result;
     if (appoinment.id != null) {
       // Case 1: Update operation
       result = await helper.updateAppoinment(appoinment);
     } else {
       // Case 2: Insert Operation
+      appoinment.notificationId = rng.nextInt(9999);
       result = await helper.insertAppoinment(appoinment);
+      if (date.isAfter(DateTime.now()))
+        notificationService.scheduleNotification(
+            id: appoinment.notificationId,
+            title: appoinment.name,
+            body: appoinment.place,
+            dateTime: date);
     }
-
+    if (date != dateCheck) {
+      notificationService.deleteNotification(appoinment.notificationId);
+      if (date.isAfter(DateTime.now()))
+        notificationService.scheduleNotification(
+            id: appoinment.notificationId,
+            title: appoinment.name,
+            body: appoinment.place,
+            dateTime: date);
+    }
     if (result != 0) {
       // Success
 

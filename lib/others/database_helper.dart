@@ -33,6 +33,8 @@ class DatabaseHelper {
   String appoinmentColPlace = 'place';
   String appoinmentColAddress = 'address';
   String appoinmentColDateTime = 'date_time';
+  String appoinmentColNotificationID = 'notification_id';
+  String appoinmentColDone = 'done';
 
   DatabaseHelper._createInstance(); // Named constructor to create instance of DatabaseHelper
 
@@ -67,7 +69,8 @@ class DatabaseHelper {
         '$remColType TEXT, $remColTimes INTEGER, $remColTime1 TEXT,$remColTime2 TEXT,$remColTime3 TEXT)');
 
     await db.execute(
-        'CREATE TABLE $appoinmentTable($appoinmentColId INTEGER PRIMARY KEY AUTOINCREMENT, $appoinmentColName TEXT, '
+        'CREATE TABLE $appoinmentTable($appoinmentColId INTEGER PRIMARY KEY AUTOINCREMENT, $appoinmentColDone INTEGER NOT NULL,'
+        '$appoinmentColNotificationID INTEGER ,$appoinmentColName TEXT, '
         '$appoinmentColPlace TEXT, $appoinmentColAddress TEXT, $appoinmentColDateTime TEXT)');
 
     await db.execute(

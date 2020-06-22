@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:elderly_app/models/appoinment.dart';
 import 'package:elderly_app/others/database_helper.dart';
+import 'package:elderly_app/screens/appoinment_reminder/appoinment_decision_screen.dart';
 import 'package:elderly_app/screens/appoinment_reminder/appoinment_detail_screen.dart';
 import 'package:elderly_app/screens/home/home_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
@@ -7,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:elderly_app/others/notification_service.dart';
 
 class AppoinmentReminder extends StatefulWidget {
   static const String id = 'Appoinment_Reminder_Screen';
@@ -16,12 +18,12 @@ class AppoinmentReminder extends StatefulWidget {
 }
 
 class _AppoinmentReminderState extends State<AppoinmentReminder> {
+  var rng = Random();
   var kTextStyle =
       TextStyle(color: Colors.brown, fontSize: 15, fontWeight: FontWeight.w700);
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Appoinment> appoinmentList;
-  Appoinment appoinment =
-      Appoinment('', '', DateTime(0000, 00, 00, 00, 00, 00).toString(), '');
+  Appoinment appoinment;
   int count = 0;
   int tempDay, tempMonth, tempYear, tempHour, tempMinute;
 
@@ -49,19 +51,24 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   }
 
   DateTime today = DateTime.now();
-  NotificationService notificationService;
+
   final f = DateFormat('yyyy-MM-dd hh:mm');
   @override
   void initState() {
     todayAppoinment = [];
     upcomingAppoinment = [];
     pastAppoinment = [];
+    appoinment = Appoinment(
+        '',
+        '',
+        DateTime(0000, 00, 00, 00, 00, 00).toString(),
+        '',
+        rng.nextInt(99999),
+        false);
     getMonth();
     getTextWidgets();
 
     super.initState();
-    notificationService = NotificationService();
-    notificationService.initialize();
   }
 
   List<Widget> textWidgets = [];
@@ -123,13 +130,8 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
         if (today.day == date.day &&
             today.month == date.month &&
             today.year == date.year &&
-            !date.isBefore(today)) {
+            !tempAppoinment.done) {
           todayAppoinment.add(tempAppoinment);
-          notificationService.scheduleNotification(
-              id: tempAppoinment.id,
-              title: tempAppoinment.name,
-              body: tempAppoinment.place,
-              dateTime: date);
         }
       }
     });
@@ -145,11 +147,6 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
         if (!todayAppoinment.contains(tempAppoinment)) {
           if (today.isBefore(date)) {
             upcomingAppoinment.add(tempAppoinment);
-            notificationService.scheduleNotification(
-                id: tempAppoinment.id,
-                title: tempAppoinment.name,
-                body: tempAppoinment.place,
-                dateTime: date);
           }
         }
       }
@@ -165,13 +162,15 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
 
         if (date.isBefore(today) && !todayAppoinment.contains(tempAppoinment)) {
           pastAppoinment.add(tempAppoinment);
-          notificationService.deleteNotification(tempAppoinment.id);
         }
       }
     });
   }
 
   List<Widget> getPastAppoinmentWidget(BuildContext context) {
+    pastAppoinment.sort((a, b) {
+      return b.dateAndTime.compareTo(a.dateAndTime);
+    });
     List<Widget> pastAppoinmentWidgetList = [];
 
     for (Appoinment tempAppoinment in pastAppoinment) {
@@ -249,7 +248,10 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   }
 
   List<Widget> getTodayAppoinmentWidget(BuildContext context) {
+//    todayAppoinment.sort((a, b) => a.dateAndTime.compareTo(b.dateAndTime));
+
     List<Widget> todayAppoinmentWidgetList = [];
+    Color color = Colors.green;
     for (Appoinment tempAppoinment in todayAppoinment) {
       dateTime = DateTime.parse(tempAppoinment.dateAndTime);
 
@@ -261,46 +263,52 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
         time = dateTime.hour.toString() + ':0' + dateTime.minute.toString();
       else
         time = dateTime.hour.toString() + ':' + dateTime.minute.toString();
-      todayAppoinmentWidgetList.add(Builder(
-        builder: (context) => InkWell(
-            onTap: () {
-              navigateToDetail(tempAppoinment, 'Edit');
-            },
-            onLongPress: () async {
-              _showSnackBar(context, 'Appoinment Deleted');
-              _delete(context, tempAppoinment);
-            },
-            child: Card(
-              margin: EdgeInsets.all(8),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.green,
-                    radius: 38,
-                    child: Icon(
-                      FontAwesomeIcons.userMd,
-                      size: 40,
-                      color: Colors.white,
-                    ),
-                  ),
-                  title: Text(
-                    tempAppoinment.name,
-                    style: kTextStyle.copyWith(
-                        letterSpacing: 1,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                  ),
-                  trailing: Text(time),
-                  subtitle: Text(
-                      tempAppoinment.place + ' at ' + tempAppoinment.address),
+      todayAppoinmentWidgetList.add(
+        Card(
+          margin: EdgeInsets.all(8),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              onTap: () {
+                print('tap');
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return AppoinmentDecision(tempAppoinment);
+                }));
+              },
+              onLongPress: () async {
+                _showSnackBar(context, 'Appoinment Done');
+                setState(() {
+                  tempAppoinment.done = true;
+                  color = Colors.yellow;
+                });
+                await databaseHelper.updateAppoinment(tempAppoinment);
+              },
+              leading: CircleAvatar(
+                backgroundColor: color,
+                radius: 38,
+                child: Icon(
+                  FontAwesomeIcons.userMd,
+                  size: 40,
+                  color: Colors.white,
                 ),
               ),
-            )),
-      ));
+              title: Text(
+                tempAppoinment.name,
+                style: kTextStyle.copyWith(
+                    letterSpacing: 1,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+              trailing: Text(time),
+              subtitle:
+                  Text(tempAppoinment.address + ' at ' + tempAppoinment.place),
+            ),
+          ),
+        ),
+      );
     }
 
     return todayAppoinmentWidgetList;
