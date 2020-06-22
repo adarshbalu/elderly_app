@@ -34,6 +34,23 @@ class NotificationService {
         .show(id, title, body, platformChannelSpecifics, payload: 'item x');
   }
 
+  scheduleAppoinmentNotification(
+      {@required int id,
+      @required String title,
+      @required String body,
+      @required DateTime dateTime}) async {
+    var scheduledNotificationDateTime = dateTime;
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'Elderly Care Appoinment',
+        'Elderly Care Appoinment Reminder',
+        'Elderly Care Appoinment Reminder Notification');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    NotificationDetails platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(id, title, body,
+        scheduledNotificationDateTime, platformChannelSpecifics);
+  }
+
   scheduleNotification(
       {@required int id,
       @required String title,
@@ -80,6 +97,22 @@ class NotificationService {
         'Daily notification shown at approximately ',
         time,
         platformChannelSpecifics);
+  }
+
+  dailyMedicineNotification(
+      {@required int id,
+      @required String title,
+      @required String body,
+      @required Time time}) async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'Elderly Care Med',
+        'Elderly Care Medicine Reminder',
+        'Elderly Care Medicine Reminder Notification');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.showDailyAtTime(
+        id, title, body, time, platformChannelSpecifics);
   }
 
   weeklyNotification() async {

@@ -1,6 +1,7 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:elderly_app/others/database_helper.dart';
-import 'package:elderly_app/screens/medicine_reminder/medicine_reminder.dart';
+import 'package:elderly_app/others/notification_service.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,12 +31,11 @@ class _ReminderDetailState extends State<ReminderDetail> {
   DatabaseHelper helper = DatabaseHelper();
   Reminder reminder;
   String pageTitle;
-
+  var rng = Random();
+  NotificationService notificationService;
   _ReminderDetailState(this.reminder, this.pageTitle);
 
-  TimeOfDay selectedTime1 = TimeOfDay(hour: 0, minute: 0);
-  TimeOfDay selectedTime2 = TimeOfDay(hour: 0, minute: 0);
-  TimeOfDay selectedTime3 = TimeOfDay(hour: 0, minute: 0);
+  TimeOfDay selectedTime1, selectedTime2, selectedTime3;
   TimeOfDay timeNow = TimeOfDay.now();
 
   int times = 2;
@@ -63,19 +63,35 @@ class _ReminderDetailState extends State<ReminderDetail> {
     super.dispose();
   }
 
+  String tempTime1, tempTime2, tempTime3;
+  List<String> timeStringList;
   @override
   void initState() {
     medicineName = nameController.text = reminder.name;
     medicineType = typeController.text = reminder.type;
     times = reminder.times;
-    // ignore: unused_local_variable
-    String tempTime1 = reminder.time1;
-    // ignore: unused_local_variable
-    var tempTime2 = reminder.time2;
-    // ignore: unused_local_variable
-    var tempTime3 = reminder.time3;
 
+    tempTime1 = reminder.time1;
+
+    tempTime2 = reminder.time2;
+
+    tempTime3 = reminder.time3;
+    selectedTime1 = TimeOfDay(
+            hour: int.parse(tempTime1.split(":")[0]),
+            minute: int.parse(tempTime1.split(":")[1])) ??
+        TimeOfDay(hour: 0, minute: 0);
+
+    selectedTime2 = TimeOfDay(
+            hour: int.parse(tempTime2.split(":")[0]),
+            minute: int.parse(tempTime2.split(":")[1])) ??
+        TimeOfDay(hour: 0, minute: 0);
+    selectedTime3 = TimeOfDay(
+            hour: int.parse(tempTime3.split(":")[0]),
+            minute: int.parse(tempTime3.split(":")[1])) ??
+        TimeOfDay(hour: 0, minute: 0);
     super.initState();
+    notificationService = NotificationService();
+    notificationService.initialize();
   }
 
   final nameController = TextEditingController();
@@ -122,8 +138,14 @@ class _ReminderDetailState extends State<ReminderDetail> {
       body: WillPopScope(
         onWillPop: () async {
           if (reminder !=
-              Reminder(medicineName, medicineType, selectedTime1.toString(),
-                  selectedTime2.toString(), selectedTime3.toString(), times)) {
+              Reminder(
+                  medicineName,
+                  medicineType,
+                  selectedTime1.toString(),
+                  selectedTime2.toString(),
+                  selectedTime3.toString(),
+                  times,
+                  reminder.notificationID)) {
             return showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -135,10 +157,8 @@ class _ReminderDetailState extends State<ReminderDetail> {
                       FlatButton(
                         child: Text("OK"),
                         onPressed: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => MedicineReminder()),
-                              (Route<dynamic> route) => false);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
                         },
                       ),
                       FlatButton(
@@ -386,15 +406,22 @@ class _ReminderDetailState extends State<ReminderDetail> {
                     reminder.times = times;
                     reminder.name = medicineName;
                     reminder.type = medicineType;
-                    if (times == 1) reminder.time1 = selectedTime1.toString();
+                    if (times == 1)
+                      reminder.time1 = selectedTime1.hour.toString() +
+                          ':' +
+                          selectedTime1.minute.toString();
                     if (times >= 2)
-                      reminder.time2 = selectedTime2.toString();
+                      reminder.time2 = selectedTime2.hour.toString() +
+                          ':' +
+                          selectedTime2.minute.toString();
                     else
-                      reminder.time2 = '0';
+                      reminder.time2 = '00:00';
                     if (times >= 3)
-                      reminder.time3 = selectedTime3.toString();
+                      reminder.time3 = selectedTime3.hour.toString() +
+                          ':' +
+                          selectedTime3.minute.toString();
                     else
-                      reminder.time3 = '0';
+                      reminder.time3 = '00:00';
                   });
                   _save();
                 },
@@ -412,9 +439,11 @@ class _ReminderDetailState extends State<ReminderDetail> {
     if (reminder.id != null) {
       // Case 1: Update operation
       result = await helper.updateReminder(reminder);
+      for (int i = 0; i < reminder.times; i++) {}
     } else {
       // Case 2: Insert Operation
       result = await helper.insertReminder(reminder);
+      //notificationService.dailyMedicineNotification(id: null, title: null, body: null, time: null)
     }
 
     if (result != 0) {
@@ -424,9 +453,7 @@ class _ReminderDetailState extends State<ReminderDetail> {
 //        return MedicineReminder();
 //      }));
 
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MedicineReminder()),
-          (Route<dynamic> route) => false);
+      Navigator.pop(context);
     } else {
       // Failure
       _showAlertDialog('Status', 'Problem Saving Reminder');

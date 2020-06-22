@@ -1,9 +1,7 @@
 import 'dart:math';
-
 import 'package:elderly_app/models/appoinment.dart';
 import 'package:elderly_app/others/database_helper.dart';
 import 'package:elderly_app/others/notification_service.dart';
-import 'package:elderly_app/screens/appoinment_reminder/appoinment_reminder_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -94,10 +92,7 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
                       FlatButton(
                         child: Text("OK"),
                         onPressed: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => AppoinmentReminder()),
-                              (Route<dynamic> route) => false);
+                          Navigator.pop(context);
                         },
                       ),
                       FlatButton(
@@ -260,10 +255,7 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
                         });
 
                         _save();
-                        await Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => AppoinmentReminder()),
-                            (Route<dynamic> route) => false);
+                        Navigator.pop(context);
                       } else {}
                     }
                   },
@@ -296,27 +288,25 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
       appoinment.notificationId = rng.nextInt(9999);
       result = await helper.insertAppoinment(appoinment);
       if (date.isAfter(DateTime.now()))
-        notificationService.scheduleNotification(
+        notificationService.scheduleAppoinmentNotification(
             id: appoinment.notificationId,
             title: appoinment.name,
-            body: appoinment.place,
+            body: appoinment.place + ' ' + appoinment.address,
             dateTime: date);
     }
     if (date != dateCheck) {
       notificationService.deleteNotification(appoinment.notificationId);
       if (date.isAfter(DateTime.now()))
-        notificationService.scheduleNotification(
+        notificationService.scheduleAppoinmentNotification(
             id: appoinment.notificationId,
             title: appoinment.name,
-            body: appoinment.place,
+            body: appoinment.place + ' ' + appoinment.address,
             dateTime: date);
     }
     if (result != 0) {
       // Success
 
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => AppoinmentReminder()),
-          (Route<dynamic> route) => false);
+      Navigator.pop(context);
     } else {
       // Failure
       _showAlertDialog('Status', 'Problem Saving Appoinment');

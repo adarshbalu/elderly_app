@@ -16,7 +16,7 @@ class MedicineReminder extends StatefulWidget {
 }
 
 class _MedicineReminderState extends State<MedicineReminder> {
-  Reminder _reminder = Reminder('', '', '', '', '', 2);
+  Reminder _reminder = Reminder('', '', '00:00', '00:00', '00:00', 2, 999);
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Reminder> reminderList = [];
   int count = 0;

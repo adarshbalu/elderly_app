@@ -4,21 +4,22 @@ class Reminder {
   String _type;
   int _times;
   String _time1, _time2, _time3;
+  int _notificationID;
 
-  Reminder(
-    this._name,
-    this._type,
-    this._time1,
-    this._time2,
-    this._time3,
-    this._times,
-  );
+  Reminder(this._name, this._type, this._time1, this._time2, this._time3,
+      this._times, this._notificationID);
 
   Reminder.withId(this._id, this._name, this._type, this._time1, this._time2,
-      this._time3, this._times);
+      this._time3, this._times, this._notificationID);
 
   int get id => _id;
   int get times => _times;
+
+  int get notificationID => _notificationID;
+
+  set notificationID(int value) {
+    this._notificationID = value;
+  }
 
   String get name => _name;
 
@@ -71,6 +72,7 @@ class Reminder {
     map['time1'] = _time1;
     map['time2'] = _time2;
     map['time3'] = _time3;
+    map['notification_id'] = _notificationID;
     return map;
   }
 
@@ -82,5 +84,6 @@ class Reminder {
     this._times = map['times'];
     this._type = map['type'];
     this._name = map['name'];
+    this._notificationID = map['notification_id'];
   }
 }
