@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:elderly_app/others/notification_service.dart';
 
 class AppoinmentReminder extends StatefulWidget {
   static const String id = 'Appoinment_Reminder_Screen';
@@ -48,6 +48,8 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
     month = months[monthDay];
   }
 
+  DateTime today = DateTime.now();
+  NotificationService notificationService;
   final f = DateFormat('yyyy-MM-dd hh:mm');
   @override
   void initState() {
@@ -58,6 +60,8 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
     getTextWidgets();
 
     super.initState();
+    notificationService = NotificationService();
+    notificationService.initialize();
   }
 
   List<Widget> textWidgets = [];
@@ -106,77 +110,72 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
     }
   }
 
-  List<Appoinment> todayAppoinment = [];
-  List<Appoinment> upcomingAppoinment = [];
-  List<Appoinment> pastAppoinment = [];
+  List<Appoinment> todayAppoinment;
+  List<Appoinment> upcomingAppoinment;
+  List<Appoinment> pastAppoinment;
 
   Future getTodayAppoinment() async {
-    int total = appoinmentList.length;
-    DateTime today = DateTime.now();
     setState(() {
       todayAppoinment = [];
-    });
+      for (Appoinment tempAppoinment in appoinmentList) {
+        DateTime date = DateTime.parse(tempAppoinment.dateAndTime);
 
-    Appoinment tempAppoinment;
-    for (int i = 0; i < total; i++) {
-      tempAppoinment = appoinmentList[i];
-
-      DateTime date = DateTime.parse(tempAppoinment.dateAndTime);
-
-      if (today.day == date.day &&
-          today.month == date.month &&
-          today.year == date.year) {
-        todayAppoinment.add(tempAppoinment);
+        if (today.day == date.day &&
+            today.month == date.month &&
+            today.year == date.year &&
+            !date.isBefore(today)) {
+          todayAppoinment.add(tempAppoinment);
+          notificationService.scheduleNotification(
+              id: tempAppoinment.id,
+              title: tempAppoinment.name,
+              body: tempAppoinment.place,
+              dateTime: date);
+        }
       }
-    }
+    });
   }
 
   Future getUpcomingAppoinment() async {
-    int total = appoinmentList.length;
+    setState(() {
+      upcomingAppoinment = [];
 
-    DateTime today = DateTime.now();
-    upcomingAppoinment = [];
-    Appoinment tempAppoinment;
-    for (int i = 0; i < total; i++) {
-      tempAppoinment = appoinmentList[i];
+      for (Appoinment tempAppoinment in appoinmentList) {
+        DateTime date = DateTime.parse(tempAppoinment.dateAndTime);
 
-      DateTime date = DateTime.parse(tempAppoinment.dateAndTime);
-
-      if (date.isAfter(today)) {
-        if (!todayAppoinment.contains(tempAppoinment))
-          upcomingAppoinment.add(tempAppoinment);
+        if (!todayAppoinment.contains(tempAppoinment)) {
+          if (today.isBefore(date)) {
+            upcomingAppoinment.add(tempAppoinment);
+            notificationService.scheduleNotification(
+                id: tempAppoinment.id,
+                title: tempAppoinment.name,
+                body: tempAppoinment.place,
+                dateTime: date);
+          }
+        }
       }
-    }
+    });
   }
 
   Future getPastAppoinment() async {
-    int total = appoinmentList.length;
+    setState(() {
+      pastAppoinment = [];
 
-    DateTime today = DateTime.now();
-    pastAppoinment = [];
-    Appoinment tempAppoinment;
-    for (int i = 0; i < total; i++) {
-      tempAppoinment = appoinmentList[i];
+      for (Appoinment tempAppoinment in appoinmentList) {
+        DateTime date = DateTime.parse(tempAppoinment.dateAndTime);
 
-      DateTime date = DateTime.parse(tempAppoinment.dateAndTime);
-
-      if (date.isBefore(today)) {
-        if (!todayAppoinment.contains(tempAppoinment))
+        if (date.isBefore(today) && !todayAppoinment.contains(tempAppoinment)) {
           pastAppoinment.add(tempAppoinment);
+          notificationService.deleteNotification(tempAppoinment.id);
+        }
       }
-    }
+    });
   }
 
   List<Widget> getPastAppoinmentWidget(BuildContext context) {
-    Appoinment tempAppoinment;
-    int pastAppoinmentTotal = pastAppoinment.length, pos;
-    DateTime tempDateTime;
-    String date, time;
     List<Widget> pastAppoinmentWidgetList = [];
 
-    for (int i = 0; i < pastAppoinmentTotal; i++) {
-      tempAppoinment = pastAppoinment[i];
-      pos = appoinmentList.indexOf(tempAppoinment);
+    for (Appoinment tempAppoinment in pastAppoinment) {
+      String date, time;
       dateTime = DateTime.parse(tempAppoinment.dateAndTime);
 
       date = dateTime.day.toString() +
@@ -211,15 +210,10 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   }
 
   List<Widget> getUpcomingAppoinmentWidget(BuildContext context) {
-    Appoinment tempAppoinment;
-    int upcomingAppoinmentTotal = upcomingAppoinment.length, pos;
-    DateTime tempDateTime;
-    String date, time;
     List<Widget> upcomingAppoinmentWidgetList = [];
 
-    for (int i = 0; i < upcomingAppoinmentTotal; i++) {
-      tempAppoinment = upcomingAppoinment[i];
-      pos = appoinmentList.indexOf(tempAppoinment);
+    for (Appoinment tempAppoinment in upcomingAppoinment) {
+      String date, time;
       dateTime = DateTime.parse(tempAppoinment.dateAndTime);
       date = dateTime.day.toString() +
           '/' +
@@ -255,21 +249,11 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   }
 
   List<Widget> getTodayAppoinmentWidget(BuildContext context) {
-    Appoinment tempAppoinment;
-    int todayAppoinmentTotal = todayAppoinment.length, pos;
-    DateTime tempDateTime;
-    String date, time;
     List<Widget> todayAppoinmentWidgetList = [];
-    for (int i = 0; i < todayAppoinmentTotal; i++) {
-      tempAppoinment = todayAppoinment[i];
-
-      pos = appoinmentList.indexOf(tempAppoinment);
+    for (Appoinment tempAppoinment in todayAppoinment) {
       dateTime = DateTime.parse(tempAppoinment.dateAndTime);
-      date = dateTime.day.toString() +
-          '/' +
-          dateTime.month.toString() +
-          '/' +
-          dateTime.year.toString();
+
+      String time;
       if (dateTime.minute == 0) {
         time =
             dateTime.hour.toString() + ':' + dateTime.minute.toString() + '0';
@@ -328,11 +312,10 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
       appoinmentList = List<Appoinment>();
       updateListView();
     }
-    getTodayAppoinment();
 
+    getTodayAppoinment();
     getUpcomingAppoinment();
     getPastAppoinment();
-
     return Scaffold(
       body: WillPopScope(
         onWillPop: () {
@@ -425,7 +408,6 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   }
 
   void _delete(BuildContext context, Appoinment appoinment) async {
-    bool tr = false;
     int result = await databaseHelper.deleteAppoinment(appoinment.id);
     if (result != 0) {
       updateListView();
@@ -458,20 +440,17 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
     });
   }
 
-  void _showAlertDialog(String title, String message) {
-    AlertDialog alertDialog = AlertDialog(
-      title: Text(title),
-      content: Text(message),
-    );
-    showDialog(context: context, builder: (_) => alertDialog);
-  }
-
   void _showSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(
       content: Text(message),
       duration: Duration(seconds: 5),
     );
     Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
 

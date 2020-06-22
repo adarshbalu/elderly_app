@@ -30,6 +30,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   NotificationService notificationService;
+
   var sensor;
   bool initialSetupComplete = true;
   bool heartRateSensor = false;
@@ -105,15 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
     double screenHeight = getDeviceHeight(context);
 
     return Scaffold(
-      bottomNavigationBar: RaisedButton(
-        child: Icon(Icons.add),
-        onPressed: () async {
-//          await notificationService.showNotification(
-//              id: 2, title: 'Medicine Reminder', body: 'Take meds');
-//          notificationService.deleteNotification(2);
-          await notificationService.scheduleNotification();
-        },
-      ),
       drawer: AppDrawer(),
       appBar: ElderlyAppBar(),
       body: WillPopScope(

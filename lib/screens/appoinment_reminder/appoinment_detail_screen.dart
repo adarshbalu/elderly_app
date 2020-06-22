@@ -38,7 +38,7 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
   TextEditingController addressController = TextEditingController(text: '');
   final dateFormat = DateFormat("EEEE, MMMM d, yyyy 'at' h:mma");
   final f = DateFormat('yyyy-MM-dd hh:mm');
-
+  DateTime newDate;
   @override
   void dispose() {
     nameController.dispose();
@@ -290,7 +290,7 @@ class _AppoinmentDetailState extends State<AppoinmentDetail> {
 
     if (result != 0) {
       // Success
-      _showAlertDialog('Status', 'Appoinment Saved Successfully');
+
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => AppoinmentReminder()),
           (Route<dynamic> route) => false);

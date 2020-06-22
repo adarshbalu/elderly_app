@@ -8,7 +8,7 @@ class NotificationService {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   void initialize() async {
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    this.flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     var android = AndroidInitializationSettings('@mipmap/ic_launcher');
     var ios = IOSInitializationSettings(
         onDidReceiveLocalNotification: this.onDidReceiveLocalNotification);
@@ -34,9 +34,12 @@ class NotificationService {
         .show(id, title, body, platformChannelSpecifics, payload: 'item x');
   }
 
-  scheduleNotification() async {
-    var scheduledNotificationDateTime =
-        DateTime.now().add(Duration(seconds: 5));
+  scheduleNotification(
+      {@required int id,
+      @required String title,
+      @required String body,
+      @required DateTime dateTime}) async {
+    var scheduledNotificationDateTime = dateTime;
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your other channel id',
         'your other channel name',
@@ -44,15 +47,15 @@ class NotificationService {
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     NotificationDetails platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.schedule(
-        6,
-        'scheduled title',
-        'scheduled body',
-        scheduledNotificationDateTime,
-        platformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(id, title, body,
+        scheduledNotificationDateTime, platformChannelSpecifics);
   }
 
-  periodicNotification() async {
+  periodicNotification(
+      {@required int id,
+      @required String title,
+      @required String body,
+      @required DateTime dateTime}) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'repeating channel id',
         'repeating channel name',
@@ -104,6 +107,7 @@ class NotificationService {
         await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
     print(notificationAppLaunchDetails.didNotificationLaunchApp);
     print(notificationAppLaunchDetails.payload);
+    return notificationAppLaunchDetails;
   }
 
   Future onNotificationSelect(String payload) async {
@@ -114,22 +118,25 @@ class NotificationService {
 
   Future onDidReceiveLocalNotification(
       int id, String title, String body, String payload) async {
-    return CupertinoAlertDialog(
-      title: Text(title),
-      content: Text(body),
-      actions: <Widget>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            print("Hii");
-          },
-          child: Text("Okay"),
-        )
-      ],
-    );
+//    didReceiveLocalNotificationSubject.add(ReceivedNotification(
+//        id: id, title: title, body: body, payload: payload));
   }
 
   Future<void> deleteNotification(int id) async {
     flutterLocalNotificationsPlugin.cancel(id);
   }
+}
+
+class ReceivedNotification {
+  final int id;
+  final String title;
+  final String body;
+  final String payload;
+
+  ReceivedNotification({
+    @required this.id,
+    @required this.title,
+    @required this.body,
+    @required this.payload,
+  });
 }

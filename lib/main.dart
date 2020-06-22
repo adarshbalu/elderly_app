@@ -26,8 +26,18 @@ import 'package:elderly_app/screens/relatives/edit_relatives.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:elderly_app/others/notification_service.dart';
 
-void main() {
+NotificationAppLaunchDetails notificationAppLaunchDetails;
+NotificationService notificationService;
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  notificationService = NotificationService();
+  notificationService.initialize();
+  notificationAppLaunchDetails =
+      await notificationService.notificationDetails();
+
   setupLocator();
   FlutterDownloader.initialize(debug: false);
   runApp(ElderlyApp());
