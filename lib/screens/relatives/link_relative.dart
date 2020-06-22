@@ -57,17 +57,23 @@ class _LinkRelativeState extends State<LinkRelative> {
                     recipients: [relative.phoneNumber],
                   ));
                 }
-                return Column(
+                return ListView(
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         'Link Relatives',
+                        textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 25),
                       ),
                     ),
                     Column(
                       children: relativeCards,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                          'Showing linked here does not mean that your accounts are linked . Please make sure that relative account is linked using the code sent . '),
                     )
                   ],
                 );

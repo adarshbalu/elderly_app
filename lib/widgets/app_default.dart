@@ -81,6 +81,11 @@ class AppDrawer extends StatelessWidget {
                           text: 'Link Relative',
                         ),
                         ListButtons(
+                          onTap: () {},
+                          icon: Icons.description,
+                          text: 'Instructions',
+                        ),
+                        ListButtons(
                           onTap: () async {
                             showDialog(
                                 context: context,
@@ -113,41 +118,6 @@ class AppDrawer extends StatelessWidget {
                           icon: Icons.exit_to_app,
                           text: 'Sign Out',
                         ),
-                        ListButtons(
-                          onTap: () {},
-                          icon: Icons.settings,
-                          text: 'Settings',
-                        ),
-//                        ListButtons(
-//                          onTap: () {
-//                            showDialog(
-//                                context: context,
-//                                builder: (BuildContext context) {
-//                                  return RichAlertDialog(
-//                                    alertTitle: richTitle("Exit the App"),
-//                                    alertSubtitle:
-//                                        richSubtitle('Are you Sure '),
-//                                    alertType: RichAlertType.WARNING,
-//                                    actions: <Widget>[
-//                                      FlatButton(
-//                                        child: Text("Yes"),
-//                                        onPressed: () {
-//                                          SystemNavigator.pop();
-//                                        },
-//                                      ),
-//                                      FlatButton(
-//                                        child: Text("No"),
-//                                        onPressed: () {
-//                                          Navigator.pop(context);
-//                                        },
-//                                      ),
-//                                    ],
-//                                  );
-//                                });
-//                          },
-//                          icon: Icons.cancel,
-//                          text: 'Exit App',
-//                        ),
                       ],
                     ),
                     Column(
@@ -161,7 +131,7 @@ class AppDrawer extends StatelessWidget {
                         ListButtons(
                           onTap: () {},
                           icon: Icons.share,
-                          text: 'Tell a Friend',
+                          text: 'Share Companion ',
                         ),
                         ListButtons(
                           onTap: () {},
