@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
+import 'package:elderly_app/screens/relatives/link_relative.dart';
 
 final auth = FirebaseAuth.instance;
 final user = FirebaseUser;
@@ -70,9 +71,14 @@ class AppDrawer extends StatelessWidget {
                           ),
                         ),
                         ListButtons(
-                          onTap: () {},
-                          icon: Icons.person_outline,
-                          text: 'Profile',
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return LinkRelative();
+                            }));
+                          },
+                          icon: Icons.person_add,
+                          text: 'Link Relative',
                         ),
                         ListButtons(
                           onTap: () async {

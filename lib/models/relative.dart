@@ -9,4 +9,13 @@ class Relative {
     this.documentID = data.documentID;
     return this;
   }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> data = Map<String, dynamic>();
+    data['phoneNumber'] = this.phoneNumber;
+    data['email'] = this.email;
+    data['uid'] = this.uid;
+    data['name'] = this.name;
+    return data;
+  }
 }
