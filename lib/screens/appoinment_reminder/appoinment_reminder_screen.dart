@@ -209,6 +209,9 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   }
 
   List<Widget> getUpcomingAppoinmentWidget(BuildContext context) {
+    upcomingAppoinment.sort((a, b) {
+      return a.dateAndTime.compareTo(b.dateAndTime);
+    });
     List<Widget> upcomingAppoinmentWidgetList = [];
 
     for (Appoinment tempAppoinment in upcomingAppoinment) {
@@ -248,7 +251,9 @@ class _AppoinmentReminderState extends State<AppoinmentReminder> {
   }
 
   List<Widget> getTodayAppoinmentWidget(BuildContext context) {
-//    todayAppoinment.sort((a, b) => a.dateAndTime.compareTo(b.dateAndTime));
+    todayAppoinment.sort((a, b) {
+      return b.dateAndTime.compareTo(a.dateAndTime);
+    });
 
     List<Widget> todayAppoinmentWidgetList = [];
     Color color = Colors.green;
