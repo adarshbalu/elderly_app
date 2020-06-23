@@ -82,9 +82,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    for (int i = 0; i < introWidgetsList.length; i++)
-                      if (i == currentPageValue) ...[circleBar(true)] else
-                        circleBar(false),
+//                    for (int i = 0; i < introWidgetsList.length; i++)
+//                      if (i == currentPageValue) ...[circleBar(true)] else
+//                        circleBar(false),
                   ],
                 ),
               ),

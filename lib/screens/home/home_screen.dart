@@ -5,9 +5,9 @@ import 'package:elderly_app/screens/hospital/nearby_hospital_screen.dart';
 import 'package:elderly_app/screens/login/initial_setup_screen.dart';
 import 'package:elderly_app/screens/medicine_reminder/medicine_reminder.dart';
 import 'package:elderly_app/screens/notes/note_home_screen.dart';
-import 'package:elderly_app/screens/pages/heart_rate_screen.dart';
 import 'package:elderly_app/screens/relatives/contact_relatives_screen.dart';
 import 'package:elderly_app/screens/trackers/tracker_home.dart';
+import 'package:elderly_app/screens/video_call/video_call.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -293,46 +293,67 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: Column(
                         children: <Widget>[
+//                          InkWell(
+//                            splashColor: Colors.redAccent,
+//                            child: CardButton(
+//                              height: screenHeight * 0.2,
+//                              width: screenWidth * (35 / 100),
+//                              icon: FontAwesomeIcons.heartbeat,
+//                              size: screenWidth * (25 / 100),
+//                              color: Color(0xffD83B36),
+//                              borderColor: Color(0xffD83B36).withOpacity(0.75),
+//                            ),
+//                            onTap: () {
+//                              if (heartRateSensor) {
+//                                Navigator.pushNamed(
+//                                    context, HeartRateScreen.id);
+//                              } else {
+//                                print('Heart Rate Sensor not available');
+//                                showDialog(
+//                                    context: context,
+//                                    builder: (BuildContext context) {
+//                                      return RichAlertDialog(
+//                                        alertTitle:
+//                                            richTitle("Function not available"),
+//                                        alertSubtitle: richSubtitle(
+//                                            'Sensor not available in device '),
+//                                        alertType: RichAlertType.WARNING,
+//                                        actions: <Widget>[
+//                                          FlatButton(
+//                                              child: Text("Ok"),
+//                                              onPressed: () {
+//                                                Navigator.pop(context);
+//                                              }),
+//                                        ],
+//                                      );
+//                                    });
+//                              }
+//                            },
+//                          ),
+//                          Padding(
+//                            padding: EdgeInsets.only(top: 8.0),
+//                            child: Text('Check your Heart rate'),
+//                          ),
                           InkWell(
                             splashColor: Colors.redAccent,
                             child: CardButton(
                               height: screenHeight * 0.2,
                               width: screenWidth * (35 / 100),
-                              icon: FontAwesomeIcons.heartbeat,
+                              icon: FontAwesomeIcons.userInjured,
                               size: screenWidth * (25 / 100),
                               color: Color(0xffD83B36),
                               borderColor: Color(0xffD83B36).withOpacity(0.75),
                             ),
                             onTap: () {
-                              if (heartRateSensor) {
-                                Navigator.pushNamed(
-                                    context, HeartRateScreen.id);
-                              } else {
-                                print('Heart Rate Sensor not available');
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return RichAlertDialog(
-                                        alertTitle:
-                                            richTitle("Function not available"),
-                                        alertSubtitle: richSubtitle(
-                                            'Sensor not available in device '),
-                                        alertType: RichAlertType.WARNING,
-                                        actions: <Widget>[
-                                          FlatButton(
-                                              child: Text("Ok"),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              }),
-                                        ],
-                                      );
-                                    });
-                              }
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return VideoCall();
+                              }));
                             },
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: 8.0),
-                            child: Text('Check your Heart rate'),
+                            child: Text('Urgent Video Call'),
                           ),
                         ],
                       ),
@@ -424,30 +445,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: screenHeight * (5 / 100),
                 ),
-                Center(
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 55.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.redAccent,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.red,
-                            blurRadius: 3.0,
-                            offset: Offset(0, 4.0),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        'Urgent',
-                        style: TextStyle(color: Colors.white, fontSize: 20.0),
-                      ),
-                    ),
-                  ),
-                ),
+//                Center(
+//                  child: GestureDetector(
+//                    onTap: () {
+//                      Navigator.push(context,
+//                          MaterialPageRoute(builder: (context) {
+//                        return VideoCall();
+//                      }));
+//                    },
+//                    child: Container(
+//                      padding: EdgeInsets.symmetric(
+//                          vertical: 15.0, horizontal: 55.0),
+//                      decoration: BoxDecoration(
+//                        borderRadius: BorderRadius.circular(30),
+//                        color: Colors.redAccent,
+//                        boxShadow: [
+//                          BoxShadow(
+//                            color: Colors.red,
+//                            blurRadius: 3.0,
+//                            offset: Offset(0, 4.0),
+//                          ),
+//                        ],
+//                      ),
+//                      child: Text(
+//                        'Urgent',
+//                        style: TextStyle(color: Colors.white, fontSize: 20.0),
+//                      ),
+//                    ),
+//                  ),
+//                ),
                 SizedBox(
                   height: 30,
                 )

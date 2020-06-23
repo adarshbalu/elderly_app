@@ -56,6 +56,7 @@ dependencies:
   flutter_downloader: ^1.4.4
   android_alarm_manager: ^0.4.5+11
   flutter_local_notifications: ^1.4.4+1
+  jitsi_meet: ^0.2.2
 
 
 

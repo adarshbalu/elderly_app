@@ -408,6 +408,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+  jitsi_meet:
+    dependency: "direct main"
+    description:
+      name: jitsi_meet
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.2"
   js:
     dependency: transitive
     description:
