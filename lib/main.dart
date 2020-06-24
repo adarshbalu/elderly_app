@@ -80,7 +80,6 @@ class ElderlyApp extends StatelessWidget {
         ImageLabel.id: (context) => ImageLabel(),
         AppoinmentDecision.id: (context) =>
             AppoinmentDecision(Appoinment('', '', '', '', 999999, false)),
-        MedicineScreen.id: (context) => MedicineScreen(),
         OnBoardingScreen.id: (context) => OnBoardingScreen(),
       },
       theme: ThemeData(

@@ -1,14 +1,19 @@
-import 'package:elderly_app/screens/profile/profile_screen.dart';
+import 'package:elderly_app/models/reminder.dart';
+import 'package:elderly_app/others/database_helper.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class MedicineScreen extends StatefulWidget {
+class MedicineDecisionScreen extends StatefulWidget {
   static const String id = 'Medicine_decision_screen';
+  final Reminder reminder;
+  MedicineDecisionScreen(this.reminder);
   @override
-  _MedicineScreenState createState() => _MedicineScreenState();
+  _MedicineDecisionScreenState createState() => _MedicineDecisionScreenState();
 }
 
-class _MedicineScreenState extends State<MedicineScreen> {
+class _MedicineDecisionScreenState extends State<MedicineDecisionScreen> {
+  DatabaseHelper databaseHelper = DatabaseHelper();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +25,7 @@ class _MedicineScreenState extends State<MedicineScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Did you take medicine ?',
+                'Did you take ${widget.reminder.name} ?',
                 style: TextStyle(fontSize: 30, color: Colors.blue),
               ),
             ),
@@ -40,7 +45,19 @@ class _MedicineScreenState extends State<MedicineScreen> {
                           color: Colors.white,
                         )),
                     onTap: () {
-                      print('true');
+                      Reminder r = widget.reminder;
+                      DateTime now = DateTime.now();
+
+                      String dateString =
+                          (DateFormat('yyyy-MM-dd hh:mm').format(now));
+
+                      r.intakeHistory.addAll({
+                        dateString: {TimeOfDay.now().toString(): true}
+                      });
+
+                      databaseHelper.updateReminder(r);
+                      setState(() {});
+                      Navigator.pop(context);
                     },
                   ),
                 ),
@@ -55,7 +72,19 @@ class _MedicineScreenState extends State<MedicineScreen> {
                           color: Colors.white,
                         )),
                     onTap: () {
-                      print('false');
+                      Reminder r = widget.reminder;
+                      DateTime now = DateTime.now();
+
+                      String dateString =
+                          (DateFormat('yyyy-MM-dd hh:mm').format(now));
+
+                      r.intakeHistory.addAll({
+                        dateString: {TimeOfDay.now().toString(): false}
+                      });
+                      print(r.intakeHistory);
+                      databaseHelper.updateReminder(r);
+                      setState(() {});
+                      Navigator.pop(context);
                     },
                   ),
                 )
