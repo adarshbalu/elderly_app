@@ -29,7 +29,7 @@ class NoteListState extends State<NoteList> {
       noteList = List<Note>();
       updateListView();
     }
-
+    updateListView();
     return Scaffold(
       appBar: ElderlyAppBar(),
       drawer: AppDrawer(),
@@ -83,35 +83,7 @@ class NoteListState extends State<NoteList> {
   List<Widget> getNoteListView() {
     staggeredTileExtent = [];
     children = [];
-//    children.add(GestureDetector(
-//      onTap: () {
-//        navigateToDetail(Note('', '', 2), 'Add Note');
-//      },
-//      child: Padding(
-//        padding: const EdgeInsets.all(8.0),
-//        child: Material(
-//          elevation: 2,
-//          borderRadius: BorderRadius.circular(10),
-//          child: Column(
-//            children: <Widget>[
-//              Padding(
-//                  padding: EdgeInsets.all(8.0),
-//                  child: Text(
-//                    'Create Note',
-//                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//                  )),
-//              SizedBox(
-//                height: 8,
-//              ),
-//              Padding(
-//                  padding: EdgeInsets.all(8),
-//                  child: Text('Click Here to add Note'))
-//            ],
-//          ),
-//        ),
-//      ),
-//    ));
-//    staggeredTileExtent.add(StaggeredTile.extent(1, 220));
+
     for (var note in noteList) {
       bool descriptionTrim = false, titleTrim = false;
 
@@ -125,8 +97,10 @@ class NoteListState extends State<NoteList> {
           },
           child: Dismissible(
             onDismissed: (direction) {
-              setState(() async {
+              children.removeAt(noteList.indexOf(note));
+              setState(() {
                 _delete(noteList[noteList.indexOf(note)]);
+
                 noteList.remove(note);
               });
             },

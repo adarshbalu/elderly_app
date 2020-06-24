@@ -19,30 +19,33 @@ class NoteDetail extends StatefulWidget {
 }
 
 class NoteDetailState extends State<NoteDetail> {
-//  static var _priorities = ['High', 'Low'];
-
   DatabaseHelper helper = DatabaseHelper();
 
   String appBarTitle;
   Note note;
   bool isReminder = false;
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
+  TextEditingController titleController;
+  TextEditingController descriptionController;
   Color color = Colors.blue;
   Icon icon = Icon(Icons.add_alert);
   NoteDetailState(this.note, this.appBarTitle);
 
   @override
+  initState() {
+    titleController = TextEditingController(text: note.title);
+    descriptionController = TextEditingController(text: note.description);
+    _checkForReminder();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.bodyText1;
 
-    titleController.text = note.title;
-    descriptionController.text = note.description;
-    _checkForReminder();
     return WillPopScope(
         onWillPop: () async {
-          _save();
-          return true;
+          bool value = await _save();
+          return value;
         },
         child: Scaffold(
           appBar: ElderlyAppBar(),
@@ -142,30 +145,6 @@ class NoteDetailState extends State<NoteDetail> {
     Navigator.pop(context, true);
   }
 
-//  void updatePriorityAsInt(String value) {
-//    switch (value) {
-//      case 'High':
-//        note.priority = 1;
-//        break;
-//      case 'Low':
-//        note.priority = 2;
-//        break;
-//    }
-//  }
-//
-//  String getPriorityAsString(int value) {
-//    String priority;
-//    switch (value) {
-//      case 1:
-//        priority = _priorities[0]; // 'High'
-//        break;
-//      case 2:
-//        priority = _priorities[1]; // 'Low'
-//        break;
-//    }
-//    return priority;
-//  }
-
   void updateTitle() {
     note.title = titleController.text;
   }
@@ -174,30 +153,31 @@ class NoteDetailState extends State<NoteDetail> {
     note.description = descriptionController.text;
   }
 
-//  void _addReminder() {}
-
-  void _save() async {
-    moveToLastScreen();
-
+  _save() async {
     int result;
-    if (note.id != null) {
-      result = await helper.updateNote(note);
-    } else {
-      note.date = DateFormat.yMMMd().format(DateTime.now());
-      note.dateCreated = note.date;
-      result = await helper.insertNote(note);
-    }
+    updateDescription();
+    updateTitle();
+    if (note.title.isNotEmpty && note.description.isNotEmpty) {
+      if (note.id != null) {
+        result = await helper.updateNote(note);
+      } else {
+        note.date = DateFormat.yMMMd().format(DateTime.now());
+        note.dateCreated = note.date;
+        result = await helper.insertNote(note);
+      }
 
-    if (result != 0) {
-      showDialogBox('Note Saved ', note.title);
-    } else {
-      _showAlertDialog('Status', 'Problem Saving Note');
-    }
+      if (result != 0) {
+        showDialogBox('Note Saved ', note.title);
+      } else {
+        _showAlertDialog('Status', 'Problem Saving Note');
+      }
+      moveToLastScreen();
+      return true;
+    } else
+      return false;
   }
 
   void _delete() async {
-    moveToLastScreen();
-
     if (note.id == null) {
       _showAlertDialog('Status', 'No Note was deleted');
       return;
@@ -209,6 +189,7 @@ class NoteDetailState extends State<NoteDetail> {
     } else {
       _showAlertDialog('Status', 'Error Occurred while Deleting Note');
     }
+    moveToLastScreen();
   }
 
   void _showAlertDialog(String title, String message) {
