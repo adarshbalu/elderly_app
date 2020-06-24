@@ -187,8 +187,9 @@ class _MedicineReminderState extends State<MedicineReminder> {
                     itemBuilder: (BuildContext context, int position) {
                       return Dismissible(
                         onDismissed: (direction) {
+                          _delete(context, this.reminderList[position]);
+                          reminderList.removeAt(position);
                           setState(() {
-                            _delete(context, this.reminderList[position]);
                             _showSnackBar(context, 'Reminder Deleted');
                           });
                         },

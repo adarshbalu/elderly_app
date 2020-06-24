@@ -36,7 +36,7 @@ class _ReminderDetailState extends State<ReminderDetail> {
   NotificationService notificationService;
   _ReminderDetailState(this.reminder, this.pageTitle);
 
-  TimeOfDay selectedTime1, selectedTime2, selectedTime3;
+  TimeOfDay selectedTime1, selectedTime2, selectedTime3, t1, t2, t3;
   TimeOfDay timeNow = TimeOfDay.now();
 
   int times = 2;
@@ -79,16 +79,16 @@ class _ReminderDetailState extends State<ReminderDetail> {
     tempTime2 = reminder.time2;
 
     tempTime3 = reminder.time3;
-    selectedTime1 = TimeOfDay(
+    selectedTime1 = t1 = TimeOfDay(
             hour: int.parse(tempTime1.split(":")[0]),
             minute: int.parse(tempTime1.split(":")[1])) ??
         TimeOfDay(hour: 0, minute: 0);
 
-    selectedTime2 = TimeOfDay(
+    selectedTime2 = t2 = TimeOfDay(
             hour: int.parse(tempTime2.split(":")[0]),
             minute: int.parse(tempTime2.split(":")[1])) ??
         TimeOfDay(hour: 0, minute: 0);
-    selectedTime3 = TimeOfDay(
+    selectedTime3 = t3 = TimeOfDay(
             hour: int.parse(tempTime3.split(":")[0]),
             minute: int.parse(tempTime3.split(":")[1])) ??
         TimeOfDay(hour: 0, minute: 0);
@@ -445,44 +445,69 @@ class _ReminderDetailState extends State<ReminderDetail> {
       result = await helper.updateReminder(reminder);
       if (tempReminder != reminder) {
         notificationService.deleteNotification(reminder.id);
-        switch (reminder.times) {
-          case 1:
-            notificationService.dailyMedicineNotification(
-                id: reminder.notificationID,
-                title: 'Medicine Reminder',
-                body: reminder.name,
-                time: Time(selectedTime1.hour, selectedTime1.minute, 0));
-            break;
-          case 2:
-            notificationService.dailyMedicineNotification(
-                id: reminder.notificationID,
-                title: 'Medicine Reminder',
-                body: reminder.name,
-                time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+        if (selectedTime1 != t1) {
+          notificationService.dailyMedicineNotification(
+              id: reminder.notificationID,
+              title: 'Medicine Reminder',
+              body: reminder.name,
+              time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+        }
+        if (times == 2) {
+          if (selectedTime2 != t2) {
             notificationService.dailyMedicineNotification(
                 id: reminder.notificationID,
                 title: 'Medicine Reminder',
                 body: reminder.name,
                 time: Time(selectedTime2.hour, selectedTime2.minute, 0));
-            break;
-          case 3:
-            notificationService.dailyMedicineNotification(
-                id: reminder.notificationID,
-                title: 'Medicine Reminder',
-                body: reminder.name,
-                time: Time(selectedTime1.hour, selectedTime1.minute, 0));
-            notificationService.dailyMedicineNotification(
-                id: reminder.notificationID,
-                title: 'Medicine Reminder',
-                body: reminder.name,
-                time: Time(selectedTime2.hour, selectedTime2.minute, 0));
+          }
+        }
+        if (times == 3) {
+          if (selectedTime3 != t3) {
             notificationService.dailyMedicineNotification(
                 id: reminder.notificationID,
                 title: 'Medicine Reminder',
                 body: reminder.name,
                 time: Time(selectedTime3.hour, selectedTime3.minute, 0));
-            break;
+          }
         }
+//        switch (reminder.times) {
+//          case 1:
+//            notificationService.dailyMedicineNotification(
+//                id: reminder.notificationID,
+//                title: 'Medicine Reminder',
+//                body: reminder.name,
+//                time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+//            break;
+//          case 2:
+//            notificationService.dailyMedicineNotification(
+//                id: reminder.notificationID,
+//                title: 'Medicine Reminder',
+//                body: reminder.name,
+//                time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+//            notificationService.dailyMedicineNotification(
+//                id: reminder.notificationID,
+//                title: 'Medicine Reminder',
+//                body: reminder.name,
+//                time: Time(selectedTime2.hour, selectedTime2.minute, 0));
+//            break;
+//          case 3:
+//            notificationService.dailyMedicineNotification(
+//                id: reminder.notificationID,
+//                title: 'Medicine Reminder',
+//                body: reminder.name,
+//                time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+//            notificationService.dailyMedicineNotification(
+//                id: reminder.notificationID,
+//                title: 'Medicine Reminder',
+//                body: reminder.name,
+//                time: Time(selectedTime2.hour, selectedTime2.minute, 0));
+//            notificationService.dailyMedicineNotification(
+//                id: reminder.notificationID,
+//                title: 'Medicine Reminder',
+//                body: reminder.name,
+//                time: Time(selectedTime3.hour, selectedTime3.minute, 0));
+//            break;
+//        }
       }
     } else {
       // Case 2: Insert Operation
