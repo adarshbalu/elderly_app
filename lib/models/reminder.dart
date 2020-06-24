@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Reminder {
   int _id;
   String _name;
@@ -5,6 +7,7 @@ class Reminder {
   int _times;
   String _time1, _time2, _time3;
   int _notificationID;
+  Map<String, Map<String, String>> _intakeHistory;
 
   Reminder(this._name, this._type, this._time1, this._time2, this._time3,
       this._times, this._notificationID);
@@ -14,6 +17,12 @@ class Reminder {
 
   int get id => _id;
   int get times => _times;
+
+  Map<String, Map<String, String>> get intakeHistory => _intakeHistory;
+
+  set intakeHistory(Map<String, Map<String, String>> value) {
+    this._intakeHistory = value;
+  }
 
   int get notificationID => _notificationID;
 
@@ -73,6 +82,7 @@ class Reminder {
     map['time2'] = _time2;
     map['time3'] = _time3;
     map['notification_id'] = _notificationID;
+    map['intake_history'] = jsonEncode(intakeHistory);
     return map;
   }
 
@@ -85,5 +95,6 @@ class Reminder {
     this._type = map['type'];
     this._name = map['name'];
     this._notificationID = map['notification_id'];
+    this._intakeHistory = jsonDecode(map['intake_history']);
   }
 }

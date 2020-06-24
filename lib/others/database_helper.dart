@@ -26,6 +26,8 @@ class DatabaseHelper {
   String remColTime1 = 'time1';
   String remColTime2 = 'time2';
   String remColTime3 = 'time3';
+  String remColNotificationID = 'notification_id';
+  String remColIntakeHistory = 'intake_history';
 
   String appoinmentTable = 'appoinment_table';
   String appoinmentColId = 'id';
@@ -65,7 +67,7 @@ class DatabaseHelper {
 
   void _createDb(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE $reminderTable($remColId INTEGER PRIMARY KEY AUTOINCREMENT, $remColName TEXT, '
+        'CREATE TABLE $reminderTable($remColId INTEGER PRIMARY KEY AUTOINCREMENT, $remColIntakeHistory TEXT ,$remColNotificationID INTEGER, $remColName TEXT, '
         '$remColType TEXT, $remColTimes INTEGER, $remColTime1 TEXT,$remColTime2 TEXT,$remColTime3 TEXT)');
 
     await db.execute(
