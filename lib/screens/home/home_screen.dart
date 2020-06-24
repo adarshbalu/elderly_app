@@ -58,11 +58,49 @@ class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
   FirebaseUser loggedInUser;
 
-  checkNotificationPermission() async {
-    permission = await PermissionManager.PermissionHandler()
-        .checkPermissionStatus(PermissionManager.PermissionGroup.notification);
-    await PermissionManager.PermissionHandler()
-        .checkServiceStatus(PermissionManager.PermissionGroup.notification);
+  checkRequiredPermission() async {
+    bool permissionEnabled, serviceEnabled;
+    permissionEnabled = false;
+    serviceEnabled = false;
+    PermissionManager.PermissionStatus cameraPermission, microPhonePermission;
+
+    if (!(permissionEnabled && serviceEnabled)) {
+      cameraPermission = await PermissionManager.PermissionHandler()
+          .checkPermissionStatus(PermissionManager.PermissionGroup.camera);
+      cameraPermission = await PermissionManager.PermissionHandler()
+          .checkPermissionStatus(PermissionManager.PermissionGroup.microphone);
+      if (cameraPermission == PermissionManager.PermissionStatus.granted &&
+          microPhonePermission == PermissionManager.PermissionStatus.granted) {
+        setState(() {
+          permissionEnabled = true;
+        });
+
+        PermissionManager.ServiceStatus cameraServiceStatus =
+            await PermissionManager.PermissionHandler()
+                .checkServiceStatus(PermissionManager.PermissionGroup.camera);
+
+        PermissionManager.ServiceStatus microPhoneServiceStatus =
+            await PermissionManager.PermissionHandler().checkServiceStatus(
+                PermissionManager.PermissionGroup.microphone);
+        if (cameraServiceStatus == PermissionManager.ServiceStatus.enabled &&
+            microPhoneServiceStatus ==
+                PermissionManager.ServiceStatus.enabled) {
+          setState(() {
+            serviceEnabled = true;
+          });
+        }
+      } else {
+        await PermissionManager.PermissionHandler().requestPermissions([
+          PermissionManager.PermissionGroup.camera,
+          PermissionManager.PermissionGroup.microphone
+        ]);
+        setState(() {
+          serviceEnabled = true;
+          permissionEnabled = true;
+        });
+      }
+    }
+    return serviceEnabled && permissionEnabled;
   }
 
   Future checkLocationPermission() async {
@@ -344,11 +382,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Color(0xffD83B36),
                               borderColor: Color(0xffD83B36).withOpacity(0.75),
                             ),
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return VideoCall();
-                              }));
+                            onTap: () async {
+                              bool granted = await checkRequiredPermission();
+                              if (granted) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return VideoCall();
+                                }));
+                              }
                             },
                           ),
                           Padding(
