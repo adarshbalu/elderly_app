@@ -7,10 +7,10 @@ class Reminder {
   int _times;
   String _time1, _time2, _time3;
   int _notificationID;
-  Map<String, Map<String, String>> _intakeHistory;
+  Map<String, dynamic> _intakeHistory;
 
   Reminder(this._name, this._type, this._time1, this._time2, this._time3,
-      this._times, this._notificationID);
+      this._times, this._notificationID, this._intakeHistory);
 
   Reminder.withId(this._id, this._name, this._type, this._time1, this._time2,
       this._time3, this._times, this._notificationID);
@@ -18,9 +18,9 @@ class Reminder {
   int get id => _id;
   int get times => _times;
 
-  Map<String, Map<String, String>> get intakeHistory => _intakeHistory;
+  Map<String, dynamic> get intakeHistory => _intakeHistory;
 
-  set intakeHistory(Map<String, Map<String, String>> value) {
+  set intakeHistory(Map<String, dynamic> value) {
     this._intakeHistory = value;
   }
 
@@ -82,7 +82,8 @@ class Reminder {
     map['time2'] = _time2;
     map['time3'] = _time3;
     map['notification_id'] = _notificationID;
-    map['intake_history'] = jsonEncode(intakeHistory);
+    String temp = jsonEncode(intakeHistory);
+    map['intake_history'] = temp;
     return map;
   }
 
@@ -95,6 +96,7 @@ class Reminder {
     this._type = map['type'];
     this._name = map['name'];
     this._notificationID = map['notification_id'];
-    this._intakeHistory = jsonDecode(map['intake_history']);
+    Map<String, dynamic> temp = jsonDecode(map['intake_history']);
+    this._intakeHistory = temp;
   }
 }

@@ -5,6 +5,7 @@ import 'package:elderly_app/others/notification_service.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
@@ -29,7 +30,7 @@ class ReminderDetail extends StatefulWidget {
 
 class _ReminderDetailState extends State<ReminderDetail> {
   DatabaseHelper helper = DatabaseHelper();
-  Reminder reminder;
+  Reminder reminder, tempReminder;
   String pageTitle;
   var rng = Random();
   NotificationService notificationService;
@@ -41,7 +42,7 @@ class _ReminderDetailState extends State<ReminderDetail> {
   int times = 2;
 
   String medicineName = '', tempName = '', medicineType = '';
-
+  Map<String, dynamic> intakeHistory;
   File pickedImage;
   bool isImageLoaded = false;
 
@@ -65,14 +66,16 @@ class _ReminderDetailState extends State<ReminderDetail> {
 
   String tempTime1, tempTime2, tempTime3;
   List<String> timeStringList;
+
   @override
   void initState() {
+    tempReminder = widget.reminder;
     medicineName = nameController.text = reminder.name;
     medicineType = typeController.text = reminder.type;
     times = reminder.times;
 
     tempTime1 = reminder.time1;
-
+    intakeHistory = reminder.intakeHistory;
     tempTime2 = reminder.time2;
 
     tempTime3 = reminder.time3;
@@ -145,7 +148,8 @@ class _ReminderDetailState extends State<ReminderDetail> {
                   selectedTime2.toString(),
                   selectedTime3.toString(),
                   times,
-                  reminder.notificationID)) {
+                  reminder.notificationID,
+                  intakeHistory)) {
             return showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -439,11 +443,89 @@ class _ReminderDetailState extends State<ReminderDetail> {
     if (reminder.id != null) {
       // Case 1: Update operation
       result = await helper.updateReminder(reminder);
-      for (int i = 0; i < reminder.times; i++) {}
+      if (tempReminder != reminder) {
+        notificationService.deleteNotification(reminder.id);
+        switch (reminder.times) {
+          case 1:
+            notificationService.dailyMedicineNotification(
+                id: reminder.notificationID,
+                title: 'Medicine Reminder',
+                body: reminder.name,
+                time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+            break;
+          case 2:
+            notificationService.dailyMedicineNotification(
+                id: reminder.notificationID,
+                title: 'Medicine Reminder',
+                body: reminder.name,
+                time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+            notificationService.dailyMedicineNotification(
+                id: reminder.notificationID,
+                title: 'Medicine Reminder',
+                body: reminder.name,
+                time: Time(selectedTime2.hour, selectedTime2.minute, 0));
+            break;
+          case 3:
+            notificationService.dailyMedicineNotification(
+                id: reminder.notificationID,
+                title: 'Medicine Reminder',
+                body: reminder.name,
+                time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+            notificationService.dailyMedicineNotification(
+                id: reminder.notificationID,
+                title: 'Medicine Reminder',
+                body: reminder.name,
+                time: Time(selectedTime2.hour, selectedTime2.minute, 0));
+            notificationService.dailyMedicineNotification(
+                id: reminder.notificationID,
+                title: 'Medicine Reminder',
+                body: reminder.name,
+                time: Time(selectedTime3.hour, selectedTime3.minute, 0));
+            break;
+        }
+      }
     } else {
       // Case 2: Insert Operation
+      reminder.notificationID = rng.nextInt(9999);
       result = await helper.insertReminder(reminder);
-      //notificationService.dailyMedicineNotification(id: null, title: null, body: null, time: null)
+      switch (reminder.times) {
+        case 1:
+          notificationService.dailyMedicineNotification(
+              id: reminder.notificationID,
+              title: 'Medicine Reminder',
+              body: reminder.name,
+              time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+          break;
+        case 2:
+          notificationService.dailyMedicineNotification(
+              id: reminder.notificationID,
+              title: 'Medicine Reminder',
+              body: reminder.name,
+              time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+          notificationService.dailyMedicineNotification(
+              id: reminder.notificationID,
+              title: 'Medicine Reminder',
+              body: reminder.name,
+              time: Time(selectedTime2.hour, selectedTime2.minute, 0));
+          break;
+        case 3:
+          notificationService.dailyMedicineNotification(
+              id: reminder.notificationID,
+              title: 'Medicine Reminder',
+              body: reminder.name,
+              time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+          notificationService.dailyMedicineNotification(
+              id: reminder.notificationID,
+              title: 'Medicine Reminder',
+              body: reminder.name,
+              time: Time(selectedTime2.hour, selectedTime2.minute, 0));
+          notificationService.dailyMedicineNotification(
+              id: reminder.notificationID,
+              title: 'Medicine Reminder',
+              body: reminder.name,
+              time: Time(selectedTime3.hour, selectedTime3.minute, 0));
+          break;
+      }
     }
 
     if (result != 0) {
