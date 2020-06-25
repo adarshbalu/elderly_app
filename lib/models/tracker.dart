@@ -8,20 +8,16 @@ class TrackerModel {
 }
 
 class SleepTracker {
-  List<Tracker> sleepTracker;
+  int hours, minutes;
   bool isTracking;
+  String notes;
   SleepTracker();
-
-  addValue(Tracker _tracker) {
-    this.sleepTracker.add(_tracker);
-    if (!this.isTracking) this.isTracking = true;
-  }
 
   getAllTrackingData() {
     if (this.isTracking)
-      return this.sleepTracker;
+      return this;
     else
-      return [];
+      return '';
   }
 }
 

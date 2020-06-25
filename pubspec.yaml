@@ -47,16 +47,17 @@ dependencies:
   flutter_sms: 2.0.0+2
   flutter_staggered_grid_view: ^0.3.0
   flutter_beautiful_popup: ^1.5.0
-  firebase_ml_vision : any
+  firebase_ml_vision : ^0.9.4
   path: ^1.6.4
-  cloud_firestore: any
-  mlkit: any
+  cloud_firestore: ^0.13.7
+  mlkit: ^0.15.1
   google_sign_in: ^4.5.1
   firebase_storage: ^3.1.6
   flutter_downloader: ^1.4.4
   android_alarm_manager: ^0.4.5+11
   flutter_local_notifications: ^1.4.4+1
   jitsi_meet: ^0.2.2
+  charts_flutter: ^0.9.0
 
 
 

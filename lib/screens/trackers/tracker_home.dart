@@ -14,16 +14,9 @@ class _TrackerHomeState extends State<TrackerHome> {
   initializeDisplayMap() {
     hideMap = Map<String, bool>();
     trackMap = Map<String, bool>();
-    hideMap = {
-      'sleep': true,
-      'height': true,
-      'weight': true,
-      'sugar': true,
-      'pressure': true
-    };
+    hideMap = {'sleep': true, 'weight': true, 'sugar': true, 'pressure': true};
     trackMap = {
       'sleep': false,
-      'height': true,
       'weight': true,
       'sugar': true,
       'pressure': true
@@ -91,15 +84,6 @@ class _TrackerHomeState extends State<TrackerHome> {
             onView: () {},
             isHidden: hideMap['weight'],
             isTracking: trackMap['weight'],
-          ),
-          TrackerCard(
-            title: 'Height Tracker',
-            subTitle: '\nHow tall are you ? Track to see progress over time.\n',
-            onAdd: () {},
-            onHide: () => onHide('height'),
-            onView: () {},
-            isHidden: hideMap['height'],
-            isTracking: trackMap['height'],
           ),
           TrackerCard(
             title: 'Blood Glucose',
