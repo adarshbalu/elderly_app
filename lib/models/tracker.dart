@@ -95,13 +95,46 @@ class WeightTracker {
   }
 }
 
-class BloodSugarTracker {}
+class BloodSugar {
+  int bloodSugar;
+  String notes;
+  DateTime dateTime;
+  BloodSugar({this.bloodSugar, this.notes, this.dateTime});
+}
+
+class BloodSugarTracker {
+  bool isTracking;
+  BloodSugar bloodSugar;
+  BloodSugarTracker();
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = Map<String, dynamic>();
+
+    map['dateAndTime'] = this.bloodSugar.dateTime.toString();
+    map['blood_sugar'] = this.bloodSugar.bloodSugar.toString();
+    map['notes'] = this.bloodSugar.notes;
+
+    return map;
+  }
+
+  fromMap(Map<String, dynamic> map) {
+    BloodSugar bloodSugar = BloodSugar();
+    bloodSugar.dateTime = DateTime.parse(map['dateAndTime']);
+    bloodSugar.bloodSugar = int.parse(map['blood_sugar']);
+
+    bloodSugar.notes = map['notes'];
+    return bloodSugar;
+  }
+
+  List<BloodSugar> loadData(QuerySnapshot snapshot) {
+    List<DocumentSnapshot> documents = snapshot.documents;
+    List<BloodSugar> bloodSugarList = [];
+    for (var data in documents) {
+      Map map = data.data;
+      bloodSugarList.add(this.fromMap(map));
+    }
+    return bloodSugarList;
+  }
+}
 
 class BloodPressureTracker {}
-
-class Tracker {
-  String dateAndTime;
-  double value;
-  String notes;
-  Tracker({this.value, this.dateAndTime, this.notes});
-}

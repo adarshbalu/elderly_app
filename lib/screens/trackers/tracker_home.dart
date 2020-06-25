@@ -1,3 +1,5 @@
+import 'package:elderly_app/screens/trackers/blood_sugar/add_blood_sugar.dart';
+import 'package:elderly_app/screens/trackers/blood_sugar/blood_sugar_tracker_screen.dart';
 import 'package:elderly_app/screens/trackers/sleep/add_sleep_screen.dart';
 import 'package:elderly_app/screens/trackers/sleep/sleep_tracker_screen.dart';
 import 'package:elderly_app/screens/trackers/weight/add_weight.dart';
@@ -99,9 +101,17 @@ class _TrackerHomeState extends State<TrackerHome> {
             title: 'Blood Glucose',
             subTitle:
                 '\nWhat\'s your blood sugar level ? Track to chart progress.\n',
-            onAdd: () {},
+            onAdd: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return AddBloodSugarScreen();
+              }));
+            },
             onHide: () => onHide('sugar'),
-            onView: () {},
+            onView: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return BloodSugarTrackerScreen();
+              }));
+            },
             isHidden: hideMap['sugar'],
             isTracking: trackMap['sugar'],
           ),
