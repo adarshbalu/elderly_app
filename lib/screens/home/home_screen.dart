@@ -387,7 +387,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               if (granted) {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return VideoCall();
+                                  return VideoCall(
+                                    userID: loggedInUser.uid,
+                                  );
                                 }));
                               }
                             },
@@ -486,35 +488,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: screenHeight * (5 / 100),
                 ),
-//                Center(
-//                  child: GestureDetector(
-//                    onTap: () {
-//                      Navigator.push(context,
-//                          MaterialPageRoute(builder: (context) {
-//                        return VideoCall();
-//                      }));
-//                    },
-//                    child: Container(
-//                      padding: EdgeInsets.symmetric(
-//                          vertical: 15.0, horizontal: 55.0),
-//                      decoration: BoxDecoration(
-//                        borderRadius: BorderRadius.circular(30),
-//                        color: Colors.redAccent,
-//                        boxShadow: [
-//                          BoxShadow(
-//                            color: Colors.red,
-//                            blurRadius: 3.0,
-//                            offset: Offset(0, 4.0),
-//                          ),
-//                        ],
-//                      ),
-//                      child: Text(
-//                        'Urgent',
-//                        style: TextStyle(color: Colors.white, fontSize: 20.0),
-//                      ),
-//                    ),
-//                  ),
-//                ),
                 SizedBox(
                   height: 30,
                 )
