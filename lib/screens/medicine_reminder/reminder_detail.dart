@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
@@ -397,6 +398,26 @@ class _ReminderDetailState extends State<ReminderDetail> {
               SizedBox(
                 height: 20,
               ),
+              Column(
+                children: <Widget>[
+                  times >= 1 && selectedTime1 != TimeOfDay(hour: 0, minute: 0)
+                      ? Text('Time 1 :  ' + selectedTime1.format(context))
+                      : SizedBox(),
+                  times >= 2 && selectedTime2 != TimeOfDay(hour: 0, minute: 0)
+                      ? Text('Time 2 :  ' + selectedTime2.format(context))
+                      : SizedBox(
+                          height: 8,
+                        ),
+                  times == 3 && selectedTime3 != TimeOfDay(hour: 0, minute: 0)
+                      ? Text('Time 3 :  ' + selectedTime3.format(context))
+                      : SizedBox(
+                          height: 8,
+                        ),
+                ],
+              ),
+              SizedBox(
+                height: 8,
+              ),
               RaisedButton.icon(
                 color: Colors.green,
                 textColor: Colors.white,
@@ -410,7 +431,7 @@ class _ReminderDetailState extends State<ReminderDetail> {
                     reminder.times = times;
                     reminder.name = medicineName;
                     reminder.type = medicineType;
-                    if (times == 1)
+                    if (times >= 1)
                       reminder.time1 = selectedTime1.hour.toString() +
                           ':' +
                           selectedTime1.minute.toString();
@@ -420,7 +441,7 @@ class _ReminderDetailState extends State<ReminderDetail> {
                           selectedTime2.minute.toString();
                     else
                       reminder.time2 = '00:00';
-                    if (times >= 3)
+                    if (times == 3)
                       reminder.time3 = selectedTime3.hour.toString() +
                           ':' +
                           selectedTime3.minute.toString();
@@ -452,7 +473,7 @@ class _ReminderDetailState extends State<ReminderDetail> {
               body: reminder.name,
               time: Time(selectedTime1.hour, selectedTime1.minute, 0));
         }
-        if (times == 2) {
+        if (times >= 2) {
           if (selectedTime2 != t2) {
             notificationService.dailyMedicineNotification(
                 id: reminder.notificationID,
@@ -470,89 +491,37 @@ class _ReminderDetailState extends State<ReminderDetail> {
                 time: Time(selectedTime3.hour, selectedTime3.minute, 0));
           }
         }
-//        switch (reminder.times) {
-//          case 1:
-//            notificationService.dailyMedicineNotification(
-//                id: reminder.notificationID,
-//                title: 'Medicine Reminder',
-//                body: reminder.name,
-//                time: Time(selectedTime1.hour, selectedTime1.minute, 0));
-//            break;
-//          case 2:
-//            notificationService.dailyMedicineNotification(
-//                id: reminder.notificationID,
-//                title: 'Medicine Reminder',
-//                body: reminder.name,
-//                time: Time(selectedTime1.hour, selectedTime1.minute, 0));
-//            notificationService.dailyMedicineNotification(
-//                id: reminder.notificationID,
-//                title: 'Medicine Reminder',
-//                body: reminder.name,
-//                time: Time(selectedTime2.hour, selectedTime2.minute, 0));
-//            break;
-//          case 3:
-//            notificationService.dailyMedicineNotification(
-//                id: reminder.notificationID,
-//                title: 'Medicine Reminder',
-//                body: reminder.name,
-//                time: Time(selectedTime1.hour, selectedTime1.minute, 0));
-//            notificationService.dailyMedicineNotification(
-//                id: reminder.notificationID,
-//                title: 'Medicine Reminder',
-//                body: reminder.name,
-//                time: Time(selectedTime2.hour, selectedTime2.minute, 0));
-//            notificationService.dailyMedicineNotification(
-//                id: reminder.notificationID,
-//                title: 'Medicine Reminder',
-//                body: reminder.name,
-//                time: Time(selectedTime3.hour, selectedTime3.minute, 0));
-//            break;
-//        }
       }
     } else {
       // Case 2: Insert Operation
       reminder.notificationID = rng.nextInt(9999);
       result = await helper.insertReminder(reminder);
-      switch (reminder.times) {
-        case 1:
-          notificationService.dailyMedicineNotification(
-              id: reminder.notificationID,
-              title: 'Medicine Reminder',
-              body: reminder.name,
-              time: Time(selectedTime1.hour, selectedTime1.minute, 0));
-          break;
-        case 2:
-          notificationService.dailyMedicineNotification(
-              id: reminder.notificationID,
-              title: 'Medicine Reminder',
-              body: reminder.name,
-              time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+      if (selectedTime1 != t1) {
+        notificationService.dailyMedicineNotification(
+            id: reminder.notificationID,
+            title: 'Medicine Reminder',
+            body: reminder.name,
+            time: Time(selectedTime1.hour, selectedTime1.minute, 0));
+      }
+      if (times >= 2) {
+        if (selectedTime2 != t2) {
           notificationService.dailyMedicineNotification(
               id: reminder.notificationID,
               title: 'Medicine Reminder',
               body: reminder.name,
               time: Time(selectedTime2.hour, selectedTime2.minute, 0));
-          break;
-        case 3:
-          notificationService.dailyMedicineNotification(
-              id: reminder.notificationID,
-              title: 'Medicine Reminder',
-              body: reminder.name,
-              time: Time(selectedTime1.hour, selectedTime1.minute, 0));
-          notificationService.dailyMedicineNotification(
-              id: reminder.notificationID,
-              title: 'Medicine Reminder',
-              body: reminder.name,
-              time: Time(selectedTime2.hour, selectedTime2.minute, 0));
+        }
+      }
+      if (times == 3) {
+        if (selectedTime3 != t3) {
           notificationService.dailyMedicineNotification(
               id: reminder.notificationID,
               title: 'Medicine Reminder',
               body: reminder.name,
               time: Time(selectedTime3.hour, selectedTime3.minute, 0));
-          break;
+        }
       }
     }
-
     if (result != 0) {
       // Success
 //      _showAlertDialog('Status', 'Reminder Saved Successfully');

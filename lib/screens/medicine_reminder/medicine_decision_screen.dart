@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:elderly_app/models/reminder.dart';
 import 'package:elderly_app/others/database_helper.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class MedicineDecisionScreen extends StatefulWidget {
   static const String id = 'Medicine_decision_screen';
@@ -13,6 +16,29 @@ class MedicineDecisionScreen extends StatefulWidget {
 }
 
 class _MedicineDecisionScreenState extends State<MedicineDecisionScreen> {
+  sendSms() async {
+    var cred =
+        'AC07a649c710761cf3a0e6b96048accf58:ff835258561a7da33fe49ce779f745d4';
+
+    var bytes = utf8.encode(cred);
+
+    var base64Str = base64.encode(bytes);
+
+    var url =
+        'https://api.twilio.com/2010-04-01/Accounts/AC07a649c710761cf3a0e6b96048accf58/Messages.json';
+
+    var response = await http.post(url, headers: {
+      'Authorization': 'Basic $base64Str'
+    }, body: {
+      'From': '+12567403927',
+      'To': '+918078214942',
+      'Body': 'Just forgot to take medicine now'
+    });
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+  }
+
   DatabaseHelper databaseHelper = DatabaseHelper();
   @override
   Widget build(BuildContext context) {
@@ -71,7 +97,7 @@ class _MedicineDecisionScreenState extends State<MedicineDecisionScreen> {
                           size: 90,
                           color: Colors.white,
                         )),
-                    onTap: () {
+                    onTap: () async {
                       Reminder r = widget.reminder;
                       DateTime now = DateTime.now();
 
@@ -84,6 +110,7 @@ class _MedicineDecisionScreenState extends State<MedicineDecisionScreen> {
                       print(r.intakeHistory);
                       databaseHelper.updateReminder(r);
                       setState(() {});
+                      await sendSms();
                       Navigator.pop(context);
                     },
                   ),

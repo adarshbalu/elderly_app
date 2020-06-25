@@ -6,6 +6,7 @@ import 'package:elderly_app/screens/medicine_reminder/medicine_decision_screen.d
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:elderly_app/others/functions.dart';
 import 'reminder_detail.dart';
@@ -25,6 +26,8 @@ class _MedicineReminderState extends State<MedicineReminder> {
   String today = '';
   Map<int, String> weekDays = {};
   List<Reminder> nearReminders = List<Reminder>();
+  Map<Reminder, Map<int, DateTime>> reminderMap =
+      Map<Reminder, Map<int, DateTime>>();
   List<Reminder> doneReminders = List<Reminder>();
   int weekDayNumber;
   getWeekDays() {
@@ -41,6 +44,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
     today = weekDays[weekDayNumber];
   }
 
+  bool set;
   List<Widget> weekDayWidgets = [];
   List<Widget> getWeekDayWidgets() {
     Widget widget;
@@ -70,8 +74,10 @@ class _MedicineReminderState extends State<MedicineReminder> {
 
   @override
   void initState() {
+    set = false;
     updateListView();
     getWeekDays();
+
     super.initState();
   }
 
@@ -82,8 +88,6 @@ class _MedicineReminderState extends State<MedicineReminder> {
       reminderList = List<Reminder>();
       updateListView();
     }
-    updateListView();
-    checkReminders();
 
     return Scaffold(
       drawer: AppDrawer(),
@@ -151,13 +155,41 @@ class _MedicineReminderState extends State<MedicineReminder> {
   }
 
   Widget getReminderListView() {
+    checkReminders();
+    List<Widget> list = [];
+
+    reminderMap.forEach((rem, map) {
+      map.forEach((time, date) {
+        var card = Card(
+          elevation: 2,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          margin: EdgeInsets.all(8),
+          child: ListTile(
+            trailing: Icon(
+              Icons.notification_important,
+              color: Colors.orange,
+            ),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return MedicineDecisionScreen(rem);
+              }));
+            },
+            title: Text(rem.name),
+            subtitle: Text(DateFormat.jm().format(date)),
+          ),
+        );
+        if (!list.contains(card)) list.add(card);
+      });
+    });
+
     double width = getDeviceWidth(context);
     return ListView(
       children: <Widget>[
         SizedBox(
           height: 8,
         ),
-        nearReminders.length > 0
+        reminderMap.length > 0
             ? Column(
                 children: <Widget>[
                   Container(
@@ -168,187 +200,11 @@ class _MedicineReminderState extends State<MedicineReminder> {
                       style: TextStyle(fontSize: 22),
                     ),
                   ),
-                  ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: nearReminders.length,
-                      itemBuilder: (BuildContext context, int position) {
-                        int times = nearReminders[position].times;
-                        if (times == 1 &&
-                            compareTimes(TimeOfDay.now(),
-                                getTimeOfDay(nearReminders[position].time1))) {
-                          return Card(
-                              margin: EdgeInsets.all(8),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ListTile(
-                                  title: Text(nearReminders[position].name),
-                                  subtitle: Text(nearReminders[position].time1),
-                                  trailing: Icon(
-                                    Icons.done,
-                                    color: Colors.orange,
-                                    size: 35,
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (_) {
-                                      return MedicineDecisionScreen(
-                                          nearReminders[position]);
-                                    }));
-                                  },
-                                ),
-                              ));
-                        }
-                        if (times == 2) {
-                          List<Widget> list = [];
-                          if (compareTimes(TimeOfDay.now(),
-                              getTimeOfDay(nearReminders[position].time1))) {
-                            list.add(Card(
-                                margin: EdgeInsets.all(8),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                    title: Text(nearReminders[position].name),
-                                    subtitle:
-                                        Text(nearReminders[position].time1),
-                                    trailing: Icon(
-                                      Icons.done,
-                                      color: Colors.orange,
-                                      size: 35,
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (_) {
-                                        return MedicineDecisionScreen(
-                                            nearReminders[position]);
-                                      }));
-                                    },
-                                  ),
-                                )));
-                          }
-                          if (compareTimes(TimeOfDay.now(),
-                              getTimeOfDay(nearReminders[position].time2))) {
-                            list.add(Card(
-                                margin: EdgeInsets.all(8),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                    title: Text(nearReminders[position].name),
-                                    subtitle:
-                                        Text(nearReminders[position].time2),
-                                    trailing: Icon(
-                                      Icons.done,
-                                      color: Colors.orange,
-                                      size: 35,
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (_) {
-                                        return MedicineDecisionScreen(
-                                            nearReminders[position]);
-                                      }));
-                                    },
-                                  ),
-                                )));
-                            return Column(
-                              children: list,
-                            );
-                          }
-                        }
-                        if (times == 3) {
-                          List<Widget> list = [];
-                          if (compareTimes(TimeOfDay.now(),
-                              getTimeOfDay(nearReminders[position].time1))) {
-                            list.add(Card(
-                                margin: EdgeInsets.all(8),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                    title: Text(nearReminders[position].name),
-                                    subtitle:
-                                        Text(nearReminders[position].time1),
-                                    trailing: Icon(
-                                      Icons.done,
-                                      color: Colors.orange,
-                                      size: 35,
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (_) {
-                                        return MedicineDecisionScreen(
-                                            nearReminders[position]);
-                                      }));
-                                    },
-                                  ),
-                                )));
-                          }
-                          if (compareTimes(TimeOfDay.now(),
-                              getTimeOfDay(nearReminders[position].time2))) {
-                            list.add(Card(
-                                margin: EdgeInsets.all(8),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                    title: Text(nearReminders[position].name),
-                                    subtitle:
-                                        Text(nearReminders[position].time2),
-                                    trailing: Icon(
-                                      Icons.done,
-                                      color: Colors.orange,
-                                      size: 35,
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (_) {
-                                        return MedicineDecisionScreen(
-                                            nearReminders[position]);
-                                      }));
-                                    },
-                                  ),
-                                )));
-                          }
-                          if (compareTimes(TimeOfDay.now(),
-                              getTimeOfDay(nearReminders[position].time3))) {
-                            list.add(Card(
-                                margin: EdgeInsets.all(8),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                    title: Text(nearReminders[position].name),
-                                    subtitle:
-                                        Text(nearReminders[position].time3),
-                                    trailing: Icon(
-                                      Icons.done,
-                                      color: Colors.orange,
-                                      size: 35,
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (_) {
-                                        return MedicineDecisionScreen(
-                                            nearReminders[position]);
-                                      }));
-                                    },
-                                  ),
-                                )));
-                          }
-                          return Column(
-                            children: list,
-                          );
-                        }
-                        return SizedBox();
-                      }),
+                  Padding(
+                      padding: const EdgeInsets.only(left: 20.0, right: 20),
+                      child: Column(
+                        children: list,
+                      )),
                 ],
               )
             : Container(
@@ -484,6 +340,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
     if (result != 0) {
       setState(() {
         updateListView();
+        checkReminders();
       });
     }
   }
@@ -505,6 +362,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
 
     if (result == true) {
       updateListView();
+      checkReminders();
     }
   }
 
@@ -513,47 +371,61 @@ class _MedicineReminderState extends State<MedicineReminder> {
     dbFuture.then((database) {
       Future<List<Reminder>> remListFuture = databaseHelper.getRemList();
       remListFuture.then((reminderList) {
-        setState(() {
-          this.reminderList = reminderList;
-          this.count = reminderList.length;
-        });
+        if (mounted)
+          setState(() {
+            this.reminderList = reminderList;
+            this.count = reminderList.length;
+          });
       });
     });
+    checkReminders();
   }
 
   checkReminders() {
-    updateListView();
     nearReminders = [];
+    reminderMap = Map<Reminder, Map<int, DateTime>>();
     TimeOfDay now = TimeOfDay.now();
     TimeOfDay reminderTime;
     for (var reminder in reminderList) {
       if (!(doneReminders.contains(reminder))) {
-        if (reminder.times == 1) {
-          reminderTime = getTimeOfDay(reminder.time1);
-          bool result = compareTimes(now, reminderTime);
-          if (result) nearReminders.add(reminder);
+        reminderTime = getTimeOfDay(reminder.time1);
+        bool result = compareTimes(now, reminderTime);
+        if (result) {
+          nearReminders.add(reminder);
+          reminderMap[reminder] = {1: toDateTime(reminderTime)};
         }
-        if (reminder.times == 2) {
-          reminderTime = getTimeOfDay(reminder.time1);
-          bool result = compareTimes(now, reminderTime);
-          if (result) nearReminders.add(reminder);
+
+        if (reminder.times >= 2) {
           reminderTime = getTimeOfDay(reminder.time2);
           result = compareTimes(now, reminderTime);
-          if (result) nearReminders.add(reminder);
+          if (result) {
+            nearReminders.add(reminder);
+            Map tempMap = reminderMap[reminder] ?? {};
+            if (tempMap.isEmpty)
+              reminderMap[reminder] = {2: toDateTime(reminderTime)};
+            else {
+              tempMap[2] = toDateTime(reminderTime);
+              reminderMap[reminder] = tempMap;
+            }
+          }
         }
         if (reminder.times == 3) {
-          reminderTime = getTimeOfDay(reminder.time1);
-          bool result = compareTimes(now, reminderTime);
-          if (result) nearReminders.add(reminder);
-          reminderTime = getTimeOfDay(reminder.time2);
-          result = compareTimes(now, reminderTime);
-          if (result) nearReminders.add(reminder);
           reminderTime = getTimeOfDay(reminder.time3);
           result = compareTimes(now, reminderTime);
-          if (result) nearReminders.add(reminder);
+          if (result) {
+            nearReminders.add(reminder);
+            Map tempMap = reminderMap[reminder] ?? {};
+            if (tempMap.isEmpty)
+              reminderMap[reminder] = {3: toDateTime(reminderTime)};
+            else {
+              tempMap[3] = toDateTime(reminderTime);
+              reminderMap[reminder] = tempMap;
+            }
+          }
         }
       }
     }
+    nearReminders.toSet().toList();
   }
 }
 
