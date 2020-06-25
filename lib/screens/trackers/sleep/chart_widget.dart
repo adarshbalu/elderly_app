@@ -63,4 +63,3 @@ class _TimeChartState extends State<TimeChart> {
     ];
   }
 }
-

@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class TrackerModel {
   Sleep sleepTracker;
   WeightTracker weightTracker;
-  HeightTracker heightTracker;
   BloodPressureTracker bloodPressureTracker;
   BloodSugarTracker bloodSugarTracker;
   TrackerModel();
@@ -53,14 +52,47 @@ class SleepTracker {
   }
 }
 
-class WeightTracker {
-  List<Tracker> weightTracker;
-  bool isTracking;
+class Weight {
+  int weight;
+  String notes;
+  DateTime dateTime;
+
+  Weight({this.weight, this.notes, this.dateTime});
 }
 
-class HeightTracker {
-  List<Tracker> heightTracker;
+class WeightTracker {
   bool isTracking;
+  Weight weightData;
+  WeightTracker();
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = Map<String, dynamic>();
+
+    map['dateAndTime'] = this.weightData.dateTime.toString();
+    map['weight'] = this.weightData.weight.toString();
+    map['notes'] = this.weightData.notes;
+
+    return map;
+  }
+
+  fromMap(Map<String, dynamic> map) {
+    Weight weightTracker = Weight();
+    weightTracker.dateTime = DateTime.parse(map['dateAndTime']);
+    weightTracker.weight = int.parse(map['weight']);
+
+    weightTracker.notes = map['notes'];
+    return weightTracker;
+  }
+
+  List<Weight> loadData(QuerySnapshot snapshot) {
+    List<DocumentSnapshot> documents = snapshot.documents;
+    List<Weight> weightList = [];
+    for (var data in documents) {
+      Map map = data.data;
+      weightList.add(this.fromMap(map));
+    }
+    return weightList;
+  }
 }
 
 class BloodSugarTracker {}

@@ -1,5 +1,7 @@
 import 'package:elderly_app/screens/trackers/sleep/add_sleep_screen.dart';
 import 'package:elderly_app/screens/trackers/sleep/sleep_tracker_screen.dart';
+import 'package:elderly_app/screens/trackers/weight/add_weight.dart';
+import 'package:elderly_app/screens/trackers/weight/weight_tracker_screen.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -79,9 +81,17 @@ class _TrackerHomeState extends State<TrackerHome> {
             title: 'Weight Tracker',
             subTitle:
                 '\nHow much did you weigh ? Track to see progress over time.\n',
-            onAdd: () {},
+            onAdd: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return AddWeightScreen();
+              }));
+            },
             onHide: () => onHide('weight'),
-            onView: () {},
+            onView: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return WeightTrackerScreen();
+              }));
+            },
             isHidden: hideMap['weight'],
             isTracking: trackMap['weight'],
           ),

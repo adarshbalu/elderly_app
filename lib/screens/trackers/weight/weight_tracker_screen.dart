@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elderly_app/models/tracker.dart';
-import 'package:elderly_app/screens/trackers/sleep/chart_widget.dart';
+import 'package:elderly_app/screens/trackers/weight/chart_widget.dart';
 import 'package:elderly_app/widgets/app_default.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SleepTrackerScreen extends StatefulWidget {
+class WeightTrackerScreen extends StatefulWidget {
   @override
-  _SleepTrackerScreenState createState() => _SleepTrackerScreenState();
+  _WeightTrackerScreenState createState() => _WeightTrackerScreenState();
 }
 
-class _SleepTrackerScreenState extends State<SleepTrackerScreen> {
+class _WeightTrackerScreenState extends State<WeightTrackerScreen> {
   getCurrentUser() async {
     await FirebaseAuth.instance.currentUser().then((user) {
       setState(() {
@@ -21,22 +21,23 @@ class _SleepTrackerScreenState extends State<SleepTrackerScreen> {
 
   QuerySnapshot snapshot;
   String userId;
-  double averageSleep;
-  SleepTracker sleepTracker;
+  double averageWeight;
+  WeightTracker weightTracker;
   getDocumentList() async {
-    sleepTracker = SleepTracker();
+    weightTracker = WeightTracker();
     snapshot = await Firestore.instance
         .collection('tracker')
         .document(userId)
-        .collection('sleep')
+        .collection('weight')
         .getDocuments();
-    averageSleep = 0;
-    double totalSleep = 0;
-    List<Sleep> list = sleepTracker.loadData(snapshot);
+    averageWeight = 0;
+    double totalWeight = 0;
+
+    List<Weight> list = weightTracker.loadData(snapshot);
     for (var s in list) {
-      totalSleep += s.hours + s.minutes / 60;
+      totalWeight += s.weight;
     }
-    averageSleep = totalSleep / list.length;
+    averageWeight = totalWeight / list.length;
     return snapshot;
   }
 
@@ -56,7 +57,7 @@ class _SleepTrackerScreenState extends State<SleepTrackerScreen> {
             child: Container(
               margin: EdgeInsets.fromLTRB(20, 8, 20, 0),
               child: Text(
-                'Sleep Tracker',
+                'Weight Tracker',
                 style: TextStyle(
                   fontSize: 32,
                   color: Color(0xff3d5afe),
@@ -75,6 +76,7 @@ class _SleepTrackerScreenState extends State<SleepTrackerScreen> {
                         child: Container(
                           margin: EdgeInsets.all(15),
                           constraints: BoxConstraints(
+                            //minWidth: MediaQuery.of(context).size.width ,
                             maxHeight: MediaQuery.of(context).size.height / 1.7,
                             maxWidth: MediaQuery.of(context).size.width *
                                 (snapshot.data.documents.length / 3),
@@ -84,7 +86,7 @@ class _SleepTrackerScreenState extends State<SleepTrackerScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: TimeChart(
+                              child: WeightChart(
                                 animate: true,
                                 userID: userId,
                               ),
@@ -96,8 +98,8 @@ class _SleepTrackerScreenState extends State<SleepTrackerScreen> {
                       Card(
                         margin: EdgeInsets.only(left: 8, right: 8),
                         child: ListTile(
-                          subtitle: Text('Average Sleep'),
-                          title: Text(averageSleep.toStringAsFixed(2)),
+                          subtitle: Text('Average Weight'),
+                          title: Text(averageWeight.toStringAsFixed(2)),
                         ),
                       )
                     ],

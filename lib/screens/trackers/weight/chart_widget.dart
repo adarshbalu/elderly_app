@@ -3,20 +3,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elderly_app/models/tracker.dart';
 import 'package:flutter/material.dart';
 
-class TimeChart extends StatefulWidget {
+class WeightChart extends StatefulWidget {
   final bool animate;
   final String userID;
-  TimeChart({
+  WeightChart({
     this.animate,
     this.userID,
   });
 
   @override
-  _TimeChartState createState() => _TimeChartState();
+  _WeightChartState createState() => _WeightChartState();
 }
 
-class _TimeChartState extends State<TimeChart> {
-  SleepTracker sleepTracker;
+class _WeightChartState extends State<WeightChart> {
+  WeightTracker weightTracker;
   List<charts.Series> seriesList;
 
   @override
@@ -41,26 +41,25 @@ class _TimeChartState extends State<TimeChart> {
         });
   }
 
-  Future<List<charts.Series<Sleep, DateTime>>> _createSampleData() async {
-    sleepTracker = SleepTracker();
+  Future<List<charts.Series<Weight, DateTime>>> _createSampleData() async {
+    weightTracker = WeightTracker();
     QuerySnapshot snapshot = await Firestore.instance
         .collection('tracker')
         .document(widget.userID)
-        .collection('sleep')
+        .collection('weight')
         .getDocuments();
 
-    List list = sleepTracker.loadData(snapshot);
+    List list = weightTracker.loadData(snapshot);
 
     return [
-      charts.Series<Sleep, DateTime>(
-        id: 'Sleep Tracking',
+      charts.Series<Weight, DateTime>(
+        id: 'Weight Tracking',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (Sleep sleep, _) => DateTime(
-            sleep.dateTime.year, sleep.dateTime.month, sleep.dateTime.day),
-        measureFn: (Sleep sleep, _) => sleep.hours + sleep.minutes / 60,
+        domainFn: (Weight weight, _) => DateTime(
+            weight.dateTime.year, weight.dateTime.month, weight.dateTime.day),
+        measureFn: (Weight weight, _) => weight.weight,
         data: list,
       )
     ];
   }
 }
-
