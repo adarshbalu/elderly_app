@@ -100,20 +100,40 @@ class _VideoCallState extends State<VideoCall> {
                       height: 48.0,
                       thickness: 2.0,
                     ),
-                    SizedBox(
-                      height: 64.0,
-                      width: double.maxFinite,
-                      child: RaisedButton(
-                        onPressed: () {
-                          _joinMeeting();
-                        },
-                        child: Text(
-                          "Start now",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        color: Colors.blue,
-                      ),
-                    ),
+                    FutureBuilder(
+                        future: null,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return SizedBox(
+                              height: 64.0,
+                              width: double.maxFinite,
+                              child: RaisedButton(
+                                onPressed: () {
+                                  _joinMeeting();
+                                },
+                                child: Text(
+                                  "Start now",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                color: Colors.blue,
+                              ),
+                            );
+                          } else
+                            return SizedBox(
+                              height: 64.0,
+                              width: double.maxFinite,
+                              child: RaisedButton(
+                                onPressed: () {
+                                  _joinMeeting();
+                                },
+                                child: Text(
+                                  "Start now",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                color: Colors.blue,
+                              ),
+                            );
+                        }),
                     SizedBox(
                       height: 48.0,
                     ),

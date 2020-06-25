@@ -13,7 +13,6 @@ import 'package:elderly_app/screens/loading/loading_screen.dart';
 import 'package:elderly_app/screens/loading/onBoarding_screen.dart';
 import 'package:elderly_app/screens/login/initial_setup_screen.dart';
 import 'package:elderly_app/screens/login/login_screen.dart';
-import 'package:elderly_app/screens/medicine_reminder/medicine_decision_screen.dart';
 import 'package:elderly_app/screens/medicine_reminder/medicine_reminder.dart';
 import 'package:elderly_app/screens/medicine_reminder/reminder_detail.dart';
 import 'package:elderly_app/screens/notes/note_home_screen.dart';
