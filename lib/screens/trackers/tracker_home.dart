@@ -1,3 +1,5 @@
+import 'package:elderly_app/screens/trackers/blood_pressure/add_blood_pressure.dart';
+import 'package:elderly_app/screens/trackers/blood_pressure/blood_pressure_tracker_screen.dart';
 import 'package:elderly_app/screens/trackers/blood_sugar/add_blood_sugar.dart';
 import 'package:elderly_app/screens/trackers/blood_sugar/blood_sugar_tracker_screen.dart';
 import 'package:elderly_app/screens/trackers/sleep/add_sleep_screen.dart';
@@ -119,9 +121,17 @@ class _TrackerHomeState extends State<TrackerHome> {
             title: 'Blood Pressure',
             subTitle:
                 '\nWhat\'s your blood pressure reading ?Track to see progress over time.\n',
-            onAdd: () {},
+            onAdd: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return AddBloodPressureScreen();
+              }));
+            },
             onHide: () => onHide('pressure'),
-            onView: () {},
+            onView: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return BloodPressureTrackerScreen();
+              }));
+            },
             isHidden: hideMap['pressure'],
             isTracking: trackMap['pressure'],
           ),
