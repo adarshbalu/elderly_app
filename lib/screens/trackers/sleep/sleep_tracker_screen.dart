@@ -36,7 +36,9 @@ class _SleepTrackerScreenState extends State<SleepTrackerScreen> {
     for (var s in list) {
       totalSleep += s.hours + s.minutes / 60;
     }
-    averageSleep = totalSleep / list.length;
+
+   setState(() {    averageSleep = totalSleep / list.length; });
+
     return snapshot;
   }
 

@@ -41,9 +41,11 @@ class _BloodPressureTrackerScreenState
       totalSystolic += s.systolic;
       totalPulse += s.pulse;
     }
-    averageDiastolic = totalDiastolic / list.length;
+
+    setState(() { averageDiastolic = totalDiastolic / list.length;
     averageSystolic = totalSystolic / list.length;
-    averagePulse = totalPulse / list.length;
+    averagePulse = totalPulse / list.length;});
+
     return snapshot;
   }
 

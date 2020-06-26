@@ -30,6 +30,7 @@ class NoteListState extends State<NoteList> {
       updateListView();
     }
     updateListView();
+
     return Scaffold(
       appBar: ElderlyAppBar(),
       drawer: AppDrawer(),
@@ -96,13 +97,9 @@ class NoteListState extends State<NoteList> {
             navigateToDetail(note, 'Edit Note');
           },
           child: Dismissible(
-            onDismissed: (direction) {
+            onDismissed: (direction) async {
+              _delete(noteList[noteList.indexOf(note)]);
               children.removeAt(noteList.indexOf(note));
-              setState(() {
-                _delete(noteList[noteList.indexOf(note)]);
-
-                noteList.remove(note);
-              });
             },
             key: Key(note.id.toString()),
             child: Material(

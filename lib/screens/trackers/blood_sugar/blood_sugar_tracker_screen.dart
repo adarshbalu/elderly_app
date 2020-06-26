@@ -38,7 +38,9 @@ class _BloodSugarTrackerScreenState extends State<BloodSugarTrackerScreen> {
     for (var s in list) {
       totalValue += s.bloodSugar;
     }
-    averageValue = totalValue / list.length;
+
+    setState(() {  averageValue = totalValue / list.length;});
+
     return snapshot;
   }
 
