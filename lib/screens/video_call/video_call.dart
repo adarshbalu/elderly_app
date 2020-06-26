@@ -215,7 +215,7 @@ class _VideoCallState extends State<VideoCall> {
 
   sendSMS() async {
     var cred =
-        'AC07a649c710761cf3a0e6b96048accf58:ff835258561a7da33fe49ce779f745d4';
+        'AC07a649c710761cf3a0e6b96048accf58:60cfd08bcc74ea581187a048dfd653cb';
 
     var bytes = utf8.encode(cred);
 
@@ -229,7 +229,8 @@ class _VideoCallState extends State<VideoCall> {
     }, body: {
       'From': '+12567403927',
       'To': '+918087214942',
-      'Body': 'Please come in for urgent video call.'
+      'Body':
+          'Open Elderly Companion application and come in for urgent video call.'
     });
 
     print('Response status: ${response.statusCode}');
