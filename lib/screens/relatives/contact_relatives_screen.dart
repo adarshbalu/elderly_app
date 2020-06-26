@@ -267,12 +267,12 @@ class _ContactScreenState extends State<ContactScreen> {
                       ],
                     );
                   } else
-                    return Center(
-                      child: Container(
-                        child: SpinKitWanderingCubes(
-                          color: Colors.green,
-                          size: 100.0,
-                        ),
+                    return Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(top: 50),
+                      child: SpinKitWanderingCubes(
+                        color: Colors.green,
+                        size: 100.0,
                       ),
                     );
                 }),

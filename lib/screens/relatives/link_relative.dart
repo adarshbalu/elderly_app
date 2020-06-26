@@ -128,20 +128,29 @@ class LinkCard extends StatelessWidget {
             onPressed: !linked
                 ? () async {
                     data['uid'] = userID;
-                    await Firestore.instance
-                        .collection('profile')
-                        .document(userID)
-                        .collection('relatives')
-                        .document(documentID)
-                        .updateData(data);
+
                     recipients.add(relative.phoneNumber);
                     await _sendSMS(
                         'Message from Elderly Care : Please copy the below code to link your account.\n'
                                 'Code : ' +
                             userID,
                         recipients);
+                    await Firestore.instance
+                        .collection('profile')
+                        .document(userID)
+                        .collection('relatives')
+                        .document(documentID)
+                        .updateData(data);
                   }
-                : () {},
+                : () async {
+                    data['uid'] = '';
+                    await Firestore.instance
+                        .collection('profile')
+                        .document(userID)
+                        .collection('relatives')
+                        .document(documentID)
+                        .updateData(data);
+                  },
             color: buttonColor,
             textColor: Colors.white,
             shape:
