@@ -108,7 +108,8 @@ class _VideoCallState extends State<VideoCall> {
                               height: 64.0,
                               width: double.maxFinite,
                               child: RaisedButton(
-                                onPressed: () {
+                                onPressed: () async {
+                                  await sendSMS();
                                   _joinMeeting();
                                 },
                                 child: Text(
@@ -123,7 +124,8 @@ class _VideoCallState extends State<VideoCall> {
                               height: 64.0,
                               width: double.maxFinite,
                               child: RaisedButton(
-                                onPressed: () {
+                                onPressed: () async {
+                                  await sendSMS();
                                   _joinMeeting();
                                 },
                                 child: Text(
