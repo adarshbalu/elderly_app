@@ -5,7 +5,13 @@
 -->
 
 Easiest way to manage your health, medicines, emergencies all in one place.
-Link
+
+## Download the App
+[<img src="https://image.flaticon.com/icons/svg/443/443049.svg" align="center"
+width="60" hspace="10" vspace="10">](http://www.mediafire.com/file/7tztn4uv8wt355s/Elderly_Care.apk/file)
+<br>
+The app is heavy as it is the profile apk due to some issue with the release build.
+
 ## About
 
 The app provides a reminder for the elderly for their daily medications, shows nearby hospitals,  an option to alert emergency contacts, sos button for fetching the number of nearby hospital in case of emergency, option to add important notes based on their priority, option to add doctor appointment reminder and alert emergency contacts regarding the same, helps in tracking the person's important health vitals, to organise documents in one place.
