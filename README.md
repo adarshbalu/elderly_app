@@ -5,7 +5,7 @@
 -->
 
 Easiest way to manage your health, medicines, emergencies all in one place.
-
+Link
 ## About
 
 The app provides a reminder for the elderly for their daily medications, shows nearby hospitals,  an option to alert emergency contacts, sos button for fetching the number of nearby hospital in case of emergency, option to add important notes based on their priority, option to add doctor appointment reminder and alert emergency contacts regarding the same, helps in tracking the person's important health vitals, to organise documents in one place.
