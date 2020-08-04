@@ -57,6 +57,16 @@ width="200"
 
 - Document Storage
   - Helps in organising all personal documents you are challenged manage - from all personal IDs and journals to medical contacts and    insurance informations. Secure upload and storage.
+  
+## Technologies Used
+- Firebase - Authentication,Firestore,Storage
+- SqfLite Database - Offline Storage
+- Shared Preferences
+- Jisti Meet - Video call
+- TomTom API - Routing and Navigation
+- OpenCage API - Location information
+
+
 ## Screenshots
 
 ## Permissions
