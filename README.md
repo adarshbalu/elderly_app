@@ -35,14 +35,14 @@ width="200"
   - The reminder hits an alarm and requests for confirmation if the person hastaken the specific medicine at the times prescribed. 
   - If not responded to,or responded negatively,the app sends a notification to the point of contact.
 
-- Alert Emergency contacts
-  - Feature that shares your current location to all emergency contacts in case you want them to reach you as soon as possible. Helps       accessing you in emergency, or to coordinate care.
+- Alert Emergency contacts with location
+  - Feature that shares your current location to all emergency contacts in case you want them to reach you as soon as possible. Helps accessing you in emergency, or to coordinate care.
 
 - Locate nearby Hospitals
   - This feature help in locating all your nearby hospitals in your current location providing information on the distances and      directions for you.
 
-- SOS Button
-  - Helps you to fetch the contact number of the nearby hospital for informing your emergency at the latest.
+- Emergency Video Call
+  - Helps you to connect with loved ones on emergency needs.
 
 - Doctor Appointments
   - Helps in keeping track of doctor appointments through reminders.
