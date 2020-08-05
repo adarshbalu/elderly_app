@@ -16,18 +16,6 @@ The app is heavy as it is the profile apk due to some issue with the release bui
 
 The app provides a reminder for the elderly for their daily medications, shows nearby hospitals,  an option to alert emergency contacts, sos button for fetching the number of nearby hospital in case of emergency, option to add important notes based on their priority, option to add doctor appointment reminder and alert emergency contacts regarding the same, helps in tracking the person's important health vitals, to organise documents in one place.There is a companion app for Caretakers to monitor the data from health trackers,to view documents,emergency video call and more. Find the companion app here : [Elderly Companion](https://github.com/adarshbalu/elderly_companion) app.
 
-
-<!--
-<img src="1.jpg" align="left"
-width="200"
-    hspace="10" vspace="10">
-<img src="2.jpg" align="center"
-width="200"
-    hspace="10" vspace="10">
-<img src="3.jpg" align="center"
-width="200"
-    hspace="10" vspace="10">
--->
 ## Features
 
 - Medicine Reminder
@@ -67,7 +55,43 @@ width="200"
 - OpenCage API - Location information
 
 
+
 ## Screenshots
+
+### Home Screen
+
+<img src="screens/home_screen(1).png" align="center"
+width="200" hspace="10" vspace="10">
+
+<img src="screens/home_screen(2).png" align="center"
+width="200" hspace="10" vspace="10">
+
+###  Documents
+
+<img src="screens/documents.png" align="center"
+width="200" hspace="10" vspace="10">
+
+<img src="screens/view_documents.png" align="center"
+width="200" hspace="10" vspace="10">
+
+
+### Tracker
+
+<img src="screens/add_tracking_data.png" align="center"
+width="200" hspace="10" vspace="10">
+
+<img src="screens/tracking_screen.png" align="center"
+width="200" hspace="10" vspace="10">
+
+
+### Video call
+
+<img src="screens/video_call_confirmation.png" align="center"
+width="200" hspace="10" vspace="10">
+
+
+
+
 
 ## Permissions
 
@@ -84,7 +108,7 @@ On Android versions prior to Android 6.0, Elderly Care requires the following pe
 ## Contributing
 
 Elderly Care app is a free and open source project. Any contributions are welcome. Here are a few ways you can help:
- * [Report bugs and make suggestions.](https://github.com/wallabag/android-app/issues)
+ * [Report bugs and make suggestions.](https://github.com/adarshbalu/elderly_app/issues)
  
 
 ## Credits  
