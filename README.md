@@ -90,6 +90,16 @@ width="200" hspace="10" vspace="10">
 width="200" hspace="10" vspace="10">
 
 
+### Profile
+
+<img src="screens/profile.png" align="center"
+width="200" hspace="10" vspace="10">
+
+
+### Notes
+
+<img src="screens/notes.png" align="center"
+width="200" hspace="10" vspace="10">
 
 
 
