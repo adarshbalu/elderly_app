@@ -74,6 +74,13 @@ width="200" hspace="10" vspace="10">
 <img src="screens/view_documents.png" align="center"
 width="200" hspace="10" vspace="10">
 
+### Medicine Reminder
+
+<img src="screens/medicine_reminder.png" align="center"
+width="200" hspace="10" vspace="10">
+
+<img src="medicine_intake_confirmation.png" align="center"
+width="200" hspace="10" vspace="10">
 
 ### Tracker
 
