@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.firebase:firebase-ml-vision-image-label-model:17.0.2@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d7bf8dbed4c62abc0d44d824fbcbaa32/jetified-firebase-ml-vision-image-label-model-17.0.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fde47c4813c362d8db84ddaa09691fc2/jetified-firebase-ml-vision-image-label-model-17.0.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/df934f6d448b88406cb795eb87f677fd/jetified-firebase-ml-vision-image-label-model-17.0.2/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/df934f6d448b88406cb795eb87f677fd/jetified-firebase-ml-vision-image-label-model-17.0.2/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/df934f6d448b88406cb795eb87f677fd/jetified-firebase-ml-vision-image-label-model-17.0.2/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

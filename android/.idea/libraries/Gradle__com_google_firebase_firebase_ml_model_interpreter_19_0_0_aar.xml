@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.firebase:firebase-ml-model-interpreter:19.0.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b5f55e8634e3c5e7dfeb0c2558e9f35a/jetified-firebase-ml-model-interpreter-19.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c00697f6a5840f9acc1826eaa887a2d1/jetified-firebase-ml-model-interpreter-19.0.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7f490138b9b73f9483010ad8847a5d1b/jetified-firebase-ml-model-interpreter-19.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7f490138b9b73f9483010ad8847a5d1b/jetified-firebase-ml-model-interpreter-19.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7f490138b9b73f9483010ad8847a5d1b/jetified-firebase-ml-model-interpreter-19.0.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-ml-model-interpreter/19.0.0/bbcc90bdb6fc1acc0f03aa21fdaaecae32ff88f0/firebase-ml-model-interpreter-19.0.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

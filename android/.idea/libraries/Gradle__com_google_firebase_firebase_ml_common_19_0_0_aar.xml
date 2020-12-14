@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.firebase:firebase-ml-common:19.0.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e1a57c0ad9a557bc138219505bcbc0fe/jetified-firebase-ml-common-19.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2d49be71993803b63464ebae2663abbe/jetified-firebase-ml-common-19.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/136e881f4dc7d93038b918d097c2805b/jetified-firebase-ml-common-19.0.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/136e881f4dc7d93038b918d097c2805b/jetified-firebase-ml-common-19.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/136e881f4dc7d93038b918d097c2805b/jetified-firebase-ml-common-19.0.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-ml-common/19.0.0/d744794686c273d9fe2fdad77ee686c87a47625b/firebase-ml-common-19.0.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

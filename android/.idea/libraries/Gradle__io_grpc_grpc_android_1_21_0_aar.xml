@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Gradle: io.grpc:grpc-android:1.21.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7629cea33ef8947b300ce17eda1c453e/jetified-grpc-android-1.21.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ed8f1e9b234c431a33e72d54ee541cea/jetified-grpc-android-1.21.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5d9ab1eca050340df9835542aa37ad39/jetified-grpc-android-1.21.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5d9ab1eca050340df9835542aa37ad39/jetified-grpc-android-1.21.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5d9ab1eca050340df9835542aa37ad39/jetified-grpc-android-1.21.0/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.grpc/grpc-android/1.21.0/453175ba294eb576b920a46862341b00fa50bd7f/grpc-android-1.21.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.grpc/grpc-android/1.21.0/66b8fad340884a7cfe2515058478a82face4d936/grpc-android-1.21.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
